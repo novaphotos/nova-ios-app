@@ -24,6 +24,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 @property (nonatomic, strong) AVCaptureStillImageOutput *stillImageOutput;
 @property (nonatomic, assign, getter=isDeviceAuthorized) BOOL deviceAuthorized;
 @property (nonatomic, readonly, getter=isSessionRunningAndDeviceAuthorized) BOOL sessionRunningAndDeviceAuthorized;
+@property (nonatomic, strong) id runtimeErrorObserver;
 
 - (BOOL)setDevice:(AVCaptureDevice *)device withError:(NSError **)error;
 - (void)checkDeviceAuthorizationStatus;
@@ -68,6 +69,15 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         [self addObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:SessionRunningAndDeviceAuthorizedContext];
 		[self addObserver:self forKeyPath:@"stillImageOutput.capturingStillImage" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:CapturingStillImageContext];
         
+        __block typeof(self) bSelf = self;
+		self.runtimeErrorObserver = [[NSNotificationCenter defaultCenter] addObserverForName:AVCaptureSessionRuntimeErrorNotification object:self.session queue:nil usingBlock:^(NSNotification *note) {
+			dispatch_async(bSelf.sessionQueue, ^{
+				// Manually restarting the session since it must have been stopped due to an error.
+                NSLog(@"Restarting session");
+                [bSelf.session startRunning];
+			});
+        }];
+        
         [self.session startRunning];
     });
 }
@@ -79,6 +89,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
         
 		[self removeObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" context:SessionRunningAndDeviceAuthorizedContext];
 		[self removeObserver:self forKeyPath:@"stillImageOutput.capturingStillImage" context:CapturingStillImageContext];
+        
+        [[NSNotificationCenter defaultCenter] removeObserver:self.runtimeErrorObserver];
     });
 }
 
