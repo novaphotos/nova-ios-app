@@ -15,13 +15,15 @@
 		2724C99018639EEB00A68E0D /* SSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2724C98F18639EEB00A68E0D /* SSAppDelegate.m */; };
 		2724C99318639EEB00A68E0D /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2724C99118639EEB00A68E0D /* Main_iPhone.storyboard */; };
 		2724C99618639EEB00A68E0D /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2724C99418639EEB00A68E0D /* Main_iPad.storyboard */; };
-		2724C99918639EEB00A68E0D /* SSViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2724C99818639EEB00A68E0D /* SSViewController.m */; };
 		2724C99B18639EEB00A68E0D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2724C99A18639EEB00A68E0D /* Images.xcassets */; };
 		2724C9A218639EEB00A68E0D /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2724C9A118639EEB00A68E0D /* XCTest.framework */; };
 		2724C9A318639EEB00A68E0D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2724C97F18639EEB00A68E0D /* Foundation.framework */; };
 		2724C9A418639EEB00A68E0D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2724C98318639EEB00A68E0D /* UIKit.framework */; };
 		2724C9AC18639EEB00A68E0D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2724C9AA18639EEB00A68E0D /* InfoPlist.strings */; };
 		2724C9AE18639EEB00A68E0D /* Nova_CameraTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2724C9AD18639EEB00A68E0D /* Nova_CameraTests.m */; };
+		27A2B0D91863CB7700D13251 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27A2B0D81863CB7700D13251 /* AVFoundation.framework */; };
+		27BB942D1863A7CD00A31BCF /* SSCameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27BB942C1863A7CD00A31BCF /* SSCameraViewController.m */; };
+		27BB94331863AB3300A31BCF /* SSCameraPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27BB94321863AB3300A31BCF /* SSCameraPreviewView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,14 +49,17 @@
 		2724C98F18639EEB00A68E0D /* SSAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SSAppDelegate.m; sourceTree = "<group>"; };
 		2724C99218639EEB00A68E0D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
 		2724C99518639EEB00A68E0D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
-		2724C99718639EEB00A68E0D /* SSViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SSViewController.h; sourceTree = "<group>"; };
-		2724C99818639EEB00A68E0D /* SSViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SSViewController.m; sourceTree = "<group>"; };
 		2724C99A18639EEB00A68E0D /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		2724C9A018639EEB00A68E0D /* Nova CameraTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Nova CameraTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2724C9A118639EEB00A68E0D /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		2724C9A918639EEB00A68E0D /* Nova CameraTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Nova CameraTests-Info.plist"; sourceTree = "<group>"; };
 		2724C9AB18639EEB00A68E0D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2724C9AD18639EEB00A68E0D /* Nova_CameraTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Nova_CameraTests.m; sourceTree = "<group>"; };
+		27A2B0D81863CB7700D13251 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		27BB942B1863A7CD00A31BCF /* SSCameraViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSCameraViewController.h; sourceTree = "<group>"; };
+		27BB942C1863A7CD00A31BCF /* SSCameraViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSCameraViewController.m; sourceTree = "<group>"; };
+		27BB94311863AB3300A31BCF /* SSCameraPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSCameraPreviewView.h; sourceTree = "<group>"; };
+		27BB94321863AB3300A31BCF /* SSCameraPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSCameraPreviewView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +67,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27A2B0D91863CB7700D13251 /* AVFoundation.framework in Frameworks */,
 				2724C98218639EEB00A68E0D /* CoreGraphics.framework in Frameworks */,
 				2724C98418639EEB00A68E0D /* UIKit.framework in Frameworks */,
 				2724C98018639EEB00A68E0D /* Foundation.framework in Frameworks */,
@@ -103,6 +109,7 @@
 		2724C97E18639EEB00A68E0D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				27A2B0D81863CB7700D13251 /* AVFoundation.framework */,
 				2724C97F18639EEB00A68E0D /* Foundation.framework */,
 				2724C98118639EEB00A68E0D /* CoreGraphics.framework */,
 				2724C98318639EEB00A68E0D /* UIKit.framework */,
@@ -118,8 +125,8 @@
 				2724C98F18639EEB00A68E0D /* SSAppDelegate.m */,
 				2724C99118639EEB00A68E0D /* Main_iPhone.storyboard */,
 				2724C99418639EEB00A68E0D /* Main_iPad.storyboard */,
-				2724C99718639EEB00A68E0D /* SSViewController.h */,
-				2724C99818639EEB00A68E0D /* SSViewController.m */,
+				27BB94281863A7B700A31BCF /* ViewControllers */,
+				27BB942E1863AB1100A31BCF /* Views */,
 				2724C99A18639EEB00A68E0D /* Images.xcassets */,
 				2724C98618639EEB00A68E0D /* Supporting Files */,
 			);
@@ -153,6 +160,24 @@
 				2724C9AA18639EEB00A68E0D /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		27BB94281863A7B700A31BCF /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				27BB942B1863A7CD00A31BCF /* SSCameraViewController.h */,
+				27BB942C1863A7CD00A31BCF /* SSCameraViewController.m */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		27BB942E1863AB1100A31BCF /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				27BB94311863AB3300A31BCF /* SSCameraPreviewView.h */,
+				27BB94321863AB3300A31BCF /* SSCameraPreviewView.m */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -254,8 +279,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2724C99918639EEB00A68E0D /* SSViewController.m in Sources */,
+				27BB942D1863A7CD00A31BCF /* SSCameraViewController.m in Sources */,
 				2724C99018639EEB00A68E0D /* SSAppDelegate.m in Sources */,
+				27BB94331863AB3300A31BCF /* SSCameraPreviewView.m in Sources */,
 				2724C98C18639EEB00A68E0D /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -477,6 +503,7 @@
 				2724C9B318639EEB00A68E0D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		2724C9B418639EEB00A68E0D /* Build configuration list for PBXNativeTarget "Nova CameraTests" */ = {
 			isa = XCConfigurationList;
@@ -485,6 +512,7 @@
 				2724C9B618639EEB00A68E0D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
