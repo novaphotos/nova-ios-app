@@ -5,32 +5,18 @@
 //  Created by Mike Matz on 12/20/13.
 //  Copyright (c) 2013 Sneaky Squid. All rights reserved.
 //
-//  Largely based on Apple's AVCam sample code
 
 #import "SSCameraViewController.h"
 #import "SSCameraPreviewView.h"
+#import "SSCaptureSessionManager.h"
 #import <AVFoundation/AVFoundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 
-static void * CapturingStillImageContext = &CapturingStillImageContext;
 static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDeviceAuthorizedContext;
 
 @interface SSCameraViewController ()
-
-@property (nonatomic, strong) dispatch_queue_t sessionQueue;
-@property (nonatomic, strong) AVCaptureSession *session;
-@property (nonatomic, readonly) AVCaptureDevice *device;
-@property (nonatomic, strong) AVCaptureDeviceInput *deviceInput;
-@property (nonatomic, strong) AVCaptureStillImageOutput *stillImageOutput;
-@property (nonatomic, assign, getter=isDeviceAuthorized) BOOL deviceAuthorized;
-@property (nonatomic, readonly, getter=isSessionRunningAndDeviceAuthorized) BOOL sessionRunningAndDeviceAuthorized;
-@property (nonatomic, strong) id runtimeErrorObserver;
-
-- (BOOL)setDevice:(AVCaptureDevice *)device withError:(NSError **)error;
-- (void)checkDeviceAuthorizationStatus;
-- (void)configureSession;
+@property (nonatomic, strong) SSCaptureSessionManager *captureSessionManager;
 - (void)runStillImageCaptureAnimation;
-
 @end
 
 @implementation SSCameraViewController
@@ -48,50 +34,33 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 {
     [super viewDidLoad];
     
-    // Create capture session
-    self.session = [[AVCaptureSession alloc] init];
+    // Setup capture session
+    self.captureSessionManager = [[SSCaptureSessionManager alloc] init];
     
-    // Setup preview view
-    self.previewView.session = self.session;
+    // Check authorization
+    [self.captureSessionManager checkDeviceAuthorizationWithCompletion:^(BOOL granted) {
+        if (!granted) {
+            // Complain to the user that we haven't been authorized
+            [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Device not authorized" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil] show];
+        }
+    }];
     
-    // Check device authorization
-    [self checkDeviceAuthorizationStatus];
-    
-    // Create queue for capture session setup
-    self.sessionQueue = dispatch_queue_create("session queue", DISPATCH_QUEUE_SERIAL);
-    
-    [self configureSession];
+    // Setup preview layer
+    self.previewView.session = self.captureSessionManager.session;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    // Setup observers and start capture session
-    dispatch_async(self.sessionQueue, ^{
-        [self addObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:SessionRunningAndDeviceAuthorizedContext];
-		[self addObserver:self forKeyPath:@"stillImageOutput.capturingStillImage" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:CapturingStillImageContext];
-        
-        __block typeof(self) bSelf = self;
-		self.runtimeErrorObserver = [[NSNotificationCenter defaultCenter] addObserverForName:AVCaptureSessionRuntimeErrorNotification object:self.session queue:nil usingBlock:^(NSNotification *note) {
-			dispatch_async(bSelf.sessionQueue, ^{
-				// Manually restarting the session since it must have been stopped due to an error.
-                NSLog(@"Restarting session");
-                [bSelf.session startRunning];
-			});
-        }];
-        
-        [self.session startRunning];
-    });
+    [self.captureSessionManager startSession];
+    
+    // Add observers
+    [self.captureSessionManager addObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:SessionRunningAndDeviceAuthorizedContext];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
-    // Remove observers and end session
-    dispatch_async(self.sessionQueue, ^{
-        [self.session stopRunning];
-        
-		[self removeObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" context:SessionRunningAndDeviceAuthorizedContext];
-		[self removeObserver:self forKeyPath:@"stillImageOutput.capturingStillImage" context:CapturingStillImageContext];
-        
-        [[NSNotificationCenter defaultCenter] removeObserver:self.runtimeErrorObserver];
-    });
+    [self.captureSessionManager stopSession];
+    
+    // Remove observers
+    [self removeObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" context:SessionRunningAndDeviceAuthorizedContext];
 }
 
 - (void)didReceiveMemoryWarning
@@ -107,15 +76,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 #pragma mark - KVO
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-	if (context == CapturingStillImageContext) {
-		BOOL isCapturingStillImage = [change[NSKeyValueChangeNewKey] boolValue];
-		
-		if (isCapturingStillImage) {
-			[self runStillImageCaptureAnimation];
-		}
-	}
-    
-	else if (context == SessionRunningAndDeviceAuthorizedContext) {
+    if (context == SessionRunningAndDeviceAuthorizedContext) {
 		BOOL isRunning = [change[NSKeyValueChangeNewKey] boolValue];
 		
 		dispatch_async(dispatch_get_main_queue(), ^{
@@ -128,24 +89,21 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 	}
 }
 
+
 #pragma mark - Public methods
 
 - (IBAction)capture:(id)sender {
     NSLog(@"Capture!");
-    dispatch_async(self.sessionQueue, ^{
-        // Set up capture connection
-        AVCaptureConnection *connection = [self.stillImageOutput connectionWithMediaType:AVMediaTypeVideo];
-        [self.stillImageOutput captureStillImageAsynchronouslyFromConnection:connection completionHandler:^(CMSampleBufferRef imageDataSampleBuffer, NSError *error) {
-            // Save to asset library
-            if (imageDataSampleBuffer) {
-                NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
-				UIImage *image = [[UIImage alloc] initWithData:imageData];
-				[[[ALAssetsLibrary alloc] init] writeImageToSavedPhotosAlbum:[image CGImage] orientation:(ALAssetOrientation)[image imageOrientation] completionBlock:nil];
-            } else if (error) {
-                NSLog(@"Error capturing image: %@", error);
-            }
-        }];
-    });
+    [self.captureSessionManager captureStillImageWithCompletionHandler:^(NSData *imageData, UIImage *image, NSError *error) {
+        if (error) {
+            NSLog(@"Error capturing!");
+        } else {
+            NSLog(@"Saving to asset library");
+            [[[ALAssetsLibrary alloc] init] writeImageToSavedPhotosAlbum:[image CGImage] orientation:(ALAssetOrientation)[image imageOrientation] completionBlock:nil];
+        }
+    } shutterHandler:^{
+        [self runStillImageCaptureAnimation];
+    }];
 }
 
 - (IBAction)showGeneralSettings:(id)sender {
@@ -158,170 +116,10 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 }
 
 - (IBAction)toggleCamera:(id)sender {
-    dispatch_async(self.sessionQueue, ^{
-        NSArray *devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
-        if (devices.count > 1) {
-            AVCaptureDevice *newDevice;
-            NSInteger idx = [devices indexOfObject:self.device];
-            if (idx > 0) {
-                newDevice = devices[0];
-            } else {
-                newDevice = devices[1];
-            }
-            
-            NSError *error = nil;
-            [self setDevice:newDevice withError:&error];
-            if (error) {
-                NSLog(@"Error changing device: %@", error);
-            }
-        }
-    });
+    [self.captureSessionManager toggleCamera];
 }
 
 #pragma mark - Private methods
-
-- (BOOL)setDevice:(AVCaptureDevice *)device withError:(NSError **)outError {
-    NSError *error = nil;
-    AVCaptureDeviceInput *newInput = [AVCaptureDeviceInput deviceInputWithDevice:device error:&error];
-    if (error) {
-        NSLog(@"Error creating device input: %@ for device: %@", error, device);
-        *outError = error;
-        return NO;
-    }
-    [self willChangeValueForKey:@"device"];
-
-    [self.session beginConfiguration];
-
-    // Remove current device input before adding new
-    if (self.deviceInput) {
-        [self.session removeInput:self.deviceInput];
-    }
-    
-    if (![self.session canAddInput:newInput]) {
-        NSLog(@"Unable to add new input %@", newInput);
-        if (self.deviceInput) {
-            // Attempt to restore state by adding previous input
-            [self.session addInput:self.deviceInput];
-        }
-        return NO;
-    }
-    
-    [self.session addInput:newInput];
-    self.deviceInput = newInput;
-    _device = device;
-    
-    // Reset exposure, focus and flash
-    [_device lockForConfiguration:&error];
-    
-    // Expose for center of screen
-    CGPoint centerPoint = CGPointMake(0.5, 0.5);
-    if ([_device isExposureModeSupported:AVCaptureExposureModeContinuousAutoExposure]) {
-        _device.exposureMode = AVCaptureExposureModeContinuousAutoExposure;
-        _device.exposurePointOfInterest = centerPoint;
-    }
-    
-    // Set continuous autofocus and focus at center of screen
-    if ([_device isFocusModeSupported:AVCaptureFocusModeContinuousAutoFocus]) {
-        _device.focusMode = AVCaptureFocusModeContinuousAutoFocus;
-        _device.focusPointOfInterest = centerPoint;
-    }
-    
-    // Disable flash
-    if ([_device isFlashModeSupported:AVCaptureFlashModeOff]) {
-        [_device setFlashMode:AVCaptureFlashModeOff];
-    }
-    
-    [_device unlockForConfiguration];
-    [self.session commitConfiguration];
-    [self didChangeValueForKey:@"device"];
-    
-    return YES;
-}
-
-- (BOOL)isSessionRunningAndDeviceAuthorized {
-    return [self.session isRunning] && [self isDeviceAuthorized];
-}
-
-+ (NSSet *)keyPathsForValuesAffectingSessionRunningAndDeviceAuthorized {
-    return [NSSet setWithObjects:@"session.running", @"deviceAuthorized", nil];
-}
-
-- (void)checkDeviceAuthorizationStatus {
-	[AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
-        if (granted) {
-            self.deviceAuthorized = YES;
-        } else {
-            self.deviceAuthorized = NO;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Device not authorized" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil] show];
-            });
-        }
-    }];
-}
-
-- (void)configureSession {
-    dispatch_async(self.sessionQueue, ^{
-        self.session.sessionPreset = AVCaptureSessionPresetPhoto;
-        
-        // Find suitable capture device (default to back facing)
-        NSArray *devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
-        AVCaptureDevice *selectedDevice = [devices firstObject];
-        for (AVCaptureDevice *device in devices) {
-            if (device.position == AVCaptureDevicePositionBack) {
-                selectedDevice = device;
-                break;
-            }
-        }
-        
-        NSError *error = nil;
-        if (![self setDevice:selectedDevice withError:&error]) {
-            // Error setting up device
-            NSLog(@"Error setting up device; giving up. %@", error);
-            return;
-        }
-        
-        // Configure still image output
-        AVCaptureStillImageOutput *stillImageOutput = [[AVCaptureStillImageOutput alloc] init];
-        if ([self.session canAddOutput:stillImageOutput]) {
-            [self.session addOutput:stillImageOutput];
-            self.stillImageOutput = stillImageOutput;
-        } else {
-            NSLog(@"Unable to add still image output");
-            self.stillImageOutput = nil;
-            return;
-        }
-    });
-}
-
-- (void)resetFocus {
-    if ([self.device isFocusModeSupported:AVCaptureFocusModeContinuousAutoFocus]) {
-        // Focus at center of screen
-        NSError *error;
-        [self.device lockForConfiguration:&error];
-        CGPoint focusPoint = CGPointMake(0.5, 0.5);
-        self.device.focusMode = AVCaptureFocusModeContinuousAutoFocus;
-        self.device.focusPointOfInterest = focusPoint;
-        [self.device unlockForConfiguration];
-    }
-}
-
-- (void)resetExposure {
-    if ([self.device isExposureModeSupported:AVCaptureExposureModeContinuousAutoExposure]) {
-        NSError *error;
-        [self.device lockForConfiguration:&error];
-        CGPoint exposurePoint = CGPointMake(0.5, 0.5);
-        self.device.exposureMode = AVCaptureExposureModeContinuousAutoExposure;
-        self.device.exposurePointOfInterest = exposurePoint;
-        [self.device unlockForConfiguration];
-    }
-}
-
-- (void)resetFlash {
-    NSError *error;
-    [self.device lockForConfiguration:&error];
-    [self.device setFlashMode:AVCaptureFlashModeOff];
-    [self.device unlockForConfiguration];
-}
 
 - (void)runStillImageCaptureAnimation {
 	dispatch_async(dispatch_get_main_queue(), ^{

@@ -21,6 +21,8 @@
 		2724C9A418639EEB00A68E0D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2724C98318639EEB00A68E0D /* UIKit.framework */; };
 		2724C9AC18639EEB00A68E0D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2724C9AA18639EEB00A68E0D /* InfoPlist.strings */; };
 		2724C9AE18639EEB00A68E0D /* Nova_CameraTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2724C9AD18639EEB00A68E0D /* Nova_CameraTests.m */; };
+		272F87C518752DE90005BA58 /* SSCaptureSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 272F87C418752DE90005BA58 /* SSCaptureSessionManager.m */; };
+		272F87C618752DE90005BA58 /* SSCaptureSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 272F87C418752DE90005BA58 /* SSCaptureSessionManager.m */; };
 		27A2B0D91863CB7700D13251 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27A2B0D81863CB7700D13251 /* AVFoundation.framework */; };
 		27BB942D1863A7CD00A31BCF /* SSCameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27BB942C1863A7CD00A31BCF /* SSCameraViewController.m */; };
 		27BB94331863AB3300A31BCF /* SSCameraPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27BB94321863AB3300A31BCF /* SSCameraPreviewView.m */; };
@@ -55,6 +57,8 @@
 		2724C9A918639EEB00A68E0D /* Nova CameraTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Nova CameraTests-Info.plist"; sourceTree = "<group>"; };
 		2724C9AB18639EEB00A68E0D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2724C9AD18639EEB00A68E0D /* Nova_CameraTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Nova_CameraTests.m; sourceTree = "<group>"; };
+		272F87C318752DE90005BA58 /* SSCaptureSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSCaptureSessionManager.h; sourceTree = "<group>"; };
+		272F87C418752DE90005BA58 /* SSCaptureSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSCaptureSessionManager.m; sourceTree = "<group>"; };
 		27A2B0D81863CB7700D13251 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		27BB942B1863A7CD00A31BCF /* SSCameraViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSCameraViewController.h; sourceTree = "<group>"; };
 		27BB942C1863A7CD00A31BCF /* SSCameraViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSCameraViewController.m; sourceTree = "<group>"; };
@@ -125,6 +129,7 @@
 				2724C98F18639EEB00A68E0D /* SSAppDelegate.m */,
 				2724C99118639EEB00A68E0D /* Main_iPhone.storyboard */,
 				2724C99418639EEB00A68E0D /* Main_iPad.storyboard */,
+				272F8728186E6DE90005BA58 /* Services */,
 				27BB94281863A7B700A31BCF /* ViewControllers */,
 				27BB942E1863AB1100A31BCF /* Views */,
 				2724C99A18639EEB00A68E0D /* Images.xcassets */,
@@ -160,6 +165,15 @@
 				2724C9AA18639EEB00A68E0D /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		272F8728186E6DE90005BA58 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				272F87C318752DE90005BA58 /* SSCaptureSessionManager.h */,
+				272F87C418752DE90005BA58 /* SSCaptureSessionManager.m */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 		27BB94281863A7B700A31BCF /* ViewControllers */ = {
@@ -282,6 +296,7 @@
 				27BB942D1863A7CD00A31BCF /* SSCameraViewController.m in Sources */,
 				2724C99018639EEB00A68E0D /* SSAppDelegate.m in Sources */,
 				27BB94331863AB3300A31BCF /* SSCameraPreviewView.m in Sources */,
+				272F87C518752DE90005BA58 /* SSCaptureSessionManager.m in Sources */,
 				2724C98C18639EEB00A68E0D /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -291,6 +306,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2724C9AE18639EEB00A68E0D /* Nova_CameraTests.m in Sources */,
+				272F87C618752DE90005BA58 /* SSCaptureSessionManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
