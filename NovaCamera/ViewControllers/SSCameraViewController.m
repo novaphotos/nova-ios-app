@@ -11,6 +11,7 @@
 #import "SSCaptureSessionManager.h"
 #import <AVFoundation/AVFoundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
+#import <CocoaLumberjack/DDLog.h>
 
 static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDeviceAuthorizedContext;
 
@@ -93,12 +94,12 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 #pragma mark - Public methods
 
 - (IBAction)capture:(id)sender {
-    NSLog(@"Capture!");
+    DDLogVerbose(@"Capture!");
     [self.captureSessionManager captureStillImageWithCompletionHandler:^(NSData *imageData, UIImage *image, NSError *error) {
         if (error) {
-            NSLog(@"Error capturing!");
+            DDLogError(@"Error capturing: %@", error);
         } else {
-            NSLog(@"Saving to asset library");
+            DDLogVerbose(@"Saving to asset library");
             [[[ALAssetsLibrary alloc] init] writeImageToSavedPhotosAlbum:[image CGImage] orientation:(ALAssetOrientation)[image imageOrientation] completionBlock:nil];
         }
     } shutterHandler:^{

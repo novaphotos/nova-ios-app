@@ -7,12 +7,17 @@
 //
 
 #import "SSAppDelegate.h"
+#import <CocoaLumberjack/DDTTYLogger.h>
 
 @implementation SSAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    
+    // CocoaLumberjack logging setup
+    [DDLog addLogger:[DDTTYLogger sharedInstance]];
+    
     return YES;
 }
 							

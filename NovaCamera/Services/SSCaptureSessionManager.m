@@ -70,7 +70,7 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
         NSError *error = nil;
         if (![self setDevice:selectedDevice withError:&error]) {
             // Error setting up device
-            NSLog(@"Error setting up device; giving up. %@", error);
+            DDLogError(@"Error setting up device; giving up. %@", error);
             return;
         }
         
@@ -80,7 +80,7 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
             [self.session addOutput:stillImageOutput];
             self.stillImageOutput = stillImageOutput;
         } else {
-            NSLog(@"Unable to add still image output");
+            DDLogError(@"Unable to add still image output");
             self.stillImageOutput = nil;
             return;
         }
@@ -93,7 +93,7 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
 		self.runtimeErrorObserver = [[NSNotificationCenter defaultCenter] addObserverForName:AVCaptureSessionRuntimeErrorNotification object:self.session queue:nil usingBlock:^(NSNotification *note) {
 			dispatch_async(bSelf.sessionQueue, ^{
 				// Manually restarting the session since it must have been stopped due to an error.
-                NSLog(@"Received AVCaptureSessionRuntimeErrorNotification; restarting session");
+                DDLogError(@"Received AVCaptureSessionRuntimeErrorNotification; restarting session");
                 [bSelf.session startRunning];
 			});
         }];
@@ -169,7 +169,7 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
             NSError *error = nil;
             [self setDevice:newDevice withError:&error];
             if (error) {
-                NSLog(@"Error changing device: %@", error);
+                DDLogError(@"Error changing device: %@", error);
             }
         }
     });
@@ -189,7 +189,7 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
                     completion(imageData, image, error);
                 }
             } else if (error) {
-                NSLog(@"Error capturing image: %@", error);
+                DDLogError(@"Error capturing image: %@", error);
                 if (completion) {
                     completion(nil, nil, error);
                 }
@@ -244,10 +244,10 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
 
 - (BOOL)setDevice:(AVCaptureDevice *)device withError:(NSError **)outError {
     NSError *error = nil;
-    NSLog(@"setDevice:%@", device);
+    DDLogVerbose(@"setDevice:%@", device);
     AVCaptureDeviceInput *newInput = [AVCaptureDeviceInput deviceInputWithDevice:device error:&error];
     if (error) {
-        NSLog(@"Error creating device input: %@ for device: %@", error, device);
+        DDLogError(@"Error creating device input: %@ for device: %@", error, device);
         *outError = error;
         return NO;
     }
@@ -261,7 +261,7 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
     }
     
     if (![self.session canAddInput:newInput]) {
-        NSLog(@"Unable to add new input %@", newInput);
+        DDLogError(@"Unable to add new input %@", newInput);
         if (self.deviceInput) {
             // Attempt to restore state by adding previous input
             [self.session addInput:self.deviceInput];
