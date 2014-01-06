@@ -7,16 +7,22 @@
 //
 
 #import "SSAppDelegate.h"
+#import <TestFlightSDK/TestFlight.h>
 #import <CocoaLumberjack/DDTTYLogger.h>
+#import <TestFlightLogger/TestFlightLogger.h>
 
 @implementation SSAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
+    // TestFlight setup
+    [TestFlight takeOff:TESTFLIGHT_TOKEN];
     
     // CocoaLumberjack logging setup
+    // Xcode console logging
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
+    // TestFlight logging
+    [DDLog addLogger:[TestFlightLogger sharedInstance] withLogLevel:LOG_LEVEL_WARN];
     
     return YES;
 }

@@ -23,3 +23,6 @@ Pods/*
 
 # Doc generation
 docs
+
+# Local configuration
+NovaCamera/Config.h
