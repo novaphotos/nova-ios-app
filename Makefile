@@ -1,7 +1,7 @@
-PRODUCT_NAME="Nova Camera"
+PRODUCT_NAME="NovaCamera"
 COMPANY_NAME="Sneaky Squid"
 PRODUCT_ID="com.sneakysquid.novacamera"
-SRC_DIR="Nova Camera"
+SRC_DIR="NovaCamera"
 DOC_DIR="docs"
 
 docs:

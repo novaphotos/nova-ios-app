@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="13A603" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="vXZ-lx-hvc">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
+    </dependencies>
+    <scenes>
+        <!--Camera View Controller-->
+        <scene sceneID="ufC-wZ-h7g">
+            <objects>
+                <viewController id="vXZ-lx-hvc" customClass="SSCameraViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="jDK-1B-82m"/>
+                        <viewControllerLayoutGuide type="bottom" id="R1q-RJ-5fu"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Si-W3-Mqg" customClass="SSCameraPreviewView">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bottom-gradient-4x134" translatesAutoresizingMaskIntoConstraints="NO" id="gFl-vq-I0h">
+                                        <rect key="frame" x="0.0" y="434" width="320" height="134"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="134" id="JFC-6z-R8i"/>
+                                        </constraints>
+                                    </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ubh-N4-5IW">
+                                        <rect key="frame" x="124" y="488" width="72" height="72"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="72" id="Iys-KJ-7E0"/>
+                                            <constraint firstAttribute="height" constant="72" id="T5s-b1-zPe"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                        <state key="normal" image="btn-capture">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="selected" image="btn-capture-on"/>
+                                        <connections>
+                                            <action selector="capture:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="W7L-tF-P6A"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="13Y-yO-HUw">
+                                        <rect key="frame" x="262" y="11" width="46" height="46"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="46" id="2cN-6G-UcU"/>
+                                            <constraint firstAttribute="height" constant="46" id="U4Q-ab-TCA"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <state key="normal" image="btn-switch-camera">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="toggleCamera:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="oP3-ZR-QQh"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lwO-ON-Kzh">
+                                        <rect key="frame" x="31" y="510" width="27" height="27"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="27" id="Qc6-U6-RnY"/>
+                                            <constraint firstAttribute="width" constant="27" id="mkg-DM-y1Q"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <state key="normal" image="btn-library">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="showLibrary:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="BMc-dc-GC5"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GSs-ex-cjL">
+                                        <rect key="frame" x="12" y="11" width="46" height="46"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="46" id="CHn-wV-ZAU"/>
+                                            <constraint firstAttribute="width" constant="46" id="kC6-fZ-3OO"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <state key="normal" image="btn-settings">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="toggleCamera:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="fDf-LM-qi9"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nb7-cS-TF2">
+                                        <rect key="frame" x="260" y="496" width="43" height="43"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="43" id="Jyi-cg-CgD"/>
+                                            <constraint firstAttribute="width" constant="43" id="Mxh-KJ-z6N"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <state key="normal" image="btn-flash">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="showLibrary:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Agn-gg-BD0"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="gFl-vq-I0h" secondAttribute="trailing" id="C7U-lL-D50"/>
+                                    <constraint firstItem="13Y-yO-HUw" firstAttribute="top" secondItem="2Si-W3-Mqg" secondAttribute="top" constant="11" id="DH1-oo-YjZ"/>
+                                    <constraint firstItem="gFl-vq-I0h" firstAttribute="leading" secondItem="2Si-W3-Mqg" secondAttribute="leading" id="KmO-0g-iWT"/>
+                                    <constraint firstAttribute="bottom" secondItem="Ubh-N4-5IW" secondAttribute="bottom" constant="8" id="Rsk-sC-b4H"/>
+                                    <constraint firstItem="lwO-ON-Kzh" firstAttribute="leading" secondItem="2Si-W3-Mqg" secondAttribute="leading" constant="31" id="aC5-4h-xEM"/>
+                                    <constraint firstAttribute="bottom" secondItem="lwO-ON-Kzh" secondAttribute="bottom" constant="31" id="iPN-2m-veb"/>
+                                    <constraint firstAttribute="trailing" secondItem="13Y-yO-HUw" secondAttribute="trailing" constant="12" id="ilj-1m-M5A"/>
+                                    <constraint firstAttribute="bottom" secondItem="gFl-vq-I0h" secondAttribute="bottom" id="okZ-lc-GM9"/>
+                                    <constraint firstAttribute="centerX" secondItem="Ubh-N4-5IW" secondAttribute="centerX" id="tZS-8h-fUa"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="2Si-W3-Mqg" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="9om-8H-VTA"/>
+                            <constraint firstAttribute="bottom" secondItem="2Si-W3-Mqg" secondAttribute="bottom" id="URU-JJ-iFY"/>
+                            <constraint firstItem="2Si-W3-Mqg" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="top" id="jcX-ZS-AnB"/>
+                            <constraint firstAttribute="trailing" secondItem="2Si-W3-Mqg" secondAttribute="trailing" id="s9L-iu-SDl"/>
+                        </constraints>
+                    </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
+                    <connections>
+                        <outlet property="previewView" destination="2Si-W3-Mqg" id="aUr-MC-q6I"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
+            </objects>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="bottom-gradient-4x134" width="4" height="134"/>
+        <image name="btn-capture" width="72" height="72"/>
+        <image name="btn-capture-on" width="72" height="72"/>
+        <image name="btn-flash" width="43" height="43"/>
+        <image name="btn-library" width="27" height="27"/>
+        <image name="btn-settings" width="46" height="46"/>
+        <image name="btn-switch-camera" width="46" height="46"/>
+    </resources>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
+</document>
