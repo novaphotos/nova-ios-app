@@ -50,6 +50,11 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     
     // Setup preview layer
     self.previewView.session = self.captureSessionManager.session;
+    
+    // Add gesture recognizer
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(focusAndExposeTap:)];
+    tapGesture.numberOfTapsRequired = 1;
+    [self.previewView addGestureRecognizer:tapGesture];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -126,6 +131,17 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 - (IBAction)toggleCamera:(id)sender {
     [self.captureSessionManager toggleCamera];
+}
+
+- (IBAction)focusAndExposeTap:(id)sender {
+    DDLogVerbose(@"focusAndExposeTap");
+    if ([sender isKindOfClass:[UIGestureRecognizer class]]) {
+        UIGestureRecognizer *gestureRecognizer = (UIGestureRecognizer *)sender;
+        AVCaptureVideoPreviewLayer *previewLayer = (AVCaptureVideoPreviewLayer *)self.previewView.layer;
+        CGPoint viewPoint = [gestureRecognizer locationInView:gestureRecognizer.view];
+        CGPoint devicePoint = [previewLayer captureDevicePointOfInterestForPoint:viewPoint];
+        [self.captureSessionManager focusWithMode:AVCaptureFocusModeAutoFocus exposeWithMode:AVCaptureExposureModeContinuousAutoExposure atDevicePoint:devicePoint];
+    }
 }
 
 #pragma mark - Private methods

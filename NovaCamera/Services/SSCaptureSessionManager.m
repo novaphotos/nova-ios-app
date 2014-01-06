@@ -159,19 +159,31 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
 }
 
 - (void)focusWithMode:(AVCaptureFocusMode)focusMode exposeWithMode:(AVCaptureExposureMode)exposureMode atDevicePoint:(CGPoint)point {
+    DDLogVerbose(@"focusWithMode:%d exposeWithMode:%d atDevicePoint:%@", focusMode, exposureMode, NSStringFromCGPoint(point));
     dispatch_async(self.sessionQueue, ^{
         NSError *error = nil;
         if ([self.device lockForConfiguration:&error]) {
+            if ([self.device isExposurePointOfInterestSupported] && [self.device isExposureModeSupported:exposureMode]) {
+                [self.device setExposureMode:exposureMode];
+                [self.device setExposurePointOfInterest:point];
+            } else {
+                if (![self.device isExposurePointOfInterestSupported]) {
+                    DDLogWarn(@"Exposure point of interest not supported");
+                } else {
+                    DDLogWarn(@"Exposure mode not supported: %d", exposureMode);
+                }
+            }
             if ([self.device isFocusPointOfInterestSupported] && [self.device isFocusModeSupported:focusMode]) {
                 [self.device setFocusMode:focusMode];
                 [self.device setFocusPointOfInterest:point];
-            }
-            if ([self.device isExposurePointOfInterestSupported] && [self.device isExposureModeSupported:exposureMode]) {
-                [self.device setExposureMode:exposureMode];
-                [self.device setFocusPointOfInterest:point];
+            } else {
+                if (![self.device isFocusPointOfInterestSupported]) {
+                    DDLogWarn(@"Focus point of interest not supported");
+                } else {
+                    DDLogWarn(@"Focus mode not supported: %d", focusMode);
+                }
             }
             [self.device unlockForConfiguration];
-            [self.device flashMode];
         } else {
             DDLogError(@"Error locking device %@ for configuration: %@", self.device, error);
         }

@@ -24,5 +24,6 @@
 - (IBAction)showFlashSettings:(id)sender;
 - (IBAction)showLibrary:(id)sender;
 - (IBAction)toggleCamera:(id)sender;
+- (IBAction)focusAndExposeTap:(id)sender;
 
 @end
