@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="13A603" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="13B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="vXZ-lx-hvc">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
     </dependencies>
@@ -27,7 +27,7 @@
                                             <constraint firstAttribute="height" constant="134" id="JFC-6z-R8i"/>
                                         </constraints>
                                     </imageView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ubh-N4-5IW">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ubh-N4-5IW" userLabel="Capture">
                                         <rect key="frame" x="124" y="488" width="72" height="72"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -44,7 +44,7 @@
                                             <action selector="capture:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="W7L-tF-P6A"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="13Y-yO-HUw">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="13Y-yO-HUw" userLabel="Switch Camera">
                                         <rect key="frame" x="262" y="11" width="46" height="46"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <constraints>
@@ -59,7 +59,7 @@
                                             <action selector="toggleCamera:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="oP3-ZR-QQh"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lwO-ON-Kzh">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lwO-ON-Kzh" userLabel="Library">
                                         <rect key="frame" x="31" y="510" width="27" height="27"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <constraints>
@@ -74,7 +74,7 @@
                                             <action selector="showLibrary:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="BMc-dc-GC5"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GSs-ex-cjL">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GSs-ex-cjL" userLabel="Configuration">
                                         <rect key="frame" x="12" y="11" width="46" height="46"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <constraints>
@@ -89,7 +89,7 @@
                                             <action selector="toggleCamera:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="fDf-LM-qi9"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nb7-cS-TF2">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nb7-cS-TF2" userLabel="Flash settings">
                                         <rect key="frame" x="260" y="496" width="43" height="43"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <constraints>
@@ -107,10 +107,14 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstItem="GSs-ex-cjL" firstAttribute="top" secondItem="2Si-W3-Mqg" secondAttribute="top" constant="11" id="9fO-IR-LS8"/>
                                     <constraint firstAttribute="trailing" secondItem="gFl-vq-I0h" secondAttribute="trailing" id="C7U-lL-D50"/>
                                     <constraint firstItem="13Y-yO-HUw" firstAttribute="top" secondItem="2Si-W3-Mqg" secondAttribute="top" constant="11" id="DH1-oo-YjZ"/>
                                     <constraint firstItem="gFl-vq-I0h" firstAttribute="leading" secondItem="2Si-W3-Mqg" secondAttribute="leading" id="KmO-0g-iWT"/>
+                                    <constraint firstAttribute="bottom" secondItem="nb7-cS-TF2" secondAttribute="bottom" constant="29" id="N0o-su-kXd"/>
                                     <constraint firstAttribute="bottom" secondItem="Ubh-N4-5IW" secondAttribute="bottom" constant="8" id="Rsk-sC-b4H"/>
+                                    <constraint firstItem="GSs-ex-cjL" firstAttribute="leading" secondItem="2Si-W3-Mqg" secondAttribute="leading" constant="12" id="SS7-ZV-lH8"/>
+                                    <constraint firstAttribute="trailing" secondItem="nb7-cS-TF2" secondAttribute="trailing" constant="17" id="Uiy-CB-a42"/>
                                     <constraint firstItem="lwO-ON-Kzh" firstAttribute="leading" secondItem="2Si-W3-Mqg" secondAttribute="leading" constant="31" id="aC5-4h-xEM"/>
                                     <constraint firstAttribute="bottom" secondItem="lwO-ON-Kzh" secondAttribute="bottom" constant="31" id="iPN-2m-veb"/>
                                     <constraint firstAttribute="trailing" secondItem="13Y-yO-HUw" secondAttribute="trailing" constant="12" id="ilj-1m-M5A"/>
