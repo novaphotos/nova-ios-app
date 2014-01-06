@@ -8,9 +8,7 @@
 //  Largely based on Apple's AVCam sample code
 
 #import <Foundation/Foundation.h>
-
-@class AVCaptureSession;
-@class AVCaptureVideoPreviewLayer;
+#import <AVFoundation/AVFoundation.h>
 
 /**
  * `SSCaptureSessionManager` provides a simple interface to `AVCaptureSession` and related functionality.
@@ -26,6 +24,31 @@
  * Preview layer; can be manually added to a layer hierarchy
  */
 @property (nonatomic, readonly) AVCaptureVideoPreviewLayer *previewLayer;
+
+/**
+ * Focus mode
+ */
+@property (nonatomic, assign) AVCaptureFocusMode focusMode;
+
+/**
+ * Exposure mode
+ */
+@property (nonatomic, assign) AVCaptureExposureMode exposureMode;
+
+/**
+ * Flash mode
+ */
+@property (nonatomic, assign) AVCaptureFlashMode flashMode;
+
+/**
+ * Specify whether the device should autofocus and autoexpose when the device detects a subject area change (default YES)
+ */
+@property (nonatomic, assign) BOOL shouldAutoFocusAndAutoExposeOnDeviceAreaChange;
+
+/**
+ * Specify whether we should reset autofocus and autoexposure when device is changed (default YES)
+ */
+@property (nonatomic, assign) BOOL shouldAutoFocusAndExposeOnDeviceChange;
 
 /**
  * Video gravity; default is `AVLayerVideoGravityResizeAspectFill`
@@ -80,21 +103,29 @@
 ///-------------------------
 
 /**
- * Reset focus; autofocus on the center of the screen. Called automatically when the camera device
- * is changed.
+ * Autofocus and autoexpose at center point
  */
-- (void)resetFocus;
+- (void)autoFocusAndExposeAtCenterPoint;
 
 /**
- * Reset exposure; exposure set automatically on the center of the screen. Called automatically when the
- * camera device is changed.
+ * Continuously autofocus and autoexpose at center point
  */
-- (void)resetExposure;
+- (void)continuousAutoFocusAndExposeAtCenterPoint;
 
 /**
- * Reset flash to OFF. Called automatically when the camera device is changed.
+ * Autofocus and autoexpose at the specified point, in device coordinates
  */
-- (void)resetFlash;
+- (void)autoFocusAndExposeAtDevicePoint:(CGPoint)point;
+
+/**
+ * Continuously autofocus and autoexpose at specified point in device coordinates
+ */
+- (void)continuousAutoFocusAndExposeAtDevicePoint:(CGPoint)point;
+
+/**
+ * Specify focus and exposure mode at the specified point, in device coordinates.
+ */
+- (void)focusWithMode:(AVCaptureFocusMode)focusMode exposeWithMode:(AVCaptureExposureMode)exposureMode atDevicePoint:(CGPoint)point;
 
 /**
  * Toggle between front and back camera (if available).

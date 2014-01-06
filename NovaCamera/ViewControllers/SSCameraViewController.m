@@ -37,6 +37,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     
     // Setup capture session
     self.captureSessionManager = [[SSCaptureSessionManager alloc] init];
+    self.captureSessionManager.shouldAutoFocusAndExposeOnDeviceChange = YES;
+    self.captureSessionManager.shouldAutoFocusAndAutoExposeOnDeviceAreaChange = YES;
     
     // Check authorization
     [self.captureSessionManager checkDeviceAuthorizationWithCompletion:^(BOOL granted) {
@@ -72,6 +74,12 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 - (BOOL)prefersStatusBarHidden {
     return YES;
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    AVCaptureVideoPreviewLayer *previewLayer = (AVCaptureVideoPreviewLayer *)self.previewView.layer;
+    AVCaptureConnection *connection = previewLayer.connection;
+    connection.videoOrientation = (AVCaptureVideoOrientation)toInterfaceOrientation;
 }
 
 #pragma mark - KVO
