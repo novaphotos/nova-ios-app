@@ -14,7 +14,7 @@
 static void * CapturingStillImageContext = &CapturingStillImageContext;
 
 @interface SSCaptureSessionManager () {
-    BOOL _preparedSession, _sessionRunning;
+    BOOL _sessionHasBeenConfigured;
 }
 
 @property (nonatomic, strong) dispatch_queue_t sessionQueue;
@@ -25,6 +25,7 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
 @property (nonatomic, copy) void (^shutterHandler)();
 
 - (BOOL)setDevice:(AVCaptureDevice *)device withError:(NSError **)error;
+- (void)configureSession;
 - (void)subjectAreaDidChange:(NSNotification *)notification;
 
 @end
@@ -62,36 +63,10 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
 
 - (void)startSession {
     dispatch_async(self.sessionQueue, ^{
-        // Configure session
-        self.session.sessionPreset = AVCaptureSessionPresetPhoto;
         
-        // Find suitable capture device (default to back facing)
-        NSArray *devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
-        AVCaptureDevice *selectedDevice = [devices firstObject];
-        for (AVCaptureDevice *device in devices) {
-            if (device.position == AVCaptureDevicePositionBack) {
-                selectedDevice = device;
-                break;
-            }
-        }
-        
-        // Set up device
-        NSError *error = nil;
-        if (![self setDevice:selectedDevice withError:&error]) {
-            // Error setting up device
-            DDLogError(@"Error setting up device; giving up. %@", error);
-            return;
-        }
-        
-        // Configure still image output
-        AVCaptureStillImageOutput *stillImageOutput = [[AVCaptureStillImageOutput alloc] init];
-        if ([self.session canAddOutput:stillImageOutput]) {
-            [self.session addOutput:stillImageOutput];
-            self.stillImageOutput = stillImageOutput;
-        } else {
-            DDLogError(@"Unable to add still image output");
-            self.stillImageOutput = nil;
-            return;
+        // Configure session (one time per session)
+        if (!_sessionHasBeenConfigured) {
+            [self configureSession];
         }
         
         // Add observer for image capture (shutter indication)
@@ -241,6 +216,7 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
         [self willChangeValueForKey:@"session"];
         [self willChangeValueForKey:@"previewLayer"];
         _session = [[AVCaptureSession alloc] init];
+        _sessionHasBeenConfigured = NO;
         _previewLayer = nil;
         [self didChangeValueForKey:@"session"];
         [self didChangeValueForKey:@"previewLayer"];
@@ -436,6 +412,42 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
     }
     
     return YES;
+}
+
+- (void)configureSession {
+    self.session.sessionPreset = AVCaptureSessionPresetPhoto;
+    
+    // Find suitable capture device (default to back facing)
+    NSArray *devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
+    AVCaptureDevice *selectedDevice = [devices firstObject];
+    for (AVCaptureDevice *device in devices) {
+        if (device.position == AVCaptureDevicePositionBack) {
+            selectedDevice = device;
+            break;
+        }
+    }
+    
+    // Set up device
+    NSError *error = nil;
+    if (![self setDevice:selectedDevice withError:&error]) {
+        // Error setting up device
+        DDLogError(@"Error setting up device; giving up. %@", error);
+        return;
+    }
+    
+    // Configure still image output
+    AVCaptureStillImageOutput *stillImageOutput = [[AVCaptureStillImageOutput alloc] init];
+    DDLogVerbose(@"Current session outputs: %@", self.session.outputs);
+    if ([self.session canAddOutput:stillImageOutput]) {
+        [self.session addOutput:stillImageOutput];
+        self.stillImageOutput = stillImageOutput;
+    } else {
+        DDLogError(@"Unable to add still image output");
+        self.stillImageOutput = nil;
+        return;
+    }
+    
+    _sessionHasBeenConfigured = YES;
 }
 
 - (void)subjectAreaDidChange:(NSNotification *)notification {
