@@ -10,7 +10,7 @@
 
 @class SSCameraPreviewView;
 
-@interface SSCameraViewController : UIViewController
+@interface SSCameraViewController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 @property (nonatomic, strong) IBOutlet SSCameraPreviewView *previewView;
 @property (nonatomic, strong) IBOutlet UIButton *captureButton;

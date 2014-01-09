@@ -3,12 +3,12 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "btn-settings.png"
+      "filename" : "btn-edit-round.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "btn-settings@2x.png"
+      "filename" : "btn-edit-round@2x.png"
     }
   ],
   "info" : {

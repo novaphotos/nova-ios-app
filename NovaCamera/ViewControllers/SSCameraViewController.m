@@ -9,13 +9,16 @@
 #import "SSCameraViewController.h"
 #import "SSCameraPreviewView.h"
 #import "SSCaptureSessionManager.h"
+#import "SSPhotoViewController.h"
 #import <AVFoundation/AVFoundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <CocoaLumberjack/DDLog.h>
 
 static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDeviceAuthorizedContext;
 
-@interface SSCameraViewController ()
+@interface SSCameraViewController () {
+    NSURL *_showPhotoURL;
+}
 @property (nonatomic, strong) SSCaptureSessionManager *captureSessionManager;
 - (void)runStillImageCaptureAnimation;
 @end
@@ -87,6 +90,14 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     connection.videoOrientation = (AVCaptureVideoOrientation)toInterfaceOrientation;
 }
 
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"showPhoto"]) {
+        SSPhotoViewController *vc = (SSPhotoViewController *)segue.destinationViewController;
+        vc.photoURL = _showPhotoURL;
+        _showPhotoURL = nil;
+    }
+}
+
 #pragma mark - KVO
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
@@ -113,7 +124,10 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             DDLogError(@"Error capturing: %@", error);
         } else {
             DDLogVerbose(@"Saving to asset library");
-            [[[ALAssetsLibrary alloc] init] writeImageToSavedPhotosAlbum:[image CGImage] orientation:(ALAssetOrientation)[image imageOrientation] completionBlock:nil];
+            __block typeof(self) bSelf = self;
+            [[[ALAssetsLibrary alloc] init] writeImageToSavedPhotosAlbum:[image CGImage] orientation:(ALAssetOrientation)[image imageOrientation] completionBlock:^(NSURL *assetURL, NSError *error) {
+                [bSelf performSegueWithIdentifier:@"showPhoto" sender:self];
+            }];
         }
     } shutterHandler:^{
         [self runStillImageCaptureAnimation];
@@ -127,6 +141,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 }
 
 - (IBAction)showLibrary:(id)sender {
+    _showPhotoURL = nil;
+    [self performSegueWithIdentifier:@"showPhoto" sender:nil];
 }
 
 - (IBAction)toggleCamera:(id)sender {

@@ -3,12 +3,11 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "btn-flash-ok.png"
+      "filename" : "btn-library-round.png"
     },
     {
       "idiom" : "universal",
-      "scale" : "2x",
-      "filename" : "btn-flash-ok@2x.png"
+      "scale" : "2x"
     }
   ],
   "info" : {

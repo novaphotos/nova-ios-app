@@ -3,12 +3,12 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "btn-flash-alert.png"
+      "filename" : "btn-switch-camera-round.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "btn-flash-alert@2x.png"
+      "filename" : "btn-switch-camera-round@2x.png"
     }
   ],
   "info" : {

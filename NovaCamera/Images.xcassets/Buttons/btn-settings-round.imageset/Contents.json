@@ -3,12 +3,12 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "btn-switch-camera.png"
+      "filename" : "btn-settings-round.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "btn-switch-camera@2x.png"
+      "filename" : "btn-settings-round@2x.png"
     }
   ],
   "info" : {

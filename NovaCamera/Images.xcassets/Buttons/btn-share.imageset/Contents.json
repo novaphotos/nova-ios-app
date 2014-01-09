@@ -3,12 +3,12 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "btn-capture-on.png"
+      "filename" : "btn-share.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "btn-capture-on@2x.png"
+      "filename" : "btn-share@2x.png"
     }
   ],
   "info" : {
