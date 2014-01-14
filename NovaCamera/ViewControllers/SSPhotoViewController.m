@@ -9,10 +9,16 @@
 #import "SSPhotoViewController.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 
-@interface SSPhotoViewController ()
+@interface SSPhotoViewController () {
+    UIImage *_fullResolutionImage;
+}
 @property (nonatomic, strong) ALAssetsLibrary *assetsLibrary;
-- (void)displayImageFromAsset:(ALAsset *)asset;
+@property (nonatomic, strong) ALAsset *asset;
+@property (nonatomic, strong) AFPhotoEditorSession *photoEditorSession;
+- (void)loadAssetForURL:(NSURL *)assetURL;
+- (void)displayImage:(UIImage *)image;
 - (void)resetZoom;
+- (void)saveHiResImage:(UIImage *)image;
 @end
 
 @implementation SSPhotoViewController
@@ -37,11 +43,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     if (self.photoURL && !self.imageView.image) {
-        [self.assetsLibrary assetForURL:self.photoURL resultBlock:^(ALAsset *asset) {
-            [self displayImageFromAsset:asset];
-        } failureBlock:^(NSError *error) {
-            DDLogError(@"Unable to load asset from URL %@: %@", self.photoURL, error);
-        }];
+        [self loadAssetForURL:self.photoURL];
     }
 }
 
@@ -81,26 +83,89 @@
 - (IBAction)deletePhoto:(id)sender {
 }
 
+
+// See: http://developers.aviary.com/docs/ios/setup-guide
 - (IBAction)editPhoto:(id)sender {
+    UIImage *image = self.fullResolutionImage;
+
+    // Create editor
+    AFPhotoEditorController *editor = [[AFPhotoEditorController alloc] initWithImage:image];
+    [editor setDelegate:self];
+    
+    // Present editor
+    [self presentViewController:editor animated:YES completion:nil];
+    
+    // Capture photo editor's session and capture a strong reference
+    __block AFPhotoEditorSession *session = editor.session;
+    self.photoEditorSession = session;
+    
+    // Create a context with maximum output resolution
+    AFPhotoEditorContext *context = [session createContextWithImage:image];
+    
+    // Request that the context asynchronously replay the session's actions on its image.
+    [context render:^(UIImage *result) {
+        // `result` will be nil if the image was not modified in the session, or non-nil if the session was closed successfully
+        if (result != nil) {
+            DDLogVerbose(@"Photo editor context returned the modified hi-res image; saving");
+            [self saveHiResImage:result];
+        } else {
+            DDLogVerbose(@"Photo editor context returned nil; must not have been modified");
+        }
+        
+        // Release session
+        self.photoEditorSession = nil;
+    }];
 }
 
 - (IBAction)sharePhoto:(id)sender {
 }
 
+#pragma mark - Properties
+
+- (void)setPhotoURL:(NSURL *)photoURL {
+    // Remove existing asset and full resolution image
+    [self willChangeValueForKey:@"fullResolutionImage"];
+    self.asset = nil;
+    _fullResolutionImage = nil;
+    
+    // Update photo URL
+    [self willChangeValueForKey:@"photoURL"];
+    _photoURL = photoURL;
+    
+    [self didChangeValueForKey:@"photoURL"];
+    [self didChangeValueForKey:@"fullResolutionImage"];
+}
+
+- (UIImage *)fullResolutionImage {
+    if (!_fullResolutionImage && self.asset) {
+        [self willChangeValueForKey:@"fullResolutionImage"];
+        CGImageRef cgImage = [[self.asset defaultRepresentation] fullResolutionImage];
+        _fullResolutionImage = [UIImage imageWithCGImage:cgImage];
+        [self didChangeValueForKey:@"fullResolutionImage"];
+    }
+    return _fullResolutionImage;
+}
+
 #pragma mark - Private methods
 
-- (void)displayImageFromAsset:(ALAsset *)asset {
-    CGImageRef cgImage = [[asset defaultRepresentation] fullResolutionImage];
-    UIImage *image = [UIImage imageWithCGImage:cgImage];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        self.imageView.image = image;
-        
-        // Update imageview constraints
-        self.imageHeightConstraint.constant = image.size.height;
-        self.imageWidthConstraint.constant = image.size.width;
-        
-        [self resetZoom];
-    });
+- (void)loadAssetForURL:(NSURL *)assetURL {
+    self.photoURL = assetURL;
+    [self.assetsLibrary assetForURL:self.photoURL resultBlock:^(ALAsset *asset) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.asset = asset;
+            UIImage *newImage = self.fullResolutionImage;
+            [self displayImage:newImage];
+        });
+    } failureBlock:^(NSError *error) {
+        DDLogError(@"Unable to load asset from URL %@: %@", self.photoURL, error);
+    }];
+}
+
+- (void)displayImage:(UIImage *)image {
+    self.imageView.image = image;
+    self.imageHeightConstraint.constant = image.size.height;
+    self.imageWidthConstraint.constant = image.size.width;
+    [self resetZoom];
 }
 
 - (void)resetZoom {
@@ -126,6 +191,25 @@
     
     // Ensure scrollview updates its layout
     [self.scrollView setNeedsLayout];
+}
+
+- (void)saveHiResImage:(UIImage *)image {
+    // Save image to asset library, in background
+    DDLogVerbose(@"Encoding & saving modified image to asset library, in background");
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        NSData *imageData = UIImageJPEGRepresentation(image, 0.9);
+        NSDictionary *metadata = @{};
+        [self.asset writeModifiedImageDataToSavedPhotosAlbum:imageData metadata:metadata completionBlock:^(NSURL *assetURL, NSError *error) {
+            DDLogVerbose(@"Modified image saved to asset library: %@ (Error: %@)", assetURL, error);
+            if (!error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    // Load new asset
+                    self.photoURL = assetURL;
+                    
+                });
+            }
+        }];
+    });
 }
 
 #pragma mark - UIImagePickerControllerDelegate
@@ -160,6 +244,20 @@
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
     return self.imageView;
+}
+
+#pragma mark - AFPhotoEditorControllerDelegate
+
+- (void)photoEditor:(AFPhotoEditorController *)editor finishedWithImage:(UIImage *)image {
+    DDLogVerbose(@"photoEditor:%@ finishedWithImage:%@", editor, image);
+    DDLogVerbose(@"Displaying low-res image now; should get hi-res image later");
+    [self displayImage:image];
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)photoEditorCanceled:(AFPhotoEditorController *)editor {
+    DDLogVerbose(@"photoEditorCanceled:%@", editor);
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

@@ -7,17 +7,23 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AviarySDK/AFPhotoEditorController.h>
 
 /**
  * Photo viewer; UIImageView embedded in a UIScrollView allowing user to
  * pan and zoom around image.
  */
-@interface SSPhotoViewController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIScrollViewDelegate>
+@interface SSPhotoViewController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIScrollViewDelegate, AFPhotoEditorControllerDelegate>
 
 /**
  * Local URL of photo asset to use.
  */
 @property (nonatomic, strong) NSURL *photoURL;
+
+/**
+ * Full resolution image of the currently displayed asset
+ */
+@property (nonatomic, readonly) UIImage *fullResolutionImage;
 
 /**
  * Image view containing the target image
