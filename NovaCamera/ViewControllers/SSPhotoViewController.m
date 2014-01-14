@@ -36,7 +36,7 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    if (self.photoURL) {
+    if (self.photoURL && !self.imageView.image) {
         [self.assetsLibrary assetForURL:self.photoURL resultBlock:^(ALAsset *asset) {
             [self displayImageFromAsset:asset];
         } failureBlock:^(NSError *error) {
