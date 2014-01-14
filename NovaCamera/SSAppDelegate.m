@@ -24,6 +24,8 @@
     // TestFlight logging
     [DDLog addLogger:[TestFlightLogger sharedInstance] withLogLevel:LOG_LEVEL_WARN];
     
+    [[NSBundle mainBundle] objectForInfoDictionaryKey:@""];
+    
     return YES;
 }
 							
