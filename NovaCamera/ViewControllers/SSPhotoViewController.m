@@ -118,6 +118,12 @@
     self.scrollView.minimumZoomScale = minZoom;
     self.scrollView.zoomScale = minZoom;
     
+    // Max zoom should be at least 2x, but should be sufficient to allow
+    // image to stretch to fill the screen
+    CGFloat maxZoom = MAX(minZoomX, minZoomY);
+    maxZoom = MAX(maxZoom, 2.0);
+    self.scrollView.maximumZoomScale = maxZoom;
+    
     // Ensure scrollview updates its layout
     [self.scrollView setNeedsLayout];
 }
