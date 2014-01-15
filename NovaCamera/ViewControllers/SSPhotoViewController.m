@@ -124,6 +124,13 @@
 }
 
 - (IBAction)sharePhoto:(id)sender {
+    NSArray *activityItems = @[
+                               self.fullResolutionImage,
+                               ];
+    UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
+    activityVC.completionHandler = ^(NSString *activityType, BOOL completed) {
+    };
+    [self presentViewController:activityVC animated:YES completion:nil];
 }
 
 #pragma mark - Properties
