@@ -14,6 +14,7 @@
 }
 @property (nonatomic, strong) ALAssetsLibrary *assetsLibrary;
 @property (nonatomic, strong) ALAsset *asset;
+@property (nonatomic, strong) AFPhotoEditorController *photoEditorController;
 @property (nonatomic, strong) AFPhotoEditorSession *photoEditorSession;
 - (void)loadAssetForURL:(NSURL *)assetURL;
 - (void)displayImage:(UIImage *)image;
@@ -81,22 +82,27 @@
 }
 
 - (IBAction)deletePhoto:(id)sender {
+    if (self.asset.editable) {
+    } else {
+    }
 }
 
 
 // See: http://developers.aviary.com/docs/ios/setup-guide
 - (IBAction)editPhoto:(id)sender {
     UIImage *image = self.fullResolutionImage;
+    
+    DDLogVerbose(@"Loading Aviary photo editor with image: %@", image);
 
     // Create editor
-    AFPhotoEditorController *editor = [[AFPhotoEditorController alloc] initWithImage:image];
-    [editor setDelegate:self];
+    self.photoEditorController = [[AFPhotoEditorController alloc] initWithImage:image];
+    [self.photoEditorController setDelegate:self];
     
     // Present editor
-    [self presentViewController:editor animated:YES completion:nil];
+    [self presentViewController:self.photoEditorController animated:YES completion:nil];
     
     // Capture photo editor's session and capture a strong reference
-    __block AFPhotoEditorSession *session = editor.session;
+    __block AFPhotoEditorSession *session = self.photoEditorController.session;
     self.photoEditorSession = session;
     
     // Create a context with maximum output resolution
@@ -123,6 +129,7 @@
 #pragma mark - Properties
 
 - (void)setPhotoURL:(NSURL *)photoURL {
+    DDLogVerbose(@"setPhotoURL:%@", photoURL);
     // Remove existing asset and full resolution image
     [self willChangeValueForKey:@"fullResolutionImage"];
     self.asset = nil;
@@ -162,6 +169,7 @@
 }
 
 - (void)displayImage:(UIImage *)image {
+    DDLogVerbose(@"displayImage:%@ size:%@", image, NSStringFromCGSize(image.size));
     self.imageView.image = image;
     self.imageHeightConstraint.constant = image.size.height;
     self.imageWidthConstraint.constant = image.size.width;
@@ -202,11 +210,8 @@
         [self.asset writeModifiedImageDataToSavedPhotosAlbum:imageData metadata:metadata completionBlock:^(NSURL *assetURL, NSError *error) {
             DDLogVerbose(@"Modified image saved to asset library: %@ (Error: %@)", assetURL, error);
             if (!error) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    // Load new asset
-                    self.photoURL = assetURL;
-                    
-                });
+                // Load new asset
+                [self loadAssetForURL:assetURL];
             }
         }];
     });
@@ -253,11 +258,13 @@
     DDLogVerbose(@"Displaying low-res image now; should get hi-res image later");
     [self displayImage:image];
     [self dismissViewControllerAnimated:YES completion:nil];
+    self.photoEditorController = nil;
 }
 
 - (void)photoEditorCanceled:(AFPhotoEditorController *)editor {
     DDLogVerbose(@"photoEditorCanceled:%@", editor);
     [self dismissViewControllerAnimated:YES completion:nil];
+    self.photoEditorController = nil;
 }
 
 @end
