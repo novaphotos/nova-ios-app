@@ -49,6 +49,16 @@
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *imageHeightConstraint;
 
 /**
+ * Track swipe gestures; use to navigate between photos
+ */
+@property (nonatomic, strong) UISwipeGestureRecognizer *swipeLeftGestureRecognizer;
+
+/**
+ * Track swipe gestures; use to navigate between photos
+ */
+@property (nonatomic, strong) UISwipeGestureRecognizer *swipeRightGestureRecognizer;
+
+/**
  * Show the image library; specify whether to animate the modal
  */
 - (void)showLibraryAnimated:(BOOL)animated sender:(id)sender;
@@ -77,5 +87,15 @@
  * Share photo using UIActivityViewController
  */
 - (IBAction)sharePhoto:(id)sender;
+
+/**
+ * Handle navigation swipe left: load newer photo
+ */
+- (IBAction)navigationSwipeLeft:(id)sender;
+
+/**
+ * Handle navigation swipe right: load older photo
+ */
+- (IBAction)navigationSwipeRight:(id)sender;
 
 @end

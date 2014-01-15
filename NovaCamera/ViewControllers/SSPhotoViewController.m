@@ -119,8 +119,23 @@
         [self enumerateAssetLibrary];
     });
     
+    // Use auto layout for scroll view & image view layout
     self.scrollView.translatesAutoresizingMaskIntoConstraints = NO;
     self.imageView.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    // Set up gesture recognizer on scroll view
+    // In order for this to work, we'll need to disable scrolling when the
+    // image is sufficiently zoomed out
+    
+    self.swipeLeftGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(navigationSwipeLeft:)];
+    self.swipeLeftGestureRecognizer.numberOfTouchesRequired = 1;
+    self.swipeLeftGestureRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
+    [self.scrollView addGestureRecognizer:self.swipeLeftGestureRecognizer];
+
+    self.swipeRightGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(navigationSwipeRight:)];
+    self.swipeRightGestureRecognizer.numberOfTouchesRequired = 1;
+    self.swipeRightGestureRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+    [self.scrollView addGestureRecognizer:self.swipeRightGestureRecognizer];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -256,6 +271,20 @@
     [self presentViewController:activityVC animated:YES completion:nil];
 }
 
+- (IBAction)navigationSwipeLeft:(id)sender {
+    if (_currentAssetLibraryIndex != NSNotFound && _currentAssetLibraryIndex > 0) {
+        [self loadAssetForURL:self.allLibraryAssetURLs[_currentAssetLibraryIndex-1]];
+    }
+}
+
+- (IBAction)navigationSwipeRight:(id)sender {
+    if (_currentAssetLibraryIndex != NSNotFound && _currentAssetLibraryIndex + 1 < self.allLibraryAssetURLs.count) {
+        // Navigate to older image
+        // TODO: animate!
+        [self loadAssetForURL:self.allLibraryAssetURLs[_currentAssetLibraryIndex+1]];
+    }
+}
+
 #pragma mark - Properties
 
 - (void)setPhotoURL:(NSURL *)photoURL {
@@ -370,6 +399,11 @@
     maxZoom = MAX(maxZoom, 2.0);
     self.scrollView.maximumZoomScale = maxZoom;
     
+    // Disable scrolling on scrollview and enable gesture recognizers
+    self.scrollView.scrollEnabled = NO;
+    self.swipeLeftGestureRecognizer.enabled = YES;
+    self.swipeRightGestureRecognizer.enabled = YES;
+    
     // Ensure scrollview updates its layout
     [self.scrollView setNeedsLayout];
 }
@@ -422,6 +456,24 @@
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
     return self.imageView;
+}
+
+- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale {
+    
+    // If we're zoomed out to the min zoom, enable gesture recognizers and disable scroll.
+    // Otherwise, disable gesture recognizers and enable scroll.
+    
+    if (scale > scrollView.minimumZoomScale) {
+        DDLogVerbose(@"Enabling scrolling & disabling gesture recognizers");
+        self.scrollView.scrollEnabled = YES;
+        self.swipeLeftGestureRecognizer.enabled = NO;
+        self.swipeRightGestureRecognizer.enabled = NO;
+    } else {
+        DDLogVerbose(@"Disabling scrolling & enabling gesture recognizers");
+        self.scrollView.scrollEnabled = NO;
+        self.swipeLeftGestureRecognizer.enabled = YES;
+        self.swipeRightGestureRecognizer.enabled = YES;
+    }
 }
 
 #pragma mark - AFPhotoEditorControllerDelegate
