@@ -9,17 +9,95 @@
 #import "SSPhotoViewController.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 
+/**
+ * Private ivars, properties and methods supporting SSPhotoViewController
+ */
 @interface SSPhotoViewController () {
+    /**
+     * References full resolution image when first requested after
+     * loading a new ALAsset
+     */
     UIImage *_fullResolutionImage;
+    
+    /**
+     * Points to the currently displayed image's index within the asset
+     * library
+     */
+    NSUInteger _currentAssetLibraryIndex;
 }
+
+/**
+ * Reference to a single assets library
+ */
 @property (nonatomic, strong) ALAssetsLibrary *assetsLibrary;
+
+/**
+ * ALAsset for currently displayed image
+ */
 @property (nonatomic, strong) ALAsset *asset;
+
+/**
+ * All assets in photo library, sorted by date modified (newest first)
+ */
+@property (nonatomic, strong) NSMutableArray *allLibraryAssetURLs;
+
+/**
+ * Aviary photo editor controller
+ */
 @property (nonatomic, strong) AFPhotoEditorController *photoEditorController;
+
+/**
+ * Aviary photo editor session, used to export hi-res image
+ */
 @property (nonatomic, strong) AFPhotoEditorSession *photoEditorSession;
+
+/**
+ * Load asset at the given URL. assetURL must point to a valid local file
+ * URL that is present in the ALAssetsLibrary.
+ *
+ * Side effect: clears self.asset and self.fullResolutionImage
+ */
 - (void)loadAssetForURL:(NSURL *)assetURL;
+
+/**
+ * Enumerate assets library, building up self.allLibraryAssets array.
+ */
+- (void)enumerateAssetLibrary;
+
+/**
+ * Scan our copy of the asset library for the current asset
+ */
+- (void)updateCurrentAssetLibraryIndex;
+
+/**
+ * Display the specified image. Called from -loadAssetForURL:
+ */
 - (void)displayImage:(UIImage *)image;
+
+/**
+ * Reset zoom, fitting the current image if larger than the screen, but
+ * not zooming beyind 1x.
+ */
 - (void)resetZoom;
+
+/**
+ * Save hi-res image from Aviary editor
+ */
 - (void)saveHiResImage:(UIImage *)image;
+
+@end
+
+/**
+ * Simple ALAsset category to add -defaultURL
+ */
+@interface ALAsset (defaultURL)
+- (NSURL *)defaultURL;
+@end
+
+@implementation ALAsset (defaultURL)
+- (NSURL *)defaultURL {
+    return self.defaultRepresentation.url;
+}
 @end
 
 @implementation SSPhotoViewController
@@ -37,6 +115,9 @@
 {
     [super viewDidLoad];
     self.assetsLibrary = [[ALAssetsLibrary alloc] init];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        [self enumerateAssetLibrary];
+    });
     
     self.scrollView.translatesAutoresizingMaskIntoConstraints = NO;
     self.imageView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -83,7 +164,49 @@
 
 - (IBAction)deletePhoto:(id)sender {
     if (self.asset.editable) {
+        ALAsset *assetToDelete = self.asset;
+        __block typeof(self) bSelf = self;
+        
+        // Find the next photo to show (should be the previous item in the library)
+        NSURL *nextAssetURL = nil;
+        DDLogVerbose(@"1");
+        NSURL *currentAssetURL = self.asset.defaultURL;
+        __block NSMutableArray *newLibraryAssetURLs = [self.allLibraryAssetURLs mutableCopy];
+        [newLibraryAssetURLs removeObject:currentAssetURL];
+        if (_currentAssetLibraryIndex == 0 || _currentAssetLibraryIndex == NSNotFound) {
+            nextAssetURL = [newLibraryAssetURLs firstObject];
+        } else if (newLibraryAssetURLs.count > _currentAssetLibraryIndex) {
+            nextAssetURL = newLibraryAssetURLs[_currentAssetLibraryIndex];
+        } else {
+            nextAssetURL = [newLibraryAssetURLs lastObject];
+        }
+        
+        // Display next asset
+        if (nextAssetURL) {
+            DDLogVerbose(@"Showing next asset prior to deletion. New asset: %@", nextAssetURL);
+            [self loadAssetForURL:nextAssetURL];
+        } else {
+            // No more assets to show
+            DDLogVerbose(@"Deleted last asset; no more assets to show");
+            
+        }
+        
+        DDLogVerbose(@"Calling setImageData:metadata:completionBlock: on self.asset %@", assetToDelete);
+        [assetToDelete setImageData:nil metadata:nil completionBlock:^(NSURL *assetURL, NSError *error) {
+            
+            if (error) {
+                DDLogError(@"Unable to delete asset. Error: %@", error);
+            } else {
+                DDLogVerbose(@"Asset deletion returned with assetURL: %@", assetURL);
+            }
+            
+            // Switch out the asset URL list
+            bSelf.allLibraryAssetURLs = newLibraryAssetURLs;
+        }];
     } else {
+        NSString *msg = @"Unable to delete this photo because it was not created with the Nova app. Instead, try deleting the photo using the built-in Photos app.";
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:msg delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+        [alert show];
     }
 }
 
@@ -141,6 +264,10 @@
     [self willChangeValueForKey:@"fullResolutionImage"];
     self.asset = nil;
     _fullResolutionImage = nil;
+    _currentAssetLibraryIndex = [self.allLibraryAssetURLs indexOfObject:photoURL];
+    if (_currentAssetLibraryIndex == NSNotFound) {
+        DDLogVerbose(@"URL not found in current asset library");
+    }
     
     // Update photo URL
     [self willChangeValueForKey:@"photoURL"];
@@ -165,6 +292,7 @@
 - (void)loadAssetForURL:(NSURL *)assetURL {
     self.photoURL = assetURL;
     [self.assetsLibrary assetForURL:self.photoURL resultBlock:^(ALAsset *asset) {
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             self.asset = asset;
             UIImage *newImage = self.fullResolutionImage;
@@ -175,12 +303,50 @@
     }];
 }
 
+- (void)enumerateAssetLibrary {
+    self.allLibraryAssetURLs = [NSMutableArray array];
+    _currentAssetLibraryIndex = NSNotFound;
+    __block NSURL *currentAssetURL = self.asset.defaultURL;
+    
+    [self.assetsLibrary enumerateGroupsWithTypes:ALAssetsGroupAll usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
+        DDLogVerbose(@"enumerateGroupsWithTypes:usingBlock: executing with group %@" , group);
+        if (group) {
+            [group enumerateAssetsWithOptions:NSEnumerationReverse usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
+                DDLogVerbose(@"enumerateAssetsWithOptions:usingBlock: executing with result=%@ index=%d", result, index);
+                if (result) {
+                    NSURL *url = result.defaultURL;
+                    [self.allLibraryAssetURLs addObject:url];
+                    DDLogVerbose(@"Adding asset URL: %@", url);
+                    if ([url isEqual:currentAssetURL]) {
+                        _currentAssetLibraryIndex = self.allLibraryAssetURLs.count - 1;
+                    }
+                    DDLogVerbose(@"Added asset: %@", result);
+                }
+            }];
+        }
+    } failureBlock:^(NSError *error) {
+        DDLogError(@"Unable to enumerate assets library: %@", error);
+    }];
+}
+
+- (void)updateCurrentAssetLibraryIndex {
+    DDLogVerbose(@"4");
+    NSURL *currentAssetURL = self.asset.defaultURL;
+    _currentAssetLibraryIndex = [self.allLibraryAssetURLs indexOfObject:currentAssetURL];
+    DDLogVerbose(@"updateCurrentAssetLibraryIndex, found current asset at index %d", _currentAssetLibraryIndex);
+}
+
 - (void)displayImage:(UIImage *)image {
     DDLogVerbose(@"displayImage:%@ size:%@", image, NSStringFromCGSize(image.size));
     self.imageView.image = image;
-    self.imageHeightConstraint.constant = image.size.height;
-    self.imageWidthConstraint.constant = image.size.width;
-    [self resetZoom];
+    if (image) {
+        self.imageHeightConstraint.constant = image.size.height;
+        self.imageWidthConstraint.constant = image.size.width;
+        [self resetZoom];
+    } else {
+        self.imageHeightConstraint.constant = 0;
+        self.imageWidthConstraint.constant = 0;
+    }
 }
 
 - (void)resetZoom {
