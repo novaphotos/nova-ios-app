@@ -7,23 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <AviarySDK/AFPhotoEditorController.h>
+
+@class ALAsset;
 
 /**
  * Photo viewer; UIImageView embedded in a UIScrollView allowing user to
  * pan and zoom around image.
  */
-@interface SSPhotoViewController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIScrollViewDelegate, AFPhotoEditorControllerDelegate>
+@interface SSPhotoViewController : UIViewController <UIScrollViewDelegate>
 
 /**
  * Local URL of photo asset to use.
  */
-@property (nonatomic, strong) NSURL *photoURL;
-
-/**
- * Full resolution image of the currently displayed asset
- */
-@property (nonatomic, readonly) UIImage *fullResolutionImage;
+@property (nonatomic, strong) ALAsset *asset;
 
 /**
  * Image view containing the target image
@@ -48,54 +44,5 @@
  */
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *imageHeightConstraint;
 
-/**
- * Track swipe gestures; use to navigate between photos
- */
-@property (nonatomic, strong) UISwipeGestureRecognizer *swipeLeftGestureRecognizer;
-
-/**
- * Track swipe gestures; use to navigate between photos
- */
-@property (nonatomic, strong) UISwipeGestureRecognizer *swipeRightGestureRecognizer;
-
-/**
- * Show the image library; specify whether to animate the modal
- */
-- (void)showLibraryAnimated:(BOOL)animated sender:(id)sender;
-
-/**
- * Action to show the image library (will use animation)
- */
-- (IBAction)showLibrary:(id)sender;
-
-/**
- * Return to the camera screen, dismissing this view controller
- */
-- (IBAction)showCamera:(id)sender;
-
-/**
- * Delete the currently displayed photo
- */
-- (IBAction)deletePhoto:(id)sender;
-
-/**
- * Launch the Aviary image editor
- */
-- (IBAction)editPhoto:(id)sender;
-
-/**
- * Share photo using UIActivityViewController
- */
-- (IBAction)sharePhoto:(id)sender;
-
-/**
- * Handle navigation swipe left: load newer photo
- */
-- (IBAction)navigationSwipeLeft:(id)sender;
-
-/**
- * Handle navigation swipe right: load older photo
- */
-- (IBAction)navigationSwipeRight:(id)sender;
 
 @end

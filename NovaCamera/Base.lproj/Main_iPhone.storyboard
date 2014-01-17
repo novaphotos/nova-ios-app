@@ -144,7 +144,7 @@
         <!--Photo View Controller-->
         <scene sceneID="V0b-Gi-X7w">
             <objects>
-                <viewController id="BuL-1b-uhc" customClass="SSPhotoViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="photoViewController" id="BuL-1b-uhc" customClass="SSPhotoViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="dO4-Dz-L9v" userLabel="TopLG"/>
                         <viewControllerLayoutGuide type="bottom" id="byy-w7-KKn" userLabel="BottomLG"/>
@@ -295,6 +295,14 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vto-Rt-6av" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="966" y="205"/>
+        </scene>
+        <!--Library View Controller-->
+        <scene sceneID="qZU-eX-Jki">
+            <objects>
+                <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="pageCurl" navigationOrientation="horizontal" spineLocation="min" id="XOf-xI-q3g" customClass="SSLibraryViewController" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="VNc-dK-Eu7" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1359" y="205"/>
         </scene>
     </scenes>
     <resources>

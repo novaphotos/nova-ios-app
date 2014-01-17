@@ -28,6 +28,8 @@
 		27A2B0D91863CB7700D13251 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27A2B0D81863CB7700D13251 /* AVFoundation.framework */; };
 		27BB942D1863A7CD00A31BCF /* SSCameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27BB942C1863A7CD00A31BCF /* SSCameraViewController.m */; };
 		27BB94331863AB3300A31BCF /* SSCameraPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27BB94321863AB3300A31BCF /* SSCameraPreviewView.m */; };
+		27EF5B091886ACAD00AFBD0E /* SSLibraryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EF5B081886ACAD00AFBD0E /* SSLibraryViewController.m */; };
+		27EF5B0F1886AFD400AFBD0E /* SSAssetsLibraryService.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EF5B0E1886AFD400AFBD0E /* SSAssetsLibraryService.m */; };
 		7BB4BA47770B4148B9ACE56E /* libPods-NovaCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F36E6E5AA26F401BB75B1E25 /* libPods-NovaCamera.a */; };
 		954EF8A0E4E14A3B9AC0B73B /* libPods-NovaCameraTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AE5633BD813140FE8017A321 /* libPods-NovaCameraTests.a */; };
 /* End PBXBuildFile section */
@@ -74,6 +76,10 @@
 		27BB942C1863A7CD00A31BCF /* SSCameraViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSCameraViewController.m; sourceTree = "<group>"; };
 		27BB94311863AB3300A31BCF /* SSCameraPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSCameraPreviewView.h; sourceTree = "<group>"; };
 		27BB94321863AB3300A31BCF /* SSCameraPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSCameraPreviewView.m; sourceTree = "<group>"; };
+		27EF5B071886ACAC00AFBD0E /* SSLibraryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSLibraryViewController.h; sourceTree = "<group>"; };
+		27EF5B081886ACAD00AFBD0E /* SSLibraryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSLibraryViewController.m; sourceTree = "<group>"; };
+		27EF5B0D1886AFD400AFBD0E /* SSAssetsLibraryService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSAssetsLibraryService.h; sourceTree = "<group>"; };
+		27EF5B0E1886AFD400AFBD0E /* SSAssetsLibraryService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSAssetsLibraryService.m; sourceTree = "<group>"; };
 		AE5633BD813140FE8017A321 /* libPods-NovaCameraTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NovaCameraTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E08928AB66454C1ABFCD086F /* Pods-NovaCamera.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NovaCamera.xcconfig"; path = "Pods/Pods-NovaCamera.xcconfig"; sourceTree = "<group>"; };
 		E8DE111FD9574F8F8392A750 /* Pods-NovaCameraTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NovaCameraTests.xcconfig"; path = "Pods/Pods-NovaCameraTests.xcconfig"; sourceTree = "<group>"; };
@@ -194,6 +200,8 @@
 			children = (
 				272F87C318752DE90005BA58 /* SSCaptureSessionManager.h */,
 				272F87C418752DE90005BA58 /* SSCaptureSessionManager.m */,
+				27EF5B0D1886AFD400AFBD0E /* SSAssetsLibraryService.h */,
+				27EF5B0E1886AFD400AFBD0E /* SSAssetsLibraryService.m */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -203,6 +211,8 @@
 			children = (
 				27BB942B1863A7CD00A31BCF /* SSCameraViewController.h */,
 				27BB942C1863A7CD00A31BCF /* SSCameraViewController.m */,
+				27EF5B071886ACAC00AFBD0E /* SSLibraryViewController.h */,
+				27EF5B081886ACAD00AFBD0E /* SSLibraryViewController.m */,
 				2719089C187EC5E500996A2D /* SSPhotoViewController.h */,
 				2719089D187EC5E500996A2D /* SSPhotoViewController.m */,
 			);
@@ -402,10 +412,12 @@
 			files = (
 				27BB942D1863A7CD00A31BCF /* SSCameraViewController.m in Sources */,
 				2719089E187EC5E500996A2D /* SSPhotoViewController.m in Sources */,
+				27EF5B0F1886AFD400AFBD0E /* SSAssetsLibraryService.m in Sources */,
 				2724C99018639EEB00A68E0D /* SSAppDelegate.m in Sources */,
 				27BB94331863AB3300A31BCF /* SSCameraPreviewView.m in Sources */,
 				2752B3A21884BC0F00E0C870 /* SSCenteredScrollView.m in Sources */,
 				272F87C518752DE90005BA58 /* SSCaptureSessionManager.m in Sources */,
+				27EF5B091886ACAD00AFBD0E /* SSLibraryViewController.m in Sources */,
 				2724C98C18639EEB00A68E0D /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

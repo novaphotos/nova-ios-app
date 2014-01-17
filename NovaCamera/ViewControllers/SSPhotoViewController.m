@@ -87,18 +87,6 @@
 
 @end
 
-/**
- * Simple ALAsset category to add -defaultURL
- */
-@interface ALAsset (defaultURL)
-- (NSURL *)defaultURL;
-@end
-
-@implementation ALAsset (defaultURL)
-- (NSURL *)defaultURL {
-    return self.defaultRepresentation.url;
-}
-@end
 
 @implementation SSPhotoViewController
 
@@ -269,20 +257,6 @@
     activityVC.completionHandler = ^(NSString *activityType, BOOL completed) {
     };
     [self presentViewController:activityVC animated:YES completion:nil];
-}
-
-- (IBAction)navigationSwipeLeft:(id)sender {
-    if (_currentAssetLibraryIndex != NSNotFound && _currentAssetLibraryIndex > 0) {
-        [self loadAssetForURL:self.allLibraryAssetURLs[_currentAssetLibraryIndex-1]];
-    }
-}
-
-- (IBAction)navigationSwipeRight:(id)sender {
-    if (_currentAssetLibraryIndex != NSNotFound && _currentAssetLibraryIndex + 1 < self.allLibraryAssetURLs.count) {
-        // Navigate to older image
-        // TODO: animate!
-        [self loadAssetForURL:self.allLibraryAssetURLs[_currentAssetLibraryIndex+1]];
-    }
 }
 
 #pragma mark - Properties
