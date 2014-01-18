@@ -18,6 +18,7 @@
 @property (nonatomic, readonly) ALAssetsLibrary *assetsLibrary;
 
 - (NSUInteger)indexOfAsset:(ALAsset *)asset;
+- (NSUInteger)indexOfAssetWithURL:(NSURL *)assetURL;
 - (void)removeAssetURLAtIndex:(NSUInteger)index;
 - (void)addAssetURL:(NSURL *)assetURL;
 - (void)enumerateAllAssetsWithCompletion:(void (^)(NSArray *assetURLs, NSError *error))completion;

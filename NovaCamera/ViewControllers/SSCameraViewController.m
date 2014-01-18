@@ -9,7 +9,7 @@
 #import "SSCameraViewController.h"
 #import "SSCameraPreviewView.h"
 #import "SSCaptureSessionManager.h"
-#import "SSPhotoViewController.h"
+#import "SSLibraryViewController.h"
 #import <AVFoundation/AVFoundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <CocoaLumberjack/DDLog.h>
@@ -92,8 +92,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"showPhoto"]) {
-        SSPhotoViewController *vc = (SSPhotoViewController *)segue.destinationViewController;
-        vc.photoURL = _showPhotoURL;
+        SSLibraryViewController *vc = (SSLibraryViewController *)segue.destinationViewController;
+        [vc showAssetWithURL:_showPhotoURL];
         _showPhotoURL = nil;
     }
 }

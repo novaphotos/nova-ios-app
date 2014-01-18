@@ -17,7 +17,7 @@
 @interface SSPhotoViewController : UIViewController <UIScrollViewDelegate>
 
 /**
- * Local URL of photo asset to use.
+ * Asset of photo to display
  */
 @property (nonatomic, strong) ALAsset *asset;
 
@@ -43,6 +43,12 @@
  * Image height constraint; modified when image is changed
  */
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *imageHeightConstraint;
+
+/**
+ * Reset zoom, fitting the current image if larger than the screen, but
+ * not zooming beyind 1x.
+ */
+- (void)resetZoom;
 
 
 @end

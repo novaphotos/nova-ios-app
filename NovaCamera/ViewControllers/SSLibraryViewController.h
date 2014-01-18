@@ -8,7 +8,27 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SSLibraryViewController : UIPageViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@interface SSLibraryViewController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIPageViewControllerDataSource, UIPageViewControllerDelegate>
+
+/**
+ * Index of current photo
+ */
+@property (nonatomic, assign) NSUInteger selectedIndex;
+
+/**
+ * Parent view containing controls
+ */
+@property (nonatomic, strong) IBOutlet UIView *controlsView;
+
+/**
+ * Container view for UIPageViewController
+ */
+@property (nonatomic, strong) IBOutlet UIView *containerView;
+
+/**
+ * Child view controller: UIPageViewController
+ */
+@property (nonatomic, strong) IBOutlet UIPageViewController *pageViewController;
 
 /**
  * Show the image library; specify whether to animate the modal
@@ -39,6 +59,11 @@
  * Share photo using UIActivityViewController
  */
 - (IBAction)sharePhoto:(id)sender;
+
+/**
+ * Show specified asset
+ */
+- (void)showAssetWithURL:(NSURL *)assetURL;
 
 
 @end

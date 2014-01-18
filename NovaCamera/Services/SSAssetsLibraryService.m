@@ -41,7 +41,11 @@
 }
 
 - (NSUInteger)indexOfAsset:(ALAsset *)asset {
-    return [self.assetURLs indexOfObject:asset.defaultURL];
+    return [self indexOfAssetWithURL:asset.defaultURL];
+}
+
+- (NSUInteger)indexOfAssetWithURL:(NSURL *)assetURL {
+    return [self.assetURLs indexOfObject:assetURL];
 }
 
 - (void)removeAssetURLAtIndex:(NSUInteger)index {
@@ -80,9 +84,13 @@
         }
     };
     
+    DDLogVerbose(@"Starting enumeration");
+    
     [self.assetsLibrary enumerateGroupsWithTypes:ALAssetsGroupAll usingBlock:^(ALAssetsGroup *group, BOOL *groupStop) {
+        DDLogVerbose(@"Enumerating group");
         if (group) {
             [group enumerateAssetsWithOptions:NSEnumerationReverse usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
+                DDLogVerbose(@"Enumerating item");
                 if (result) {
                     NSURL *url = result.defaultURL;
                     [mutableURLs addObject:url];
