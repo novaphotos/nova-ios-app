@@ -25,6 +25,7 @@
 		272F87C518752DE90005BA58 /* SSCaptureSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 272F87C418752DE90005BA58 /* SSCaptureSessionManager.m */; };
 		272F87C618752DE90005BA58 /* SSCaptureSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 272F87C418752DE90005BA58 /* SSCaptureSessionManager.m */; };
 		2752B3A21884BC0F00E0C870 /* SSCenteredScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2752B3A11884BC0F00E0C870 /* SSCenteredScrollView.m */; };
+		27554D04188E9A68008E4C32 /* SSPassThroughView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27554D03188E9A68008E4C32 /* SSPassThroughView.m */; };
 		27A2B0D91863CB7700D13251 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27A2B0D81863CB7700D13251 /* AVFoundation.framework */; };
 		27BB942D1863A7CD00A31BCF /* SSCameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27BB942C1863A7CD00A31BCF /* SSCameraViewController.m */; };
 		27BB94331863AB3300A31BCF /* SSCameraPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27BB94321863AB3300A31BCF /* SSCameraPreviewView.m */; };
@@ -69,6 +70,8 @@
 		272F87C418752DE90005BA58 /* SSCaptureSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSCaptureSessionManager.m; sourceTree = "<group>"; };
 		2752B3A01884BC0F00E0C870 /* SSCenteredScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSCenteredScrollView.h; sourceTree = "<group>"; };
 		2752B3A11884BC0F00E0C870 /* SSCenteredScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSCenteredScrollView.m; sourceTree = "<group>"; };
+		27554D02188E9A68008E4C32 /* SSPassThroughView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSPassThroughView.h; sourceTree = "<group>"; };
+		27554D03188E9A68008E4C32 /* SSPassThroughView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSPassThroughView.m; sourceTree = "<group>"; };
 		276AC62B187AAF0200A7DC0B /* Config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
 		276AC62C187AAFD400A7DC0B /* Config.sample.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Config.sample.h; sourceTree = "<group>"; };
 		27A2B0D81863CB7700D13251 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -226,6 +229,8 @@
 				27BB94321863AB3300A31BCF /* SSCameraPreviewView.m */,
 				2752B3A01884BC0F00E0C870 /* SSCenteredScrollView.h */,
 				2752B3A11884BC0F00E0C870 /* SSCenteredScrollView.m */,
+				27554D02188E9A68008E4C32 /* SSPassThroughView.h */,
+				27554D03188E9A68008E4C32 /* SSPassThroughView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -413,6 +418,7 @@
 				27BB942D1863A7CD00A31BCF /* SSCameraViewController.m in Sources */,
 				2719089E187EC5E500996A2D /* SSPhotoViewController.m in Sources */,
 				27EF5B0F1886AFD400AFBD0E /* SSAssetsLibraryService.m in Sources */,
+				27554D04188E9A68008E4C32 /* SSPassThroughView.m in Sources */,
 				2724C99018639EEB00A68E0D /* SSAppDelegate.m in Sources */,
 				27BB94331863AB3300A31BCF /* SSCameraPreviewView.m in Sources */,
 				2752B3A21884BC0F00E0C870 /* SSCenteredScrollView.m in Sources */,

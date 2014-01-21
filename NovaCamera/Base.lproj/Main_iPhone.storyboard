@@ -159,10 +159,10 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <connections>
-                                    <segue destination="4Pp-Im-PU1" kind="embed" id="LfJ-KN-3ir"/>
+                                    <segue destination="cbv-ld-Wzy" kind="embed" id="Cu3-FH-tBJ"/>
                                 </connections>
                             </containerView>
-                            <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bsT-0N-wxV" userLabel="Controls">
+                            <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bsT-0N-wxV" userLabel="Controls" customClass="SSPassThroughView">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
@@ -313,15 +313,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Some Text" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="2aN-Yx-o7p">
-                                <rect key="frame" x="10" y="10" width="290" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="S2v-6J-4z6"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.25" maximumZoomScale="5" translatesAutoresizingMaskIntoConstraints="NO" id="jqL-dh-Hit" customClass="SSCenteredScrollView">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -350,13 +341,10 @@
                         </subviews>
                         <color key="backgroundColor" red="0.66563070255474455" green="0.16568772810218979" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="2aN-Yx-o7p" firstAttribute="top" secondItem="JbO-pJ-a7i" secondAttribute="top" constant="10" id="0Jf-p6-FWx"/>
                             <constraint firstItem="byy-w7-KKn" firstAttribute="top" secondItem="jqL-dh-Hit" secondAttribute="bottom" id="40r-RB-Xbo"/>
                             <constraint firstAttribute="trailing" secondItem="jqL-dh-Hit" secondAttribute="trailing" id="5di-V9-r3M"/>
                             <constraint firstItem="jqL-dh-Hit" firstAttribute="leading" secondItem="JbO-pJ-a7i" secondAttribute="leading" id="a8u-Tc-VeY"/>
                             <constraint firstItem="jqL-dh-Hit" firstAttribute="top" secondItem="dO4-Dz-L9v" secondAttribute="bottom" constant="-20" id="aXf-DZ-hqn"/>
-                            <constraint firstItem="2aN-Yx-o7p" firstAttribute="leading" secondItem="JbO-pJ-a7i" secondAttribute="leading" constant="10" id="bkB-ao-NnV"/>
-                            <constraint firstAttribute="trailing" secondItem="2aN-Yx-o7p" secondAttribute="trailing" constant="20" id="ehN-KB-E5d"/>
                         </constraints>
                     </view>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
@@ -373,23 +361,12 @@
             <point key="canvasLocation" x="2170" y="-13"/>
         </scene>
         <!--Page View Controller-->
-        <scene sceneID="uJP-CX-5to">
+        <scene sceneID="pBo-kJ-a0U">
             <objects>
-                <viewController automaticallyAdjustsScrollViewInsets="NO" id="4Pp-Im-PU1" customClass="UIPageViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="t0p-bb-LbS"/>
-                        <viewControllerLayoutGuide type="bottom" id="Gi9-6m-3zR"/>
-                    </layoutGuides>
-                    <view key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="0Z6-WN-kO7">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                    <toolbarItems/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="vjQ-Yu-DaA" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="cbv-ld-Wzy" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="APN-hd-n8E" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1763" y="-13"/>
+            <point key="canvasLocation" x="1730" y="-13"/>
         </scene>
     </scenes>
     <resources>
