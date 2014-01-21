@@ -310,8 +310,8 @@
     UIViewController *vc = nil;
     SSPhotoViewController *oldVC = (SSPhotoViewController *)viewController;
     NSUInteger oldIdx = [self.assetsLibraryService indexOfAsset:oldVC.asset];
-    if (oldIdx > 0 && oldIdx != NSNotFound) {
-        NSURL *newURL = self.assetsLibraryService.assetURLs[oldIdx - 1];
+    if (oldIdx + 1 < self.assetsLibraryService.assetURLs.count && oldIdx != NSNotFound) {
+        NSURL *newURL = self.assetsLibraryService.assetURLs[oldIdx + 1];
         vc = [self photoViewControllerForAssetURL:newURL markAsActive:NO];
     }
     return vc;
@@ -321,19 +321,11 @@
     UIViewController *vc = nil;
     SSPhotoViewController *oldVC = (SSPhotoViewController *)viewController;
     NSUInteger oldIdx = [self.assetsLibraryService indexOfAsset:oldVC.asset];
-    if (oldIdx + 1 < self.assetsLibraryService.assetURLs.count && oldIdx != NSNotFound) {
-        NSURL *newURL = self.assetsLibraryService.assetURLs[oldIdx + 1];
+    if (oldIdx > 0 && oldIdx != NSNotFound) {
+        NSURL *newURL = self.assetsLibraryService.assetURLs[oldIdx - 1];
         vc = [self photoViewControllerForAssetURL:newURL markAsActive:NO];
     }
     return vc;
-}
-
-- (NSInteger)presentationCountForPageViewController:(UIPageViewController *)pageViewController {
-    return self.assetsLibraryService.assetURLs.count;
-}
-
-- (NSInteger)presentationIndexForPageViewController:(UIPageViewController *)pageViewController {
-    return self.selectedIndex;
 }
 
 #pragma mark - UIPageViewControllerDelegate

@@ -280,7 +280,7 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" red="0.09803922474" green="0.61176472900000001" blue="0.86666673419999996" alpha="1" colorSpace="deviceRGB"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="bsT-0N-wxV" secondAttribute="trailing" id="1Bl-l5-NG5"/>
                             <constraint firstItem="sTR-wW-Hud" firstAttribute="top" secondItem="WNG-HA-Cax" secondAttribute="bottom" id="Gna-eb-Pbr"/>
@@ -339,7 +339,7 @@
                                 </connections>
                             </scrollView>
                         </subviews>
-                        <color key="backgroundColor" red="0.66563070255474455" green="0.16568772810218979" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="byy-w7-KKn" firstAttribute="top" secondItem="jqL-dh-Hit" secondAttribute="bottom" id="40r-RB-Xbo"/>
                             <constraint firstAttribute="trailing" secondItem="jqL-dh-Hit" secondAttribute="trailing" id="5di-V9-r3M"/>
