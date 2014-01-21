@@ -11,6 +11,7 @@
 #import "SSPhotoViewController.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <AviarySDK/AFPhotoEditorController.h>
+#import <BlocksKit/UIAlertView+BlocksKit.h>
 
 @interface SSLibraryViewController () <AFPhotoEditorControllerDelegate, UIPageViewControllerDataSource, UIPageViewControllerDelegate> {
     
@@ -84,9 +85,7 @@
 
     __block typeof(self) bSelf = self;
     
-    DDLogVerbose(@"viewDidLoad; triggering asset enumeration");
     [self.assetsLibraryService enumerateAllAssetsWithCompletion:^(NSArray *assetURLs, NSError *error) {
-        DDLogVerbose(@"assetsLibraryService finished enumerating; got %d assets. (error: %@)", assetURLs.count, error);
         bSelf->_assetsLoaded = YES;
     }];
 }
@@ -110,9 +109,8 @@
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    DDLogVerbose(@"prepareForSegue:%@ sender:%@", segue, sender);
     if ([segue.destinationViewController isKindOfClass:[UIPageViewController class]]) {
-        DDLogVerbose(@"Capturing pageViewController");
+        // Capture reference to UIPageViewController so that we can later setViewControllers:direction:animated:
         self.pageViewController = (UIPageViewController *)segue.destinationViewController;
         self.pageViewController.delegate = self;
         self.pageViewController.dataSource = self;
@@ -137,53 +135,45 @@
 }
 
 - (IBAction)deletePhoto:(id)sender {
-    /*
     if (self.asset.editable) {
-        ALAsset *assetToDelete = self.asset;
         __block typeof(self) bSelf = self;
         
-        // Find the next photo to show (should be the previous item in the library)
-        NSURL *nextAssetURL = nil;
-        DDLogVerbose(@"1");
-        NSURL *currentAssetURL = self.asset.defaultURL;
-        __block NSMutableArray *newLibraryAssetURLs = [self.allLibraryAssetURLs mutableCopy];
-        [newLibraryAssetURLs removeObject:currentAssetURL];
-        if (_currentAssetLibraryIndex == 0 || _currentAssetLibraryIndex == NSNotFound) {
-            nextAssetURL = [newLibraryAssetURLs firstObject];
-        } else if (newLibraryAssetURLs.count > _currentAssetLibraryIndex) {
-            nextAssetURL = newLibraryAssetURLs[_currentAssetLibraryIndex];
-        } else {
-            nextAssetURL = [newLibraryAssetURLs lastObject];
-        }
-        
-        // Display next asset
-        if (nextAssetURL) {
-            DDLogVerbose(@"Showing next asset prior to deletion. New asset: %@", nextAssetURL);
-            [self loadAssetForURL:nextAssetURL];
-        } else {
-            // No more assets to show
-            DDLogVerbose(@"Deleted last asset; no more assets to show");
-            
-        }
-        
-        DDLogVerbose(@"Calling setImageData:metadata:completionBlock: on self.asset %@", assetToDelete);
-        [assetToDelete setImageData:nil metadata:nil completionBlock:^(NSURL *assetURL, NSError *error) {
-            
-            if (error) {
-                DDLogError(@"Unable to delete asset. Error: %@", error);
-            } else {
-                DDLogVerbose(@"Asset deletion returned with assetURL: %@", assetURL);
+        void (^deleteAsset)(ALAsset *assetToDelete) = ^(ALAsset *assetToDelete) {
+            int numAssets = bSelf.assetsLibraryService.assetURLs.count;
+            int nextIndex = 0;
+            if (bSelf.selectedIndex > 0 && bSelf.selectedIndex < numAssets) {
+                nextIndex = bSelf.selectedIndex - 1;
             }
             
-            // Switch out the asset URL list
-            bSelf.allLibraryAssetURLs = newLibraryAssetURLs;
+            [bSelf.assetsLibraryService removeAssetURLAtIndex:self.selectedIndex];
+            if (bSelf.assetsLibraryService.assetURLs.count) {
+                bSelf.selectedIndex = nextIndex;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [bSelf showAssetWithURL:bSelf.assetsLibraryService.assetURLs[self.selectedIndex]];
+                });
+            }
+            
+            [assetToDelete setImageData:nil metadata:nil completionBlock:^(NSURL *assetURL, NSError *error) {
+                if (error) {
+                    DDLogError(@"Unable to delete asset. Error: %@", error);
+                } else {
+                    DDLogVerbose(@"Asset deletion returned with assetURL: %@", assetURL);
+                }
+            }];
+        };
+        
+        [UIAlertView bk_showAlertViewWithTitle:@"Delete Photo" message:@"Are you sure?" cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Delete"] handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+            DDLogVerbose(@"Alert modal.. pressed button idx %d", buttonIndex);
+            if (buttonIndex == 1) {
+                deleteAsset(bSelf.asset);
+            }
         }];
+        
     } else {
         NSString *msg = @"Unable to delete this photo because it was not created with the Nova app. Instead, try deleting the photo using the built-in Photos app.";
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:msg delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
         [alert show];
     }
-     */
 }
 
 
@@ -329,6 +319,13 @@
 }
 
 #pragma mark - UIPageViewControllerDelegate
+
+- (void)pageViewController:(UIPageViewController *)pageViewController willTransitionToViewControllers:(NSArray *)pendingViewControllers {
+    // Update selected index
+    SSPhotoViewController *vc = [pendingViewControllers firstObject];
+    self.asset = vc.asset;
+    self.selectedIndex = [self.assetsLibraryService indexOfAsset:self.asset];
+}
 
 #pragma mark - AFPhotoEditorControllerDelegate
 /*
