@@ -71,6 +71,7 @@
     __block typeof(completion) bCompletion = completion;
     
     void (^finishedEnumerating)() = ^{
+        DDLogVerbose(@"finishedEnumerating");
         [bSelf willChangeValueForKey:@"assetURLs"];
         if (mutableURLs.count) {
             bSelf->_assetURLs = [NSArray arrayWithArray:mutableURLs];
@@ -95,12 +96,8 @@
                     NSURL *url = result.defaultURL;
                     [mutableURLs addObject:url];
                 }
-                if (*stop && *groupStop) {
-                    finishedEnumerating();
-                }
             }];
-        } else if (*groupStop) {
-            // No results?
+        } else {
             finishedEnumerating();
         }
     } failureBlock:^(NSError *error) {

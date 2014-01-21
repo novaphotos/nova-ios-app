@@ -16,7 +16,6 @@
     
     BOOL _assetsLoaded;
     BOOL _viewWillAppear;
-    ALAsset *_asset;
 }
 
 /**
@@ -33,6 +32,18 @@
  * Aviary session, used for exporting hi-res images
  */
 @property (nonatomic, strong) AFPhotoEditorSession *photoEditorSession;
+
+/**
+ * Reference to current ALAsset object
+ */
+@property (nonatomic, strong) ALAsset *asset;
+
+/**
+ * Indicates whether we're currently looking up an asset, set in
+ * lookupAssetFromURL:markAsActive:completion: when looking up an "active" asset.
+ * Useful for managing UI state.
+ */
+@property (nonatomic, assign) BOOL retrievingAsset;
 
 /**
  * Instantiate a view controller for the specified asset URL
@@ -81,7 +92,12 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    if (self.selectedIndex == NSNotFound) {
+    [super viewWillAppear:animated];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    if (!self.asset && !self.retrievingAsset) {
         // Show library
         [self showLibraryAnimated:YES sender:self];
     }
@@ -223,10 +239,12 @@
 - (void)showAssetWithURL:(NSURL *)assetURL {
     SSPhotoViewController *photoVC = [self photoViewControllerForAssetURL:assetURL markAsActive:YES];
     NSUInteger idx = [self.assetsLibraryService indexOfAssetWithURL:assetURL];
+    DDLogVerbose(@"showAssetWithURL:%@ asset idx: %d", assetURL, idx);
     UIPageViewControllerNavigationDirection dir = UIPageViewControllerNavigationDirectionForward;
     if (NSNotFound == idx) {
         DDLogError(@"showAssetsWithURL:%@ can't find asset in our list", assetURL);
     }
+    self.selectedIndex = idx;
     [self.pageViewController setViewControllers:@[photoVC] direction:dir animated:NO completion:nil];
 }
 
@@ -247,15 +265,18 @@
 - (void)lookupAssetFromURL:(NSURL *)assetURL markAsActive:(BOOL)isActive completion:(void (^)(ALAsset *asset))completion {
     __block BOOL bIsActive = isActive;
     __block typeof(self) bSelf = self;
+    self.retrievingAsset = YES;
     [self.assetsLibraryService assetForURL:assetURL resultBlock:^(ALAsset *asset) {
         if (bIsActive) {
-            bSelf->_asset = asset;
+            bSelf.retrievingAsset = NO;
+            bSelf.asset = asset;
         }
         if (completion) {
             completion(asset);
         }
     } failureBlock:^(NSError *error) {
         if (bIsActive) {
+            bSelf.retrievingAsset = NO;
             bSelf->_asset = nil;
         }
         if (completion) {
@@ -338,9 +359,20 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     DDLogVerbose(@"Picked media with info: %@", info);
-    NSURL *mediaURL = info[UIImagePickerControllerReferenceURL];
-    [self showAssetWithURL:mediaURL];
-    [self dismissViewControllerAnimated:YES completion:nil];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSURL *mediaURL = info[UIImagePickerControllerReferenceURL];
+        [self showAssetWithURL:mediaURL];
+        [self dismissViewControllerAnimated:YES completion:^{
+            DDLogVerbose(@"Finished dismissing imagePickerController");
+            double delayInSeconds = 2.0;
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    DDLogVerbose(@"View hierarchy from library: %@", [self.view recursiveDescription]);
+                });
+            });
+        }];
+    });
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {

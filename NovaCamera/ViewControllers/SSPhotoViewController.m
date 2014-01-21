@@ -109,7 +109,9 @@
 - (void)setAsset:(ALAsset *)asset {
     [self willChangeValueForKey:@"asset"];
     _asset = asset;
-    [self displayAsset:asset];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self displayAsset:asset];
+    });
     [self didChangeValueForKey:@"asset"];
 }
 
@@ -129,11 +131,9 @@
 }
 
 - (void)displayAsset:(ALAsset *)asset {
-    dispatch_sync(dispatch_get_main_queue(), ^{
-        CGImageRef cgImage = [[self.asset defaultRepresentation] fullResolutionImage];
-        UIImage *image = [UIImage imageWithCGImage:cgImage];
-        [self displayImage:image];
-    });
+    CGImageRef cgImage = [[self.asset defaultRepresentation] fullResolutionImage];
+    UIImage *image = [UIImage imageWithCGImage:cgImage];
+    [self displayImage:image];
 }
 
 #pragma mark - UIScrollViewDelegate
