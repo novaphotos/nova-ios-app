@@ -17,6 +17,7 @@
     
     BOOL _assetsLoaded;
     BOOL _viewWillAppear;
+    BOOL _waitingToDisplayInsertedAsset;
 }
 
 /**
@@ -44,6 +45,11 @@
  */
 - (void)saveHiResImage:(UIImage *)image;
 
+/**
+ * Respond to asset library changes: adding and removing assets
+ */
+- (void)assetLibraryUpdatedWithNotification:(NSNotification *)notification;
+
 @end
 
 @implementation SSLibraryViewController
@@ -56,6 +62,10 @@
     return self;
 }
 
+- (void)Dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:(NSString *)SSChronologicalAssetsLibraryUpdatedNotification object:self.libraryService];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -65,6 +75,8 @@
     self.selectedIndex = NSNotFound;
     _assetsLoaded = NO;
     _viewWillAppear = NO;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(assetLibraryUpdatedWithNotification:) name:(NSString *)SSChronologicalAssetsLibraryUpdatedNotification object:self.libraryService];
 
     __block typeof(self) bSelf = self;
     
@@ -128,104 +140,84 @@
 }
 
 - (IBAction)deletePhoto:(id)sender {
-    /*
-    if (self.asset.editable) {
-        __block typeof(self) bSelf = self;
-        
-        void (^deleteAsset)(ALAsset *assetToDelete) = ^(ALAsset *assetToDelete) {
-            int numAssets = bSelf.assetsLibraryService.assetURLs.count;
-            int nextIndex = 0;
-            if (bSelf.selectedIndex > 0 && bSelf.selectedIndex < numAssets) {
-                nextIndex = bSelf.selectedIndex - 1;
-            }
-            
-            [bSelf.assetsLibraryService removeAssetURLAtIndex:self.selectedIndex];
-            if (bSelf.assetsLibraryService.assetURLs.count) {
-                bSelf.selectedIndex = nextIndex;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [bSelf showAssetWithURL:bSelf.assetsLibraryService.assetURLs[self.selectedIndex]];
-                });
-            }
-            
-            [assetToDelete setImageData:nil metadata:nil completionBlock:^(NSURL *assetURL, NSError *error) {
-                if (error) {
-                    DDLogError(@"Unable to delete asset. Error: %@", error);
-                } else {
-                    DDLogVerbose(@"Asset deletion returned with assetURL: %@", assetURL);
+    [self.libraryService assetAtIndex:self.selectedIndex withCompletion:^(ALAsset *asset) {
+        if (asset.editable) {
+            [UIAlertView bk_showAlertViewWithTitle:@"Delete Photo" message:@"Are you sure?" cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Delete"] handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+                if (buttonIndex == 1) {
+                    [asset setImageData:nil metadata:nil completionBlock:^(NSURL *assetURL, NSError *error) {
+                        if (error) {
+                            DDLogError(@"Unable to delete asset. Error: %@", error);
+                        } else {
+                            DDLogVerbose(@"Asset deletion returned with assetURL: %@", assetURL);
+                        }
+                    }];
                 }
             }];
-        };
-        
-        [UIAlertView bk_showAlertViewWithTitle:@"Delete Photo" message:@"Are you sure?" cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Delete"] handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
-            DDLogVerbose(@"Alert modal.. pressed button idx %d", buttonIndex);
-            if (buttonIndex == 1) {
-                deleteAsset(bSelf.asset);
-            }
-        }];
-        
-    } else {
-        NSString *msg = @"Unable to delete this photo because it was not created with the Nova app. Instead, try deleting the photo using the built-in Photos app.";
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:msg delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-        [alert show];
-    }
-     */
+        } else {
+            NSString *msg = @"Unable to delete this photo because it was not created with the Nova app. Instead, try deleting the photo using the built-in Photos app.";
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:msg delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+            [alert show];
+        }
+    }];
 }
 
 
 // See: http://developers.aviary.com/docs/ios/setup-guide
 - (IBAction)editPhoto:(id)sender {
-    /*
-    UIImage *image = [UIImage imageWithCGImage:self.asset.defaultRepresentation.fullResolutionImage];
-    
-    DDLogVerbose(@"Loading Aviary photo editor with image: %@", image);
-    
-    // Create editor
-    self.photoEditorController = [[AFPhotoEditorController alloc] initWithImage:image];
-    [self.photoEditorController setDelegate:self];
-    
-    // Present editor
-    [self presentViewController:self.photoEditorController animated:YES completion:nil];
-    
-    // Capture photo editor's session and capture a strong reference
-    __block AFPhotoEditorSession *session = self.photoEditorController.session;
-    self.photoEditorSession = session;
-    
-    // Create a context with maximum output resolution
-    AFPhotoEditorContext *context = [session createContextWithImage:image];
-    
-    // Request that the context asynchronously replay the session's actions on its image.
-    [context render:^(UIImage *result) {
-        // `result` will be nil if the image was not modified in the session, or non-nil if the session was closed successfully
-        if (result != nil) {
-            DDLogVerbose(@"Photo editor context returned the modified hi-res image; saving");
-            [self saveHiResImage:result];
-        } else {
-            DDLogVerbose(@"Photo editor context returned nil; must not have been modified");
-        }
+    // TODO: Show loading
+    __block typeof(self) bSelf = self;
+    NSURL *assetURL = [self.libraryService assetURLAtIndex:self.selectedIndex];
+    [self.libraryService fullResolutionImageForAssetWithURL:assetURL withCompletion:^(UIImage *image) {
+        DDLogVerbose(@"Loading Aviary photo editor with image: %@", image);
         
-        // Release session
-        self.photoEditorSession = nil;
+        // Create editor
+        bSelf.photoEditorController = [[AFPhotoEditorController alloc] initWithImage:image];
+        [bSelf.photoEditorController setDelegate:bSelf];
+        
+        // Present editor
+        [bSelf presentViewController:bSelf.photoEditorController animated:YES completion:nil];
+        
+        // Capture photo editor's session and capture a strong reference
+        __block AFPhotoEditorSession *session = bSelf.photoEditorController.session;
+        bSelf.photoEditorSession = session;
+        
+        // Create a context with maximum output resolution
+        AFPhotoEditorContext *context = [session createContextWithImage:image];
+        
+        // Request that the context asynchronously replay the session's actions on its image.
+        [context render:^(UIImage *result) {
+            // `result` will be nil if the image was not modified in the session, or non-nil if the session was closed successfully
+            if (result != nil) {
+                DDLogVerbose(@"Photo editor context returned the modified hi-res image; saving");
+                [bSelf saveHiResImage:result];
+            } else {
+                DDLogVerbose(@"Photo editor context returned nil; must not have been modified");
+            }
+            
+            // Release session
+            bSelf.photoEditorSession = nil;
+        }];
     }];
-     */
 }
 
 - (IBAction)sharePhoto:(id)sender {
-    /*
-    UIImage *image = [UIImage imageWithCGImage:self.asset.defaultRepresentation.fullResolutionImage];
-    NSArray *activityItems = @[
-                               image,
-                               ];
-    UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
-    activityVC.completionHandler = ^(NSString *activityType, BOOL completed) {
-    };
-    [self presentViewController:activityVC animated:YES completion:nil];
-     */
+    __block typeof(self) bSelf = self;
+    NSURL *assetURL = [self.libraryService assetURLAtIndex:self.selectedIndex];
+    [self.libraryService fullResolutionImageForAssetWithURL:assetURL withCompletion:^(UIImage *image) {
+        NSArray *activityItems = @[
+                                   image,
+                                   ];
+        UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
+        activityVC.completionHandler = ^(NSString *activityType, BOOL completed) {
+        };
+        [bSelf presentViewController:activityVC animated:YES completion:nil];
+    }];
 }
 
 - (void)showAssetWithURL:(NSURL *)assetURL {
     SSPhotoViewController *photoVC = [self photoViewControllerForAssetURL:assetURL markAsActive:YES];
     NSUInteger idx = [self.libraryService indexOfAssetWithURL:assetURL];
-    DDLogVerbose(@"showAssetWithURL:%@ asset idx: %d", assetURL, idx);
+    DDLogVerbose(@"showAssetWithURL:%@ asset idx: %d", assetURL, (int)idx);
     UIPageViewControllerNavigationDirection dir = UIPageViewControllerNavigationDirectionForward;
     if (NSNotFound == idx) {
         DDLogError(@"showAssetsWithURL:%@ can't find asset in our list", assetURL);
@@ -243,33 +235,7 @@
     return vc;
 }
 
-- (void)lookupAssetFromURL:(NSURL *)assetURL markAsActive:(BOOL)isActive completion:(void (^)(ALAsset *asset))completion {
-    /*
-    __block BOOL bIsActive = isActive;
-    __block typeof(self) bSelf = self;
-    self.retrievingAsset = YES;
-    [self.assetsLibraryService assetForURL:assetURL resultBlock:^(ALAsset *asset) {
-        if (bIsActive) {
-            bSelf.retrievingAsset = NO;
-            bSelf.asset = asset;
-        }
-        if (completion) {
-            completion(asset);
-        }
-    } failureBlock:^(NSError *error) {
-        if (bIsActive) {
-            bSelf.retrievingAsset = NO;
-            bSelf->_asset = nil;
-        }
-        if (completion) {
-            completion(nil);
-        }
-    }];
-     */
-}
-
 - (void)saveHiResImage:(UIImage *)image {
-    /*
     // Save image to asset library, in background
     DDLogVerbose(@"Encoding & saving modified image to asset library, in background");
     __block typeof(self) bSelf = self;
@@ -281,18 +247,12 @@
         [self.libraryService assetAtIndex:self.selectedIndex withCompletion:^(ALAsset *asset) {
             [asset writeModifiedImageDataToSavedPhotosAlbum:imageData metadata:metadata completionBlock:^(NSURL *assetURL, NSError *error) {
                 DDLogVerbose(@"Modified image saved to asset library: %@ (Error: %@)", assetURL, error);
+                
+                DDLogVerbose(@"Has the asset changed notification fired yet?");
+                
                 if (!error) {
-                    // Add new asset URL
-                    NSLog(@"Adding new asset URL to library service: %@", assetURL);
-                    [self.assetsLibraryService insertAssetURL:assetURL];
-                    
-                    [self.assetsLibraryService.assetsLibrary assetForURL:assetURL resultBlock:^(ALAsset *asset) {
-                        NSLog(@"Looked up asset from url %@. Actual URL: %@", assetURL, asset.defaultRepresentation.url);
-                    } failureBlock:^(NSError *error) {
-                        NSLog(@"Error getting asset from url %@", assetURL);
-                    }];
-                    
                     // Load new asset
+                    _waitingToDisplayInsertedAsset = YES;
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [bSelf showAssetWithURL:assetURL];
                     });
@@ -300,7 +260,41 @@
             }];
         }];
     });
-     */
+}
+
+- (void)assetLibraryUpdatedWithNotification:(NSNotification *)notification {
+    NSIndexSet *insertedIndexes = notification.userInfo[SSChronologicalAssetsLibraryInsertedAssetIndexesKey];
+    NSIndexSet *deletedIndexes = notification.userInfo[SSChronologicalAssetsLibraryDeletedAssetIndexesKey];
+    
+    void (^showAssetAtIndex)(NSUInteger index) = ^(NSUInteger index) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self showAssetWithURL:[self.libraryService assetURLAtIndex:index]];
+        });
+    };
+    
+    if (_waitingToDisplayInsertedAsset && insertedIndexes.count) {
+        _waitingToDisplayInsertedAsset = NO;
+        showAssetAtIndex([insertedIndexes firstIndex]);
+    } else if ([deletedIndexes containsIndex:self.selectedIndex]) {
+        // Deleted our current asset; determine which to show next
+        DDLogVerbose(@"Deleted current asset");
+        if (self.selectedIndex > 0) {
+            showAssetAtIndex(self.selectedIndex - 1);
+        } else {
+            if (self.libraryService.numberOfAssets > 0) {
+                showAssetAtIndex(self.selectedIndex);
+            } else {
+                // No more assets!
+                DDLogError(@"No more assets to show");
+            }
+        }
+    } else {
+        if (self.pageViewController.viewControllers.count > 0) {
+            // Current index may need to change..
+            SSPhotoViewController *vc = (SSPhotoViewController *)self.pageViewController.viewControllers[0];
+            self.selectedIndex = [self.libraryService indexOfAssetWithURL:vc.assetURL];
+        }
+    }
 }
 
 #pragma mark - UIPageViewControllerDataSource

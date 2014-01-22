@@ -9,7 +9,9 @@
 #import <Foundation/Foundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 
-static const NSString *SSChronologicalAssetsLibraryUpdatedNotification;
+NSString * const SSChronologicalAssetsLibraryUpdatedNotification;
+NSString * const SSChronologicalAssetsLibraryInsertedAssetIndexesKey;
+NSString * const SSChronologicalAssetsLibraryDeletedAssetIndexesKey;
 
 @interface SSChronologicalAssetsLibraryService : NSObject
 

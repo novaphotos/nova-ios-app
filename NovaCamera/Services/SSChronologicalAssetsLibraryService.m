@@ -9,7 +9,9 @@
 #import "SSChronologicalAssetsLibraryService.h"
 #import "ALAsset+FilteredImage.h"
 
-static const NSString *SSChronologicalAssetsLibraryUpdatedNotification = @"SSChronologicalAssetsLibraryUpdatedNotification";
+NSString * const SSChronologicalAssetsLibraryUpdatedNotification = @"SSChronologicalAssetsLibraryUpdatedNotification";
+NSString * const SSChronologicalAssetsLibraryInsertedAssetIndexesKey = @"SSChronologicalAssetsLibraryInsertedAssetIndexesKey";
+NSString * const SSChronologicalAssetsLibraryDeletedAssetIndexesKey = @"SSChronologicalAssetsLibraryDeletedAssetIndexesKey";
 
 /**
  * Simple ALAsset category to add -defaultURL
@@ -48,7 +50,7 @@ static const NSString *SSChronologicalAssetsLibraryUpdatedNotification = @"SSChr
 }
 
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:ALAssetsLibraryChangedNotification object:_assetsLibrary];
 }
 
 + (id)sharedService {
@@ -77,8 +79,6 @@ static const NSString *SSChronologicalAssetsLibraryUpdatedNotification = @"SSChr
         if (bCompletion) {
             bCompletion(mutableURLs.count);
         }
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:(NSString *)SSChronologicalAssetsLibraryUpdatedNotification object:self];
     };
     
     DDLogVerbose(@"Starting enumeration");
@@ -186,8 +186,50 @@ static const NSString *SSChronologicalAssetsLibraryUpdatedNotification = @"SSChr
 
 - (void)assetsChangedWithNotification:(NSNotification *)notification {
     DDLogVerbose(@"Assets changed! Notification: %@", notification);
+    
+    if (_enumeratingAssets) {
+        DDLogVerbose(@"Already enumerating; skipping");
+        return;
+    }
+    
+    NSDictionary *userInfo = notification.userInfo;
+    NSSet *updatedAssets = userInfo[ALAssetLibraryUpdatedAssetsKey];
+    if (!updatedAssets.count) {
+        DDLogVerbose(@"No updated assets; skipping");
+        return;
+    }
+    
+    __block typeof(self) bSelf = self;
+    __block NSArray *previousAssetURLs = [NSArray arrayWithArray:self.assetURLs];
     [self enumerateAssetsWithCompletion:^(NSUInteger numberOfAssets) {
         DDLogVerbose(@"Enumeration finished (triggered by assets changed notification)");
+        
+        // Compare old and new asset URLs; track which indexes have been added and removed
+        NSMutableSet *oldAssetURLs = [NSMutableSet setWithArray:previousAssetURLs];
+        NSMutableSet *newAssetURLs = [NSMutableSet set];
+        for (NSURL *url in self.assetURLs) {
+            if ([oldAssetURLs containsObject:url]) {
+                [oldAssetURLs removeObject:url];
+            } else {
+                [newAssetURLs addObject:url];
+            }
+        }
+        
+        NSMutableIndexSet *addedAssetIndexes = [NSMutableIndexSet indexSet];
+        for (NSURL *addedURL in newAssetURLs) {
+            [addedAssetIndexes addIndex:[bSelf.assetURLs indexOfObject:addedURL]];
+        }
+        
+        NSMutableIndexSet *removedAssetIndexes = [NSMutableIndexSet indexSet];
+        for (NSURL *removedURL in oldAssetURLs) {
+            [removedAssetIndexes addIndex:[previousAssetURLs indexOfObject:removedURL]];
+        }
+        
+        NSDictionary *userInfo = @{
+                                   SSChronologicalAssetsLibraryInsertedAssetIndexesKey: addedAssetIndexes,
+                                   SSChronologicalAssetsLibraryDeletedAssetIndexesKey: removedAssetIndexes,
+                                   };
+        [[NSNotificationCenter defaultCenter] postNotificationName:SSChronologicalAssetsLibraryUpdatedNotification object:self userInfo:userInfo];
     }];
 }
 
