@@ -7,6 +7,8 @@
 //
 
 #import "SSPhotoViewController.h"
+#import "SSChronologicalAssetsLibraryService.h"
+#import "SSCenteredScrollView.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 
 /**
@@ -28,7 +30,12 @@
 /**
  * Display image from specified asset
  */
-- (void)displayAsset:(ALAsset *)asset;
+- (void)displayAssetWithURL:(NSURL *)assetURL;
+
+/**
+ * Reset zoom given specific bounds
+ */
+- (void)resetZoomWithBounds:(CGRect)bounds;
 
 @end
 
@@ -51,12 +58,16 @@
     // Use auto layout for scroll view & image view layout
     self.scrollView.translatesAutoresizingMaskIntoConstraints = NO;
     self.imageView.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    if (!self.libraryService) {
+        self.libraryService = [SSChronologicalAssetsLibraryService sharedService];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    if (self.asset && !self.imageView.image) {
-        [self displayAsset:self.asset];
+    if (self.assetURL && !self.imageView.image) {
+        [self displayAssetWithURL:self.assetURL];
     }
 }
 
@@ -71,15 +82,60 @@
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    DDLogVerbose(@"willRotateToInterfaceOrientation:%d duration:%g", toInterfaceOrientation, duration);
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    DDLogVerbose(@"didRotateFromInterfaceOrientation:%d", fromInterfaceOrientation);
     [self resetZoom];
 }
 
 #pragma mark - Public methods
 
 - (void)resetZoom {
+    [self resetZoomWithBounds:self.view.bounds];
+}
+
+#pragma mark - Properties
+
+- (void)setAssetURL:(NSURL *)assetURL {
+    [self willChangeValueForKey:@"assetURL"];
+    _assetURL = assetURL;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self displayAssetWithURL:assetURL];
+    });
+    [self didChangeValueForKey:@"assetURL"];
+}
+
+#pragma mark - Private methods
+
+- (void)displayImage:(UIImage *)image {
+    DDLogVerbose(@"displayImage:%@ size:%@", image, NSStringFromCGSize(image.size));
+    self.imageView.image = image;
+    if (image) {
+        self.imageHeightConstraint.constant = image.size.height;
+        self.imageWidthConstraint.constant = image.size.width;
+        [self resetZoom];
+    } else {
+        self.imageHeightConstraint.constant = 0;
+        self.imageWidthConstraint.constant = 0;
+    }
+}
+
+- (void)displayAssetWithURL:(NSURL *)assetURL {
+    [self.libraryService fullScreenImageForAssetWithURL:assetURL withCompletion:^(UIImage *image) {
+        [self displayImage:image];
+    }];
+}
+
+- (void)resetZoomWithBounds:(CGRect)bounds {
+    DDLogVerbose(@"resetZoomWithBounds: %@", NSStringFromCGRect(bounds));
+    
     // Calculate minimum zoom that fits entire image within view bounds
-    CGFloat minZoomX = self.view.bounds.size.width / self.imageView.image.size.width;
-    CGFloat minZoomY = self.view.bounds.size.height / self.imageView.image.size.height;
+    CGFloat minZoomX = bounds.size.width / self.imageView.image.size.width;
+    CGFloat minZoomY = bounds.size.height / self.imageView.image.size.height;
     CGFloat minZoom = MIN(minZoomX, minZoomY);
     
     // Ensure that minimum zoom is not greater than 1.0, so that image will
@@ -101,40 +157,12 @@
     self.scrollView.scrollEnabled = NO;
     
     // Ensure scrollview updates its layout
-    [self.scrollView setNeedsLayout];
-}
-
-#pragma mark - Properties
-
-- (void)setAsset:(ALAsset *)asset {
-    [self willChangeValueForKey:@"asset"];
-    _asset = asset;
-    self.assetURL = asset.defaultRepresentation.url;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self displayAsset:asset];
-    });
-    [self didChangeValueForKey:@"asset"];
-}
-
-#pragma mark - Private methods
-
-- (void)displayImage:(UIImage *)image {
-    DDLogVerbose(@"displayImage:%@ size:%@", image, NSStringFromCGSize(image.size));
-    self.imageView.image = image;
-    if (image) {
-        self.imageHeightConstraint.constant = image.size.height;
-        self.imageWidthConstraint.constant = image.size.width;
-        [self resetZoom];
+    if ([self.scrollView isKindOfClass:[SSCenteredScrollView class]]) {
+        SSCenteredScrollView *sv = (SSCenteredScrollView *)self.scrollView;
+        [sv layoutWithBounds:bounds];
     } else {
-        self.imageHeightConstraint.constant = 0;
-        self.imageWidthConstraint.constant = 0;
+        [self.scrollView setNeedsLayout];
     }
-}
-
-- (void)displayAsset:(ALAsset *)asset {
-    CGImageRef cgImage = [[self.asset defaultRepresentation] fullResolutionImage];
-    UIImage *image = [UIImage imageWithCGImage:cgImage];
-    [self displayImage:image];
 }
 
 #pragma mark - UIScrollViewDelegate

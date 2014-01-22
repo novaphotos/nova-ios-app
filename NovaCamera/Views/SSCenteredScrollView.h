@@ -17,4 +17,6 @@
  */
 @interface SSCenteredScrollView : UIScrollView
 
+- (void)layoutWithBounds:(CGRect)bounds;
+
 @end

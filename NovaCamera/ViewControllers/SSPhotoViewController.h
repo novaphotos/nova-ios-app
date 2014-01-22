@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @class ALAsset;
+@class SSChronologicalAssetsLibraryService;
 
 /**
  * Photo viewer; UIImageView embedded in a UIScrollView allowing user to
@@ -17,9 +18,9 @@
 @interface SSPhotoViewController : UIViewController <UIScrollViewDelegate>
 
 /**
- * Asset of photo to display
+ * Assets library service used to retrieve full resolution images
  */
-@property (nonatomic, strong) ALAsset *asset;
+@property (nonatomic, weak) SSChronologicalAssetsLibraryService *libraryService;
 
 /**
  * Asset URL of photo
@@ -54,6 +55,5 @@
  * not zooming beyind 1x.
  */
 - (void)resetZoom;
-
 
 @end

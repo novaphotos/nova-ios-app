@@ -21,11 +21,15 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
+    [self layoutWithBounds:self.bounds];
+}
+
+- (void)layoutWithBounds:(CGRect)bounds {
     UIView *contentView = [self.delegate viewForZoomingInScrollView:self];
     if (contentView) {
         CGRect contentFrame = contentView.frame;
-        CGFloat svWidth = self.bounds.size.width;
-        CGFloat svHeight = self.bounds.size.height;
+        CGFloat svWidth = bounds.size.width;
+        CGFloat svHeight = bounds.size.height;
         CGFloat contentWidth = contentFrame.size.width;
         CGFloat contentHeight = contentFrame.size.height;
         if (contentWidth < svWidth) {
