@@ -22,6 +22,11 @@
 @property (nonatomic, strong) ALAsset *asset;
 
 /**
+ * Asset URL of photo
+ */
+@property (nonatomic, strong) NSURL *assetURL;
+
+/**
  * Image view containing the target image
  */
 @property (nonatomic, strong) IBOutlet UIImageView *imageView;

@@ -20,7 +20,7 @@
 - (NSUInteger)indexOfAsset:(ALAsset *)asset;
 - (NSUInteger)indexOfAssetWithURL:(NSURL *)assetURL;
 - (void)removeAssetURLAtIndex:(NSUInteger)index;
-- (void)addAssetURL:(NSURL *)assetURL;
+- (void)insertAssetURL:(NSURL *)assetURL;
 - (void)enumerateAllAssetsWithCompletion:(void (^)(NSArray *assetURLs, NSError *error))completion;
 - (void)assetForURL:(NSURL *)assetURL resultBlock:(void (^)(ALAsset *asset))result failureBlock:(void (^)(NSError *error))failure;
 

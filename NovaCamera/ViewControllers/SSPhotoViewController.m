@@ -109,6 +109,7 @@
 - (void)setAsset:(ALAsset *)asset {
     [self willChangeValueForKey:@"asset"];
     _asset = asset;
+    self.assetURL = asset.defaultRepresentation.url;
     dispatch_async(dispatch_get_main_queue(), ^{
         [self displayAsset:asset];
     });

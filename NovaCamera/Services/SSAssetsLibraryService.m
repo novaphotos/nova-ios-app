@@ -56,9 +56,9 @@
     [self didChangeValueForKey:@"assetURLs"];
 }
 
-- (void)addAssetURL:(NSURL *)assetURL {
+- (void)insertAssetURL:(NSURL *)assetURL {
     NSMutableArray *mutableURLs = [self.assetURLs mutableCopy];
-    [mutableURLs addObject:assetURL];
+    [mutableURLs insertObject:assetURL atIndex:0];
     [self willChangeValueForKey:@"assetURLs"];
     _assetURLs = [NSArray arrayWithArray:mutableURLs];
     [self didChangeValueForKey:@"assetURLs"];
