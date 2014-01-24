@@ -26,3 +26,4 @@ docs
 
 # Local configuration
 NovaCamera/Config.h
+*.swp
