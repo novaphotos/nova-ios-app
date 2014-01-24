@@ -5,6 +5,7 @@ platform :ios, "7.0"
 
 target "NovaCamera" do
 	pod 'AviarySDK', '~> 3.3.11'
+	pod 'BlocksKit', '~> 2.0.0'
 	pod 'CocoaLumberjack', '~> 1.7.0'
 	pod 'TestFlightSDK', '~> 2.0.2'
 	pod 'TestFlightLogger', '~> 0.0.3'
