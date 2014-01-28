@@ -7,6 +7,7 @@
 //
 
 #import "SSFlashSettingsViewController.h"
+#import "SSTheme.h"
 
 static const CGFloat customSettingsHeight = 70.0;
 static const NSTimeInterval customSettingsAnimationDuration = 0.25;
@@ -90,6 +91,8 @@ static const NSTimeInterval customSettingsAnimationDuration = 0.25;
                              @"btn-flash-bright",
                              @"btn-flash-custom",
                              ];
+    
+    [[SSTheme currentTheme] updateFontsInView:self.view includeSubviews:YES];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

@@ -24,7 +24,10 @@
     // TestFlight logging
     [DDLog addLogger:[TestFlightLogger sharedInstance] withLogLevel:LOG_LEVEL_WARN];
     
-    [[NSBundle mainBundle] objectForInfoDictionaryKey:@""];
+    // List fonts
+    for (NSString *family in [UIFont familyNames]) {
+        DDLogVerbose(@"Fonts in family %@: %@", family, [UIFont fontNamesForFamilyName:family]);
+    }
     
     return YES;
 }
