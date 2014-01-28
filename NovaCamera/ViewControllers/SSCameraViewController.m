@@ -10,6 +10,7 @@
 #import "SSCameraPreviewView.h"
 #import "SSCaptureSessionManager.h"
 #import "SSLibraryViewController.h"
+#import "SSFlashSettingsViewController.h"
 #import <AVFoundation/AVFoundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <CocoaLumberjack/DDLog.h>
@@ -18,9 +19,12 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 @interface SSCameraViewController () {
     NSURL *_showPhotoURL;
+    NSMutableArray *_flashSettingsConstraints;
 }
 @property (nonatomic, strong) SSCaptureSessionManager *captureSessionManager;
 - (void)runStillImageCaptureAnimation;
+- (void)showFlashSettings;
+- (void)hideFlashSettings;
 @end
 
 @implementation SSCameraViewController
@@ -58,6 +62,9 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(focusAndExposeTap:)];
     tapGesture.numberOfTapsRequired = 1;
     [self.previewView addGestureRecognizer:tapGesture];
+    
+    // Set up flash settings
+    self.flashSettingsViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"flashSettings"];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -138,6 +145,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 }
 
 - (IBAction)showFlashSettings:(id)sender {
+    [self showFlashSettings];
 }
 
 - (IBAction)showLibrary:(id)sender {
@@ -169,6 +177,37 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             self.previewView.layer.opacity = 1.0;
 		}];
 	});
+}
+
+- (void)showFlashSettings {
+    [self.flashSettingsViewController viewWillAppear:NO];
+    [self.view addSubview:self.flashSettingsViewController.view];
+    
+    // Constraints
+    _flashSettingsConstraints = [NSMutableArray array];
+    NSDictionary *views = @{
+                            @"flashSettings": self.flashSettingsViewController.view,
+                            @"view": self.view,
+                            };
+    [_flashSettingsConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[flashSettings]|" options:0 metrics:Nil views:views]];
+    [_flashSettingsConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[flashSettings]|" options:0 metrics:nil views:views]];
+    [self.view addConstraints:_flashSettingsConstraints];
+    
+    [self.flashSettingsViewController viewDidAppear:NO];
+    
+    double delayInSeconds = 2.0;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        DDLogVerbose(@"%@", [self.view recursiveDescription]);
+    });
+}
+
+- (void)hideFlashSettings {
+    [self.flashSettingsViewController viewWillDisappear:NO];
+    [self.view removeConstraints:_flashSettingsConstraints];
+    [self.flashSettingsViewController.view removeFromSuperview];
+    [self.flashSettingsViewController viewDidDisappear:NO];
+    _flashSettingsConstraints = nil;
 }
 
 @end

@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @class SSCameraPreviewView;
+@class SSFlashSettingsViewController;
 
 @interface SSCameraViewController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
@@ -18,6 +19,8 @@
 @property (nonatomic, strong) IBOutlet UIButton *flashSettingsButton;
 @property (nonatomic, strong) IBOutlet UIButton *generalSettingsButton;
 @property (nonatomic, strong) IBOutlet UIButton *toggleCameraButton;
+
+@property (nonatomic, strong) IBOutlet SSFlashSettingsViewController *flashSettingsViewController;
 
 - (IBAction)capture:(id)sender;
 - (IBAction)showGeneralSettings:(id)sender;

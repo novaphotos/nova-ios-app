@@ -86,6 +86,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
+                                            <action selector="showGeneralSettings:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="bXO-Br-r6Z"/>
                                             <action selector="toggleCamera:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="fDf-LM-qi9"/>
                                         </connections>
                                     </button>
@@ -101,11 +102,11 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="showLibrary:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Agn-gg-BD0"/>
+                                            <action selector="showFlashSettings:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="BZX-zm-8S0"/>
                                         </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="GSs-ex-cjL" firstAttribute="top" secondItem="2Si-W3-Mqg" secondAttribute="top" constant="11" id="9fO-IR-LS8"/>
                                     <constraint firstAttribute="trailing" secondItem="gFl-vq-I0h" secondAttribute="trailing" id="C7U-lL-D50"/>
@@ -134,6 +135,8 @@
                     <nil key="simulatedStatusBarMetrics"/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
                     <connections>
+                        <outlet property="flashSettingsButton" destination="nb7-cS-TF2" id="5Fa-fs-NcP"/>
+                        <outlet property="generalSettingsButton" destination="GSs-ex-cjL" id="AMh-dc-kr0"/>
                         <outlet property="previewView" destination="2Si-W3-Mqg" id="aUr-MC-q6I"/>
                         <segue destination="4Kg-nv-94b" kind="modal" identifier="showPhoto" modalTransitionStyle="flipHorizontal" id="YwU-7w-q0s"/>
                     </connections>
@@ -368,6 +371,228 @@
             </objects>
             <point key="canvasLocation" x="1730" y="-13"/>
         </scene>
+        <!--Flash Settings View Controller-->
+        <scene sceneID="yQ5-1k-F3d">
+            <objects>
+                <viewController storyboardIdentifier="flashSettings" automaticallyAdjustsScrollViewInsets="NO" id="i9U-49-zHT" customClass="SSFlashSettingsViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Brp-KF-wye"/>
+                        <viewControllerLayoutGuide type="bottom" id="GY5-Vy-4cV"/>
+                    </layoutGuides>
+                    <view key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="Qyw-kn-v0a">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="X1m-R8-2yy" userLabel="Translucent window">
+                                <rect key="frame" x="0.0" y="159" width="320" height="250"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <subviews>
+                                    <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="P1K-EM-ibq" userLabel="Flash modes">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="92"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RvU-H5-dth" userLabel="Flash-Off">
+                                                <rect key="frame" x="20" y="10" width="55" height="82"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                <state key="normal" image="btn-flash-off">
+                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="changeFlashMode:" destination="i9U-49-zHT" eventType="touchUpInside" id="Ejs-VE-ugl"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hWX-V3-L6U" userLabel="Flash-Gentle">
+                                                <rect key="frame" x="75" y="10" width="55" height="82"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                <state key="normal" image="btn-flash-gentle">
+                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="changeFlashMode:" destination="i9U-49-zHT" eventType="touchUpInside" id="YB8-Lg-1ex"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xdZ-cX-thL" userLabel="Flash-Warm">
+                                                <rect key="frame" x="130" y="10" width="55" height="82"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                <state key="normal" image="btn-flash-warm">
+                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="changeFlashMode:" destination="i9U-49-zHT" eventType="touchUpInside" id="OjU-xu-wXP"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DZB-ag-wsO" userLabel="Flash-Bright">
+                                                <rect key="frame" x="185" y="10" width="55" height="82"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                <state key="normal" image="btn-flash-bright">
+                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="changeFlashMode:" destination="i9U-49-zHT" eventType="touchUpInside" id="Sdt-SI-yfF"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7N0-tm-YG3" userLabel="Flash-Custom">
+                                                <rect key="frame" x="240" y="10" width="55" height="82"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                <state key="normal" image="btn-flash-custom-selected">
+                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="changeFlashMode:" destination="i9U-49-zHT" eventType="touchUpInside" id="NJk-ds-PvR"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="320" id="TXu-6L-wdR"/>
+                                            <constraint firstAttribute="height" constant="92" id="pqi-aJ-7RJ"/>
+                                        </constraints>
+                                    </view>
+                                    <view opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xC7-iQ-5mU" userLabel="Custom settings">
+                                        <rect key="frame" x="0.0" y="92" width="320" height="70"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <subviews>
+                                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="keC-bT-JDd" userLabel="Color temp slider">
+                                                <rect key="frame" x="184" y="5" width="118" height="34"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            </slider>
+                                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="V0v-Un-PnB" userLabel="Brightness slider">
+                                                <rect key="frame" x="184" y="37" width="118" height="34"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            </slider>
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Color Temp" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rC8-e6-cJ5">
+                                                <rect key="frame" x="20" y="11" width="158" height="21"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Brightness" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Kf-Kr-xBy">
+                                                <rect key="frame" x="20" y="43" width="158" height="21"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="70" id="Jf1-ju-tiV"/>
+                                            <constraint firstAttribute="width" constant="320" id="M6B-VH-p60"/>
+                                        </constraints>
+                                    </view>
+                                    <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kUu-HW-IIb" userLabel="Status">
+                                        <rect key="frame" x="0.0" y="162" width="320" height="90"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <subviews>
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Nova Status:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YbF-FG-Rk4">
+                                                <rect key="frame" x="20" y="20" width="99" height="21"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Signal:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FzT-9K-Q7J">
+                                                <rect key="frame" x="20" y="40" width="53" height="21"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Ready" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZMd-t6-2Fg">
+                                                <rect key="frame" x="127" y="20" width="77" height="21"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Good" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2DZ-8e-5wB">
+                                                <rect key="frame" x="81" y="40" width="123" height="21"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4h3-WR-JL4">
+                                                <rect key="frame" x="212" y="36" width="30" height="30"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <state key="normal" title="Test">
+                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="testFlash:" destination="i9U-49-zHT" eventType="touchUpInside" id="Oyo-sP-CvB"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7pP-wO-R0O">
+                                                <rect key="frame" x="270" y="36" width="30" height="30"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <state key="normal" title="OK">
+                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="confirmFlashSettings:" destination="i9U-49-zHT" eventType="touchUpInside" id="8zN-Ax-Xv2"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="320" id="B2K-qV-UZg"/>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="320" id="fbB-3I-Kkf"/>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="90" id="gm2-u0-URF"/>
+                                            <constraint firstAttribute="height" constant="90" id="tas-I8-itd"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.59999999999999998" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="kUu-HW-IIb" secondAttribute="trailing" id="1ke-H5-Lml"/>
+                                    <constraint firstAttribute="width" constant="320" id="37G-LM-Enq"/>
+                                    <constraint firstItem="kUu-HW-IIb" firstAttribute="leading" secondItem="X1m-R8-2yy" secondAttribute="leading" id="5hq-7h-KtA"/>
+                                    <constraint firstItem="xC7-iQ-5mU" firstAttribute="top" secondItem="P1K-EM-ibq" secondAttribute="bottom" id="6Em-RF-k3G"/>
+                                    <constraint firstItem="xC7-iQ-5mU" firstAttribute="leading" secondItem="X1m-R8-2yy" secondAttribute="leading" id="7ox-5H-OaT"/>
+                                    <constraint firstItem="P1K-EM-ibq" firstAttribute="leading" secondItem="X1m-R8-2yy" secondAttribute="leading" id="83L-MI-arO"/>
+                                    <constraint firstAttribute="trailing" secondItem="xC7-iQ-5mU" secondAttribute="trailing" id="PYJ-79-Whg"/>
+                                    <constraint firstAttribute="trailing" secondItem="P1K-EM-ibq" secondAttribute="trailing" id="TzC-M1-cvK"/>
+                                    <constraint firstItem="kUu-HW-IIb" firstAttribute="top" secondItem="xC7-iQ-5mU" secondAttribute="bottom" id="alg-aS-pKY"/>
+                                    <constraint firstAttribute="bottom" secondItem="kUu-HW-IIb" secondAttribute="bottom" constant="-2" id="gqA-vH-6aI"/>
+                                    <constraint firstItem="P1K-EM-ibq" firstAttribute="top" secondItem="X1m-R8-2yy" secondAttribute="top" id="xHI-nV-etX"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="centerY" secondItem="X1m-R8-2yy" secondAttribute="centerY" id="hLR-5X-aKp"/>
+                            <constraint firstAttribute="centerX" secondItem="X1m-R8-2yy" secondAttribute="centerX" id="t7B-WS-og1"/>
+                        </constraints>
+                    </view>
+                    <toolbarItems/>
+                    <connections>
+                        <outlet property="brightnessSlider" destination="V0v-Un-PnB" id="V1B-3k-Nl4"/>
+                        <outlet property="colorTempSlider" destination="keC-bT-JDd" id="tJA-LO-xc0"/>
+                        <outlet property="flashBrightButton" destination="DZB-ag-wsO" id="mIH-cd-iGh"/>
+                        <outlet property="flashCustomButton" destination="7N0-tm-YG3" id="mi4-uA-khK"/>
+                        <outlet property="flashCustomSettingsHeightConstraint" destination="Jf1-ju-tiV" id="Z4Y-Y7-RLF"/>
+                        <outlet property="flashCustomSettingsView" destination="xC7-iQ-5mU" id="LVQ-iw-hk3"/>
+                        <outlet property="flashGentleButton" destination="hWX-V3-L6U" id="XvX-5B-Hov"/>
+                        <outlet property="flashModesView" destination="P1K-EM-ibq" id="f6F-DM-C4a"/>
+                        <outlet property="flashOKButton" destination="7pP-wO-R0O" id="Z6X-gI-Gt2"/>
+                        <outlet property="flashOffButton" destination="RvU-H5-dth" id="QkI-vx-nV5"/>
+                        <outlet property="flashStatusLabel" destination="ZMd-t6-2Fg" id="2aS-1N-jeq"/>
+                        <outlet property="flashStatusView" destination="kUu-HW-IIb" id="JQM-MV-SHZ"/>
+                        <outlet property="flashStrengthLabel" destination="2DZ-8e-5wB" id="ZUW-GE-GMo"/>
+                        <outlet property="flashTestButton" destination="4h3-WR-JL4" id="FuK-ih-GPr"/>
+                        <outlet property="flashWarmButton" destination="xdZ-cX-thL" id="qxD-Zw-nQe"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WKX-qY-XlS" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="755" y="677"/>
+        </scene>
     </scenes>
     <resources>
         <image name="bottom-gradient-4x134" width="4" height="134"/>
@@ -376,6 +601,11 @@
         <image name="btn-capture-on" width="80" height="80"/>
         <image name="btn-edit-round" width="50" height="50"/>
         <image name="btn-flash" width="50" height="50"/>
+        <image name="btn-flash-bright" width="55" height="82"/>
+        <image name="btn-flash-custom-selected" width="55" height="82"/>
+        <image name="btn-flash-gentle" width="55" height="82"/>
+        <image name="btn-flash-off" width="55" height="82"/>
+        <image name="btn-flash-warm" width="55" height="82"/>
         <image name="btn-library" width="50" height="50"/>
         <image name="btn-library-round" width="50" height="50"/>
         <image name="btn-settings-round" width="50" height="50"/>
