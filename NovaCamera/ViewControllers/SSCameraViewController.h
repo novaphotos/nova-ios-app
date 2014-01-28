@@ -7,11 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SSFlashSettingsViewController.h"
 
 @class SSCameraPreviewView;
-@class SSFlashSettingsViewController;
 
-@interface SSCameraViewController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@interface SSCameraViewController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate, SSFlashSettingsViewControllerDelegate>
 
 @property (nonatomic, strong) IBOutlet SSCameraPreviewView *previewView;
 @property (nonatomic, strong) IBOutlet UIButton *captureButton;

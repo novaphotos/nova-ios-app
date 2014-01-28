@@ -17,14 +17,15 @@
 
 static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDeviceAuthorizedContext;
 
+static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
+
 @interface SSCameraViewController () {
     NSURL *_showPhotoURL;
-    NSMutableArray *_flashSettingsConstraints;
 }
 @property (nonatomic, strong) SSCaptureSessionManager *captureSessionManager;
 - (void)runStillImageCaptureAnimation;
-- (void)showFlashSettings;
-- (void)hideFlashSettings;
+- (void)showFlashSettingsAnimated:(BOOL)animated;
+- (void)hideFlashSettingsAnimated:(BOOL)animated;
 @end
 
 @implementation SSCameraViewController
@@ -65,6 +66,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     
     // Set up flash settings
     self.flashSettingsViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"flashSettings"];
+    self.flashSettingsViewController.delegate = self;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -145,7 +147,7 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 }
 
 - (IBAction)showFlashSettings:(id)sender {
-    [self showFlashSettings];
+    [self showFlashSettingsAnimated:YES];
 }
 
 - (IBAction)showLibrary:(id)sender {
@@ -179,35 +181,52 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 	});
 }
 
-- (void)showFlashSettings {
-    [self.flashSettingsViewController viewWillAppear:NO];
+- (void)showFlashSettingsAnimated:(BOOL)animated {
+    [self.flashSettingsViewController viewWillAppear:animated];
     [self.view addSubview:self.flashSettingsViewController.view];
     
-    // Constraints
-    _flashSettingsConstraints = [NSMutableArray array];
-    NSDictionary *views = @{
-                            @"flashSettings": self.flashSettingsViewController.view,
-                            @"view": self.view,
-                            };
-    [_flashSettingsConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[flashSettings]|" options:0 metrics:Nil views:views]];
-    [_flashSettingsConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[flashSettings]|" options:0 metrics:nil views:views]];
-    [self.view addConstraints:_flashSettingsConstraints];
-    
-    [self.flashSettingsViewController viewDidAppear:NO];
-    
-    double delayInSeconds = 2.0;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        DDLogVerbose(@"%@", [self.view recursiveDescription]);
-    });
+    if (animated) {
+        CGRect flashSettingsFrame = self.view.frame;
+        flashSettingsFrame.origin.y += flashSettingsFrame.size.height;
+        self.flashSettingsViewController.view.frame = flashSettingsFrame;
+        
+        [UIView animateWithDuration:flashSettingsAnimationDuration delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+            self.flashSettingsViewController.view.frame = self.view.frame;
+        } completion:^(BOOL finished) {
+            [self.flashSettingsViewController viewDidAppear:animated];
+        }];
+    } else {
+        self.flashSettingsViewController.view.frame = self.view.frame;
+        [self.flashSettingsViewController viewDidAppear:animated];
+    }
 }
 
-- (void)hideFlashSettings {
-    [self.flashSettingsViewController viewWillDisappear:NO];
-    [self.view removeConstraints:_flashSettingsConstraints];
-    [self.flashSettingsViewController.view removeFromSuperview];
-    [self.flashSettingsViewController viewDidDisappear:NO];
-    _flashSettingsConstraints = nil;
+- (void)hideFlashSettingsAnimated:(BOOL)animated {
+    [self.flashSettingsViewController viewWillDisappear:animated];
+    
+    if (animated) {
+        [UIView animateWithDuration:flashSettingsAnimationDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+            CGRect flashSettingsFrame = self.view.frame;
+            flashSettingsFrame.origin.y += flashSettingsFrame.size.height;
+            self.flashSettingsViewController.view.frame = flashSettingsFrame;
+        } completion:^(BOOL finished) {
+            [self.flashSettingsViewController.view removeFromSuperview];
+            [self.flashSettingsViewController viewDidDisappear:animated];
+        }];
+    } else {
+        [self.flashSettingsViewController.view removeFromSuperview];
+        [self.flashSettingsViewController viewDidDisappear:animated];
+    }
+}
+
+#pragma mark - SSFlashSettingsViewControllerDelegate
+
+- (void)flashSettingsViewController:(id)flashSettingsViewController didConfirmSettings:(SSFlashSettings)flashSettings {
+    [self hideFlashSettingsAnimated:YES];
+}
+
+- (void)flashSettingsViewController:(id)flashSettingsViewController testFlashWithSettings:(SSFlashSettings)flashSettings {
+    [self hideFlashSettingsAnimated:YES];
 }
 
 @end
