@@ -40,5 +40,13 @@
  */
 - (void)updateFontsInView:(UIView *)view includeSubviews:(BOOL)includeSubviews;
 
+///---------------------
+/// @name Custm controls
+///---------------------
+
+/**
+ * Apply styling to UISlider
+ */
+- (void)styleSlider:(UISlider *)slider;
 
 @end

@@ -48,4 +48,19 @@
     }
 }
 
+#pragma mark - Custom controls
+
+- (void)styleSlider:(UISlider *)slider {
+    [slider setThumbImage:[UIImage imageNamed:@"slider-thumb"] forState:UIControlStateNormal];
+    
+    /*
+    slider.maximumTrackTintColor = [UIColor colorWithWhite:1.0 alpha:0.6];
+    slider.minimumTrackTintColor = [UIColor colorWithWhite:1.0 alpha:0.6];
+     */
+    
+    UIImage *trackImage = [[UIImage imageNamed:@"slider-track"] resizableImageWithCapInsets:UIEdgeInsetsZero];
+    [slider setMinimumTrackImage:trackImage forState:UIControlStateNormal];
+    [slider setMaximumTrackImage:trackImage forState:UIControlStateNormal];
+}
+
 @end

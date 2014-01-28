@@ -93,6 +93,9 @@ static const NSTimeInterval customSettingsAnimationDuration = 0.25;
                              ];
     
     [[SSTheme currentTheme] updateFontsInView:self.view includeSubviews:YES];
+    
+    [[SSTheme currentTheme] styleSlider:self.brightnessSlider];
+    [[SSTheme currentTheme] styleSlider:self.colorTempSlider];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
