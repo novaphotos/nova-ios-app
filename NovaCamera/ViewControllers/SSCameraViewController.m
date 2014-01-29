@@ -144,6 +144,7 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
 }
 
 - (IBAction)showGeneralSettings:(id)sender {
+    [self performSegueWithIdentifier:@"showSettings" sender:sender];
 }
 
 - (IBAction)showFlashSettings:(id)sender {

@@ -20,6 +20,12 @@
  */
 + (SSTheme *)currentTheme;
 
+/**
+ * Initial styling setup using UIAppearance proxies.
+ * Should be called once at the beginning of the app's lifecycle.
+ */
+- (void)styleAppearanceProxies;
+
 ///----------------------
 /// @name Font management
 ///----------------------
@@ -40,13 +46,18 @@
  */
 - (void)updateFontsInView:(UIView *)view includeSubviews:(BOOL)includeSubviews;
 
-///---------------------
-/// @name Custm controls
-///---------------------
+///----------------------
+/// @name Custom controls
+///----------------------
 
 /**
  * Apply styling to UISlider
  */
 - (void)styleSlider:(UISlider *)slider;
+
+/**
+ * Apply styling to UISwitch
+ */
+- (void)styleSwitch:(UISwitch *)aSwitch;
 
 @end

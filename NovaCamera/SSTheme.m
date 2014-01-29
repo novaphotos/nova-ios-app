@@ -7,6 +7,7 @@
 //
 
 #import "SSTheme.h"
+#import <QuartzCore/QuartzCore.h>
 
 @implementation SSTheme
 
@@ -17,6 +18,34 @@
         _sharedTheme = [[SSTheme alloc] init];
     });
     return _sharedTheme;
+}
+
+- (void)styleAppearanceProxies {
+    UIFont *navBarFont = [UIFont fontWithName:self.defaultFontName size:21];
+    UIColor *navBarFontColor = [UIColor whiteColor];
+    UIColor *navBarColor = [UIColor colorWithRed:.901 green:.404 blue:.255 alpha:1];
+    
+    NSDictionary *navBarTitleTextAttributes = @{
+                                                NSFontAttributeName: navBarFont,
+                                                NSForegroundColorAttributeName: navBarFontColor,
+                                                };
+    [[UINavigationBar appearance] setTitleTextAttributes:navBarTitleTextAttributes];
+    [[UINavigationBar appearance] setTintColor:navBarFontColor];
+    
+    // Nav bar background - simulate with a fake background image
+    UIView *background = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+    background.backgroundColor = navBarColor;
+    background.alpha = 1.0;
+    background.opaque = YES;
+    UIGraphicsBeginImageContext(background.frame.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    [background.layer renderInContext:context];
+    UIImage *backgroundImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    [[UINavigationBar appearance] setBackgroundImage:backgroundImage
+                                       forBarMetrics:UIBarMetricsDefault];
+
 }
 
 #pragma mark - Font management
@@ -61,6 +90,11 @@
     UIImage *trackImage = [[UIImage imageNamed:@"slider-track"] resizableImageWithCapInsets:UIEdgeInsetsZero];
     [slider setMinimumTrackImage:trackImage forState:UIControlStateNormal];
     [slider setMaximumTrackImage:trackImage forState:UIControlStateNormal];
+}
+
+- (void)styleSwitch:(UISwitch *)aSwitch {
+    // See: http://stackoverflow.com/a/20039695/72
+    aSwitch.layer.cornerRadius = 16.0;
 }
 
 @end

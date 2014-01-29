@@ -34,6 +34,9 @@
 		27AE1C0318976F4C00C27C38 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 27AE1C0118976F4C00C27C38 /* LICENSE.txt */; };
 		27AE1C0418976F4C00C27C38 /* OpenSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27AE1C0218976F4C00C27C38 /* OpenSans-Light.ttf */; };
 		27AE1C071897700B00C27C38 /* SSTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 27AE1C061897700B00C27C38 /* SSTheme.m */; };
+		27AE1C0A189910A300C27C38 /* SSSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27AE1C09189910A300C27C38 /* SSSettingsViewController.m */; };
+		27AE1C0D1899116900C27C38 /* SSSettingsService.m in Sources */ = {isa = PBXBuildFile; fileRef = 27AE1C0C1899116900C27C38 /* SSSettingsService.m */; };
+		27AE1C10189918D000C27C38 /* SSSettingsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27AE1C0F189918D000C27C38 /* SSSettingsCell.m */; };
 		27BB942D1863A7CD00A31BCF /* SSCameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27BB942C1863A7CD00A31BCF /* SSCameraViewController.m */; };
 		27BB94331863AB3300A31BCF /* SSCameraPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27BB94321863AB3300A31BCF /* SSCameraPreviewView.m */; };
 		27EF5B091886ACAD00AFBD0E /* SSLibraryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EF5B081886ACAD00AFBD0E /* SSLibraryViewController.m */; };
@@ -93,6 +96,12 @@
 		27AE1C0218976F4C00C27C38 /* OpenSans-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Light.ttf"; sourceTree = "<group>"; };
 		27AE1C051897700B00C27C38 /* SSTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSTheme.h; sourceTree = "<group>"; };
 		27AE1C061897700B00C27C38 /* SSTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSTheme.m; sourceTree = "<group>"; };
+		27AE1C08189910A300C27C38 /* SSSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSSettingsViewController.h; sourceTree = "<group>"; };
+		27AE1C09189910A300C27C38 /* SSSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSSettingsViewController.m; sourceTree = "<group>"; };
+		27AE1C0B1899116900C27C38 /* SSSettingsService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSSettingsService.h; sourceTree = "<group>"; };
+		27AE1C0C1899116900C27C38 /* SSSettingsService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSSettingsService.m; sourceTree = "<group>"; };
+		27AE1C0E189918D000C27C38 /* SSSettingsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSSettingsCell.h; sourceTree = "<group>"; };
+		27AE1C0F189918D000C27C38 /* SSSettingsCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSSettingsCell.m; sourceTree = "<group>"; };
 		27BB942B1863A7CD00A31BCF /* SSCameraViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSCameraViewController.h; sourceTree = "<group>"; };
 		27BB942C1863A7CD00A31BCF /* SSCameraViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSCameraViewController.m; sourceTree = "<group>"; };
 		27BB94311863AB3300A31BCF /* SSCameraPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSCameraPreviewView.h; sourceTree = "<group>"; };
@@ -233,6 +242,8 @@
 				27728B47188F5757004D67A4 /* SSChronologicalAssetsLibraryService.m */,
 				27AE1BF81896FEB500C27C38 /* SSNovaFlashService.h */,
 				27AE1BF91896FEB500C27C38 /* SSNovaFlashService.m */,
+				27AE1C0B1899116900C27C38 /* SSSettingsService.h */,
+				27AE1C0C1899116900C27C38 /* SSSettingsService.m */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -274,6 +285,8 @@
 				2719089D187EC5E500996A2D /* SSPhotoViewController.m */,
 				27F266C01892710F00B47C7B /* SSFlashSettingsViewController.h */,
 				27F266C11892710F00B47C7B /* SSFlashSettingsViewController.m */,
+				27AE1C08189910A300C27C38 /* SSSettingsViewController.h */,
+				27AE1C09189910A300C27C38 /* SSSettingsViewController.m */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -287,6 +300,8 @@
 				2752B3A11884BC0F00E0C870 /* SSCenteredScrollView.m */,
 				27554D02188E9A68008E4C32 /* SSPassThroughView.h */,
 				27554D03188E9A68008E4C32 /* SSPassThroughView.m */,
+				27AE1C0E189918D000C27C38 /* SSSettingsCell.h */,
+				27AE1C0F189918D000C27C38 /* SSSettingsCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -481,10 +496,13 @@
 				2724C99018639EEB00A68E0D /* SSAppDelegate.m in Sources */,
 				27BB94331863AB3300A31BCF /* SSCameraPreviewView.m in Sources */,
 				2752B3A21884BC0F00E0C870 /* SSCenteredScrollView.m in Sources */,
+				27AE1C10189918D000C27C38 /* SSSettingsCell.m in Sources */,
 				272F87C518752DE90005BA58 /* SSCaptureSessionManager.m in Sources */,
 				27AE1C071897700B00C27C38 /* SSTheme.m in Sources */,
 				27728B4F188F5C2A004D67A4 /* ALAsset+FilteredImage.m in Sources */,
+				27AE1C0A189910A300C27C38 /* SSSettingsViewController.m in Sources */,
 				27F266C21892710F00B47C7B /* SSFlashSettingsViewController.m in Sources */,
+				27AE1C0D1899116900C27C38 /* SSSettingsService.m in Sources */,
 				27EF5B091886ACAD00AFBD0E /* SSLibraryViewController.m in Sources */,
 				27728B48188F5757004D67A4 /* SSChronologicalAssetsLibraryService.m in Sources */,
 				2724C98C18639EEB00A68E0D /* main.m in Sources */,

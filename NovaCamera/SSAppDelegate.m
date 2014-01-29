@@ -7,6 +7,7 @@
 //
 
 #import "SSAppDelegate.h"
+#import "SSTheme.h"
 #import <TestFlightSDK/TestFlight.h>
 #import <CocoaLumberjack/DDTTYLogger.h>
 #import <TestFlightLogger/TestFlightLogger.h>
@@ -23,6 +24,9 @@
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
     // TestFlight logging
     [DDLog addLogger:[TestFlightLogger sharedInstance] withLogLevel:LOG_LEVEL_WARN];
+    
+    // Setup theme
+    [[SSTheme currentTheme] styleAppearanceProxies];
     
     return YES;
 }
