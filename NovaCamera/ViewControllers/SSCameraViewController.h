@@ -12,6 +12,10 @@
 @class SSCameraPreviewView;
 @class SSNovaFlashService;
 
+/**
+ * Camera capture view; handles preview, camera capture, displaying of
+ * various settings, and transitions to library view
+ */
 @interface SSCameraViewController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate, SSFlashSettingsViewControllerDelegate>
 
 @property (nonatomic, strong) IBOutlet SSCameraPreviewView *previewView;

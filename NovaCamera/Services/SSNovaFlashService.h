@@ -34,8 +34,18 @@ static const SSFlashSettings SSFlashSettingsWarm = { SSFlashModeWarm, 1.0, 0.75 
 static const SSFlashSettings SSFlashSettingsBright = { SSFlashModeBright, 0.5, 1.0 };
 static const SSFlashSettings SSFlashSettingsCustomDefault = { SSFlashModeCustom, 0.5, 0.5 };
 
+/**
+ * Abstraction for Nova Flash, handling persistence of flash settings as well as
+ * Nova Flash SDK interaction.
+ */
+
 @interface SSNovaFlashService : NSObject
 
+/**
+ * SSFlashSettings struct containing the current flash settings.
+ * Setting this property will result in this service asynchronously
+ * saving new settings to NSUseDefaults.
+ */
 @property (nonatomic, assign) SSFlashSettings flashSettings;
 
 @end

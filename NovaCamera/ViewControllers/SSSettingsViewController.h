@@ -10,6 +10,10 @@
 
 @class SSSettingsService;
 
+/**
+ * Simple UITableViewController subclass that displays settings as
+ * defined in SSSettingsService
+ */
 @interface SSSettingsViewController : UITableViewController
 
 @property (nonatomic, strong) SSSettingsService *settingsService;
