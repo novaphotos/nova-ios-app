@@ -34,7 +34,7 @@
 
 @end
 
-@interface SSFlashSettingsViewController : UIViewController
+@interface SSFlashSettingsViewController : UIViewController <UIGestureRecognizerDelegate>
 
 /**
  * Delegate responsible for showing/hiding the settings and responding to settings changes

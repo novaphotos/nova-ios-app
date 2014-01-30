@@ -53,6 +53,12 @@ static const NSTimeInterval customSettingsAnimationDuration = 0.25;
  */
 - (IBAction)flashBrightnessChanged:(id)sender;
 
+/**
+ * Capture background view taps; hide the flash view
+ * when received.
+ */
+- (IBAction)backgroundViewTapped:(id)sender;
+
 @end
 
 @implementation SSFlashSettingsViewController
@@ -106,6 +112,12 @@ static const NSTimeInterval customSettingsAnimationDuration = 0.25;
     
     [[SSTheme currentTheme] styleSlider:self.brightnessSlider];
     [[SSTheme currentTheme] styleSlider:self.colorTempSlider];
+    
+    // Set up the background view to respond to tap events, so that the view can
+    // be dismissed when tapped.
+    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backgroundViewTapped:)];
+    tapGestureRecognizer.delegate = self;
+    [self.view addGestureRecognizer:tapGestureRecognizer];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -181,6 +193,9 @@ static const NSTimeInterval customSettingsAnimationDuration = 0.25;
         [self hideCustomSettingsAnimated:animated];
     }
     
+    if (flashSettings.flashMode == SSFlashModeCustom) {
+    }
+    
     [self updateFlashModeButtons];
     
     [self didChangeValueForKey:@"flashSettings"];
@@ -253,6 +268,22 @@ static const NSTimeInterval customSettingsAnimationDuration = 0.25;
     SSFlashSettings settings = self.flashSettings;
     settings.flashBrightness = self.brightnessSlider.value;
     self.flashSettings = settings;
+}
+
+- (IBAction)backgroundViewTapped:(id)sender {
+    // For now, we'll pretend the user tapped OK
+    [self confirmFlashSettings:sender];
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    // We only want taps to the main view, not subviews.
+    if (touch.view == self.view) {
+        return YES;
+    } else {
+        return NO;
+    }
 }
 
 @end
