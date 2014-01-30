@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "SSNovaFlashService.h"
 
+@class SSFlashSettingsViewController;
+
 /**
  * Delegate protocol handling settings changes. The delegate, typically
  * the displaying view controller, is responsible for hiding the flash
@@ -23,7 +25,7 @@
  * should now be hidden by the parent view controller, and the specified
  * settings should be stored.
  */
-- (void)flashSettingsViewController:(id)flashSettingsViewController didConfirmSettings:(SSFlashSettings)flashSettings;
+- (void)flashSettingsViewController:(SSFlashSettingsViewController *)flashSettingsViewController didConfirmSettings:(SSFlashSettings)flashSettings;
 
 /**
  * User has requested a test flash be fired with the specified settings

@@ -108,11 +108,12 @@ static const CGFloat kTableViewHeaderSpacing = 6;
     NSString *cellIdentifier;
     NSString *title;
     BOOL value = NO;
+    NSString *key = nil;
     
     if (indexPath.row < [[self.settingsService generalSettingsLocalizedTitles] count]) {
         // Settings - switch
         cellIdentifier = @"SettingsSwitchCell";
-        NSString *key = [[self.settingsService generalSettingsKeys] objectAtIndex:indexPath.row];
+        key = [[self.settingsService generalSettingsKeys] objectAtIndex:indexPath.row];
         title = [self.settingsService localizedTitleForKey:key];
         value = [self.settingsService boolForKey:key];
     } else {
@@ -126,7 +127,9 @@ static const CGFloat kTableViewHeaderSpacing = 6;
     }
     
     cell.titleLabel.text = title;
-    cell.valueSwitch.on = value;
+//    cell.valueSwitch.on = value;
+    cell.settingsKey = key;
+    cell.settingsService = self.settingsService;
     
     return cell;
 }

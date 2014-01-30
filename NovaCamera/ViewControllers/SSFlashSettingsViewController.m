@@ -43,6 +43,16 @@ static const NSTimeInterval customSettingsAnimationDuration = 0.25;
  */
 - (void)updateFlashModeButtons;
 
+/**
+ * Persist changes to color temp to flashSettings
+ */
+- (IBAction)flashColorTempChanged:(id)sender;
+
+/**
+ * Persist changes to brightness to flashSettings
+ */
+- (IBAction)flashBrightnessChanged:(id)sender;
+
 @end
 
 @implementation SSFlashSettingsViewController
@@ -231,6 +241,18 @@ static const NSTimeInterval customSettingsAnimationDuration = 0.25;
         UIImage *image = [UIImage imageNamed:imgName];
         [flashButton setImage:image forState:UIControlStateNormal];
     }
+}
+
+- (IBAction)flashColorTempChanged:(id)sender {
+    SSFlashSettings settings = self.flashSettings;
+    settings.flashColorTemperature = self.colorTempSlider.value;
+    self.flashSettings = settings;
+}
+
+- (IBAction)flashBrightnessChanged:(id)sender {
+    SSFlashSettings settings = self.flashSettings;
+    settings.flashBrightness = self.brightnessSlider.value;
+    self.flashSettings = settings;
 }
 
 @end

@@ -14,6 +14,7 @@
 @interface SSSettingsService : NSObject
 
 + (id)sharedService;
+- (void)initializeUserDefaults;
 - (NSArray *)generalSettingsKeys;
 - (NSArray *)generalSettingsLocalizedTitles;
 - (NSString *)localizedTitleForKey:(NSString *)key;

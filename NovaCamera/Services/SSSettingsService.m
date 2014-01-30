@@ -28,6 +28,27 @@
     return _sharedService;
 }
 
+- (void)initializeUserDefaults {
+    NSArray *defaults = @[
+                          @NO,
+                          @NO,
+                          @NO,
+                          @NO,
+                          @NO,
+                          ];
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSArray *keys = [self generalSettingsKeys];
+    for (int idx = 0; idx < defaults.count; idx++) {
+        NSString *key = keys[idx];
+        if ([userDefaults objectForKey:key] == nil) {
+            BOOL val = [defaults[idx] boolValue];
+            DDLogVerbose(@"Setting NSUserDefaults key %@ to %d", key, val);
+            [userDefaults setBool:val forKey:key];
+        }
+    }
+    [userDefaults synchronize];
+}
+
 - (NSArray *)generalSettingsKeys {
     return @[
              @"edit_after_capture",
@@ -63,6 +84,9 @@
 
 - (void)setBool:(BOOL)value forKey:(NSString *)key {
     [[NSUserDefaults standardUserDefaults] setBool:value forKey:key];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    });
 }
 
 @end

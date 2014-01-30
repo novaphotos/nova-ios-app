@@ -10,6 +10,7 @@
 #import "SSCameraPreviewView.h"
 #import "SSCaptureSessionManager.h"
 #import "SSLibraryViewController.h"
+#import "SSNovaFlashService.h"
 #import "SSFlashSettingsViewController.h"
 #import <AVFoundation/AVFoundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
@@ -58,6 +59,9 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
     
     // Setup preview layer
     self.previewView.session = self.captureSessionManager.session;
+    
+    // Add flash service
+    self.flashService = [[SSNovaFlashService alloc] init];
     
     // Add gesture recognizer
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(focusAndExposeTap:)];
@@ -189,6 +193,9 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
     [self.flashSettingsViewController viewWillAppear:animated];
     [self.view addSubview:self.flashSettingsViewController.view];
     
+    // Load settings from flash service
+    self.flashSettingsViewController.flashSettings = self.flashService.flashSettings;
+    
     if (animated) {
         CGRect flashSettingsFrame = self.view.frame;
         flashSettingsFrame.origin.y += flashSettingsFrame.size.height;
@@ -225,11 +232,13 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
 
 #pragma mark - SSFlashSettingsViewControllerDelegate
 
-- (void)flashSettingsViewController:(id)flashSettingsViewController didConfirmSettings:(SSFlashSettings)flashSettings {
+- (void)flashSettingsViewController:(SSFlashSettingsViewController *)flashSettingsViewController didConfirmSettings:(SSFlashSettings)flashSettings {
+    // Update settings in flash service
+    self.flashService.flashSettings = flashSettings;
     [self hideFlashSettingsAnimated:YES];
 }
 
-- (void)flashSettingsViewController:(id)flashSettingsViewController testFlashWithSettings:(SSFlashSettings)flashSettings {
+- (void)flashSettingsViewController:(SSFlashSettingsViewController *)flashSettingsViewController testFlashWithSettings:(SSFlashSettings)flashSettings {
     [self hideFlashSettingsAnimated:YES];
 }
 

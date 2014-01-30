@@ -553,6 +553,9 @@
                                                 <color key="minimumTrackTintColor" red="0.76078438758850098" green="0.76078438758850098" blue="0.76078438758850098" alpha="1" colorSpace="deviceRGB"/>
                                                 <color key="maximumTrackTintColor" red="0.7607843876" green="0.7607843876" blue="0.7607843876" alpha="1" colorSpace="deviceRGB"/>
                                                 <color key="thumbTintColor" red="0.90588241815567017" green="0.40000003576278687" blue="0.29019609093666077" alpha="1" colorSpace="deviceRGB"/>
+                                                <connections>
+                                                    <action selector="flashColorTempChanged:" destination="i9U-49-zHT" eventType="valueChanged" id="gar-dM-D3b"/>
+                                                </connections>
                                             </slider>
                                             <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="V0v-Un-PnB" userLabel="Brightness slider">
                                                 <rect key="frame" x="138" y="45" width="116" height="34"/>
@@ -560,6 +563,9 @@
                                                 <color key="minimumTrackTintColor" red="0.7607843876" green="0.7607843876" blue="0.7607843876" alpha="1" colorSpace="deviceRGB"/>
                                                 <color key="maximumTrackTintColor" red="0.7607843876" green="0.7607843876" blue="0.7607843876" alpha="1" colorSpace="deviceRGB"/>
                                                 <color key="thumbTintColor" red="0.90588241820000004" green="0.40000003579999999" blue="0.29019609089999998" alpha="1" colorSpace="deviceRGB"/>
+                                                <connections>
+                                                    <action selector="flashBrightnessChanged:" destination="i9U-49-zHT" eventType="valueChanged" id="2ui-3e-asZ"/>
+                                                </connections>
                                             </slider>
                                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Color Temp" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rC8-e6-cJ5">
                                                 <rect key="frame" x="66" y="18" width="80" height="21"/>

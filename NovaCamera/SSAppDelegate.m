@@ -8,6 +8,7 @@
 
 #import "SSAppDelegate.h"
 #import "SSTheme.h"
+#import "SSSettingsService.h"
 #import <TestFlightSDK/TestFlight.h>
 #import <CocoaLumberjack/DDTTYLogger.h>
 #import <TestFlightLogger/TestFlightLogger.h>
@@ -27,6 +28,10 @@
     
     // Setup theme
     [[SSTheme currentTheme] styleAppearanceProxies];
+    
+    // Setup general settings
+    SSSettingsService *settingsService = [SSSettingsService sharedService];
+    [settingsService initializeUserDefaults];
     
     return YES;
 }
