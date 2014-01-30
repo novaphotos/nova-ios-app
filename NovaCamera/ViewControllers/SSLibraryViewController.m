@@ -11,13 +11,15 @@
 #import "SSPhotoViewController.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <AviarySDK/AFPhotoEditorController.h>
-#import <BlocksKit/UIAlertView+BlocksKit.h>
 
 @interface SSLibraryViewController () <AFPhotoEditorControllerDelegate, UIPageViewControllerDataSource, UIPageViewControllerDelegate> {
     
     BOOL _assetsLoaded;
     BOOL _viewWillAppear;
     BOOL _waitingToDisplayInsertedAsset;
+    
+    UIAlertView *_confirmDeleteAlertView;
+    ALAsset *_assetToDelete;
 }
 
 /**
@@ -142,17 +144,9 @@
 - (IBAction)deletePhoto:(id)sender {
     [self.libraryService assetAtIndex:self.selectedIndex withCompletion:^(ALAsset *asset) {
         if (asset.editable) {
-            [UIAlertView bk_showAlertViewWithTitle:@"Delete Photo" message:@"Are you sure?" cancelButtonTitle:@"Cancel" otherButtonTitles:@[@"Delete"] handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
-                if (buttonIndex == 1) {
-                    [asset setImageData:nil metadata:nil completionBlock:^(NSURL *assetURL, NSError *error) {
-                        if (error) {
-                            DDLogError(@"Unable to delete asset. Error: %@", error);
-                        } else {
-                            DDLogVerbose(@"Asset deletion returned with assetURL: %@", assetURL);
-                        }
-                    }];
-                }
-            }];
+            _confirmDeleteAlertView = [[UIAlertView alloc] initWithTitle:@"Delete Photo" message:@"Are you sure?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Delete", nil];
+            _assetToDelete = asset;
+            [_confirmDeleteAlertView show];
         } else {
             NSString *msg = @"Unable to delete this photo because it was not created with the Nova app. Instead, try deleting the photo using the built-in Photos app.";
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:msg delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
@@ -366,5 +360,35 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+#pragma mark UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex {
+    if (alertView == _confirmDeleteAlertView) {
+        if (buttonIndex == 1) {
+            [_assetToDelete setImageData:nil metadata:nil completionBlock:^(NSURL *assetURL, NSError *error) {
+                if (error) {
+                    DDLogError(@"Unable to delete asset. Error: %@", error);
+                } else {
+                    DDLogVerbose(@"Asset deletion returned with assetURL: %@", assetURL);
+                }
+            }];
+        }
+        _assetToDelete = nil;
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    if (alertView == _confirmDeleteAlertView) {
+        _confirmDeleteAlertView = nil;
+        _assetToDelete = nil;
+    }
+}
+
+- (void)alertViewCancel:(UIAlertView *)alertView {
+    if (alertView == _confirmDeleteAlertView) {
+        _confirmDeleteAlertView = nil;
+        _assetToDelete = nil;
+    }
+}
 
 @end
