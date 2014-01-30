@@ -67,6 +67,9 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
     // Set up flash settings
     self.flashSettingsViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"flashSettings"];
     self.flashSettingsViewController.delegate = self;
+    
+    // Remove "Back" text from navigation item
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
