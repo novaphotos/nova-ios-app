@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2719089E187EC5E500996A2D /* SSPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2719089D187EC5E500996A2D /* SSPhotoViewController.m */; };
 		2724C98018639EEB00A68E0D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2724C97F18639EEB00A68E0D /* Foundation.framework */; };
 		2724C98218639EEB00A68E0D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2724C98118639EEB00A68E0D /* CoreGraphics.framework */; };
 		2724C98418639EEB00A68E0D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2724C98318639EEB00A68E0D /* UIKit.framework */; };
@@ -23,9 +24,23 @@
 		2724C9AE18639EEB00A68E0D /* Nova_CameraTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2724C9AD18639EEB00A68E0D /* Nova_CameraTests.m */; };
 		272F87C518752DE90005BA58 /* SSCaptureSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 272F87C418752DE90005BA58 /* SSCaptureSessionManager.m */; };
 		272F87C618752DE90005BA58 /* SSCaptureSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 272F87C418752DE90005BA58 /* SSCaptureSessionManager.m */; };
+		2752B3A21884BC0F00E0C870 /* SSCenteredScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2752B3A11884BC0F00E0C870 /* SSCenteredScrollView.m */; };
+		27554D04188E9A68008E4C32 /* SSPassThroughView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27554D03188E9A68008E4C32 /* SSPassThroughView.m */; };
+		27728B48188F5757004D67A4 /* SSChronologicalAssetsLibraryService.m in Sources */ = {isa = PBXBuildFile; fileRef = 27728B47188F5757004D67A4 /* SSChronologicalAssetsLibraryService.m */; };
+		27728B4F188F5C2A004D67A4 /* ALAsset+FilteredImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 27728B4E188F5C2A004D67A4 /* ALAsset+FilteredImage.m */; };
+		27728B50188F5C2A004D67A4 /* ALAsset+FilteredImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 27728B4E188F5C2A004D67A4 /* ALAsset+FilteredImage.m */; };
 		27A2B0D91863CB7700D13251 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27A2B0D81863CB7700D13251 /* AVFoundation.framework */; };
+		27AE1BFA1896FEB500C27C38 /* SSNovaFlashService.m in Sources */ = {isa = PBXBuildFile; fileRef = 27AE1BF91896FEB500C27C38 /* SSNovaFlashService.m */; };
+		27AE1C0318976F4C00C27C38 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 27AE1C0118976F4C00C27C38 /* LICENSE.txt */; };
+		27AE1C0418976F4C00C27C38 /* OpenSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27AE1C0218976F4C00C27C38 /* OpenSans-Light.ttf */; };
+		27AE1C071897700B00C27C38 /* SSTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 27AE1C061897700B00C27C38 /* SSTheme.m */; };
+		27AE1C0A189910A300C27C38 /* SSSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27AE1C09189910A300C27C38 /* SSSettingsViewController.m */; };
+		27AE1C0D1899116900C27C38 /* SSSettingsService.m in Sources */ = {isa = PBXBuildFile; fileRef = 27AE1C0C1899116900C27C38 /* SSSettingsService.m */; };
+		27AE1C10189918D000C27C38 /* SSSettingsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27AE1C0F189918D000C27C38 /* SSSettingsCell.m */; };
 		27BB942D1863A7CD00A31BCF /* SSCameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27BB942C1863A7CD00A31BCF /* SSCameraViewController.m */; };
 		27BB94331863AB3300A31BCF /* SSCameraPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27BB94321863AB3300A31BCF /* SSCameraPreviewView.m */; };
+		27EF5B091886ACAD00AFBD0E /* SSLibraryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EF5B081886ACAD00AFBD0E /* SSLibraryViewController.m */; };
+		27F266C21892710F00B47C7B /* SSFlashSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F266C11892710F00B47C7B /* SSFlashSettingsViewController.m */; };
 		7BB4BA47770B4148B9ACE56E /* libPods-NovaCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F36E6E5AA26F401BB75B1E25 /* libPods-NovaCamera.a */; };
 		954EF8A0E4E14A3B9AC0B73B /* libPods-NovaCameraTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AE5633BD813140FE8017A321 /* libPods-NovaCameraTests.a */; };
 /* End PBXBuildFile section */
@@ -41,6 +56,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2719089C187EC5E500996A2D /* SSPhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSPhotoViewController.h; sourceTree = "<group>"; };
+		2719089D187EC5E500996A2D /* SSPhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSPhotoViewController.m; sourceTree = "<group>"; };
 		2724C97C18639EEB00A68E0D /* NovaCamera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NovaCamera.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2724C97F18639EEB00A68E0D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		2724C98118639EEB00A68E0D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -61,13 +78,37 @@
 		2724C9AD18639EEB00A68E0D /* Nova_CameraTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Nova_CameraTests.m; sourceTree = "<group>"; };
 		272F87C318752DE90005BA58 /* SSCaptureSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSCaptureSessionManager.h; sourceTree = "<group>"; };
 		272F87C418752DE90005BA58 /* SSCaptureSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSCaptureSessionManager.m; sourceTree = "<group>"; };
+		2752B3A01884BC0F00E0C870 /* SSCenteredScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSCenteredScrollView.h; sourceTree = "<group>"; };
+		2752B3A11884BC0F00E0C870 /* SSCenteredScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSCenteredScrollView.m; sourceTree = "<group>"; };
+		27554D02188E9A68008E4C32 /* SSPassThroughView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSPassThroughView.h; sourceTree = "<group>"; };
+		27554D03188E9A68008E4C32 /* SSPassThroughView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSPassThroughView.m; sourceTree = "<group>"; };
 		276AC62B187AAF0200A7DC0B /* Config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
 		276AC62C187AAFD400A7DC0B /* Config.sample.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Config.sample.h; sourceTree = "<group>"; };
+		27728B46188F5757004D67A4 /* SSChronologicalAssetsLibraryService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSChronologicalAssetsLibraryService.h; sourceTree = "<group>"; };
+		27728B47188F5757004D67A4 /* SSChronologicalAssetsLibraryService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSChronologicalAssetsLibraryService.m; sourceTree = "<group>"; };
+		27728B4D188F5C2A004D67A4 /* ALAsset+FilteredImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ALAsset+FilteredImage.h"; sourceTree = "<group>"; };
+		27728B4E188F5C2A004D67A4 /* ALAsset+FilteredImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ALAsset+FilteredImage.m"; sourceTree = "<group>"; };
 		27A2B0D81863CB7700D13251 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		27AE1BF81896FEB500C27C38 /* SSNovaFlashService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSNovaFlashService.h; sourceTree = "<group>"; };
+		27AE1BF91896FEB500C27C38 /* SSNovaFlashService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSNovaFlashService.m; sourceTree = "<group>"; };
+		27AE1C0118976F4C00C27C38 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
+		27AE1C0218976F4C00C27C38 /* OpenSans-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Light.ttf"; sourceTree = "<group>"; };
+		27AE1C051897700B00C27C38 /* SSTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSTheme.h; sourceTree = "<group>"; };
+		27AE1C061897700B00C27C38 /* SSTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSTheme.m; sourceTree = "<group>"; };
+		27AE1C08189910A300C27C38 /* SSSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSSettingsViewController.h; sourceTree = "<group>"; };
+		27AE1C09189910A300C27C38 /* SSSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSSettingsViewController.m; sourceTree = "<group>"; };
+		27AE1C0B1899116900C27C38 /* SSSettingsService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSSettingsService.h; sourceTree = "<group>"; };
+		27AE1C0C1899116900C27C38 /* SSSettingsService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSSettingsService.m; sourceTree = "<group>"; };
+		27AE1C0E189918D000C27C38 /* SSSettingsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSSettingsCell.h; sourceTree = "<group>"; };
+		27AE1C0F189918D000C27C38 /* SSSettingsCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSSettingsCell.m; sourceTree = "<group>"; };
 		27BB942B1863A7CD00A31BCF /* SSCameraViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSCameraViewController.h; sourceTree = "<group>"; };
 		27BB942C1863A7CD00A31BCF /* SSCameraViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSCameraViewController.m; sourceTree = "<group>"; };
 		27BB94311863AB3300A31BCF /* SSCameraPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSCameraPreviewView.h; sourceTree = "<group>"; };
 		27BB94321863AB3300A31BCF /* SSCameraPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSCameraPreviewView.m; sourceTree = "<group>"; };
+		27EF5B071886ACAC00AFBD0E /* SSLibraryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSLibraryViewController.h; sourceTree = "<group>"; };
+		27EF5B081886ACAD00AFBD0E /* SSLibraryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSLibraryViewController.m; sourceTree = "<group>"; };
+		27F266C01892710F00B47C7B /* SSFlashSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSFlashSettingsViewController.h; sourceTree = "<group>"; };
+		27F266C11892710F00B47C7B /* SSFlashSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSFlashSettingsViewController.m; sourceTree = "<group>"; };
 		AE5633BD813140FE8017A321 /* libPods-NovaCameraTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NovaCameraTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E08928AB66454C1ABFCD086F /* Pods-NovaCamera.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NovaCamera.xcconfig"; path = "Pods/Pods-NovaCamera.xcconfig"; sourceTree = "<group>"; };
 		E8DE111FD9574F8F8392A750 /* Pods-NovaCameraTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NovaCameraTests.xcconfig"; path = "Pods/Pods-NovaCameraTests.xcconfig"; sourceTree = "<group>"; };
@@ -141,12 +182,16 @@
 			children = (
 				2724C98E18639EEB00A68E0D /* SSAppDelegate.h */,
 				2724C98F18639EEB00A68E0D /* SSAppDelegate.m */,
+				27AE1C051897700B00C27C38 /* SSTheme.h */,
+				27AE1C061897700B00C27C38 /* SSTheme.m */,
 				2724C99118639EEB00A68E0D /* Main_iPhone.storyboard */,
 				2724C99418639EEB00A68E0D /* Main_iPad.storyboard */,
 				272F8728186E6DE90005BA58 /* Services */,
 				27BB94281863A7B700A31BCF /* ViewControllers */,
 				27BB942E1863AB1100A31BCF /* Views */,
+				27728B49188F5BDA004D67A4 /* Categories */,
 				2724C99A18639EEB00A68E0D /* Images.xcassets */,
+				27AE1BFB18976F3C00C27C38 /* Fonts */,
 				2724C98618639EEB00A68E0D /* Supporting Files */,
 			);
 			path = NovaCamera;
@@ -188,8 +233,40 @@
 			children = (
 				272F87C318752DE90005BA58 /* SSCaptureSessionManager.h */,
 				272F87C418752DE90005BA58 /* SSCaptureSessionManager.m */,
+				27728B46188F5757004D67A4 /* SSChronologicalAssetsLibraryService.h */,
+				27728B47188F5757004D67A4 /* SSChronologicalAssetsLibraryService.m */,
+				27AE1BF81896FEB500C27C38 /* SSNovaFlashService.h */,
+				27AE1BF91896FEB500C27C38 /* SSNovaFlashService.m */,
+				27AE1C0B1899116900C27C38 /* SSSettingsService.h */,
+				27AE1C0C1899116900C27C38 /* SSSettingsService.m */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		27728B49188F5BDA004D67A4 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				27728B4D188F5C2A004D67A4 /* ALAsset+FilteredImage.h */,
+				27728B4E188F5C2A004D67A4 /* ALAsset+FilteredImage.m */,
+			);
+			path = Categories;
+			sourceTree = "<group>";
+		};
+		27AE1BFB18976F3C00C27C38 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				27AE1BFD18976F3C00C27C38 /* Open_Sans */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+		27AE1BFD18976F3C00C27C38 /* Open_Sans */ = {
+			isa = PBXGroup;
+			children = (
+				27AE1C0118976F4C00C27C38 /* LICENSE.txt */,
+				27AE1C0218976F4C00C27C38 /* OpenSans-Light.ttf */,
+			);
+			path = Open_Sans;
 			sourceTree = "<group>";
 		};
 		27BB94281863A7B700A31BCF /* ViewControllers */ = {
@@ -197,6 +274,14 @@
 			children = (
 				27BB942B1863A7CD00A31BCF /* SSCameraViewController.h */,
 				27BB942C1863A7CD00A31BCF /* SSCameraViewController.m */,
+				27EF5B071886ACAC00AFBD0E /* SSLibraryViewController.h */,
+				27EF5B081886ACAD00AFBD0E /* SSLibraryViewController.m */,
+				2719089C187EC5E500996A2D /* SSPhotoViewController.h */,
+				2719089D187EC5E500996A2D /* SSPhotoViewController.m */,
+				27F266C01892710F00B47C7B /* SSFlashSettingsViewController.h */,
+				27F266C11892710F00B47C7B /* SSFlashSettingsViewController.m */,
+				27AE1C08189910A300C27C38 /* SSSettingsViewController.h */,
+				27AE1C09189910A300C27C38 /* SSSettingsViewController.m */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -206,6 +291,12 @@
 			children = (
 				27BB94311863AB3300A31BCF /* SSCameraPreviewView.h */,
 				27BB94321863AB3300A31BCF /* SSCameraPreviewView.m */,
+				2752B3A01884BC0F00E0C870 /* SSCenteredScrollView.h */,
+				2752B3A11884BC0F00E0C870 /* SSCenteredScrollView.m */,
+				27554D02188E9A68008E4C32 /* SSPassThroughView.h */,
+				27554D03188E9A68008E4C32 /* SSPassThroughView.m */,
+				27AE1C0E189918D000C27C38 /* SSSettingsCell.h */,
+				27AE1C0F189918D000C27C38 /* SSSettingsCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -222,6 +313,7 @@
 				2724C97918639EEB00A68E0D /* Frameworks */,
 				2724C97A18639EEB00A68E0D /* Resources */,
 				C7EC3CFAD39349C6B51F5F1F /* Copy Pods Resources */,
+				2752B3A41884E35800E0C870 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -291,7 +383,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27AE1C0318976F4C00C27C38 /* LICENSE.txt in Resources */,
 				2724C99618639EEB00A68E0D /* Main_iPad.storyboard in Resources */,
+				27AE1C0418976F4C00C27C38 /* OpenSans-Light.ttf in Resources */,
 				2724C99B18639EEB00A68E0D /* Images.xcassets in Resources */,
 				2724C99318639EEB00A68E0D /* Main_iPhone.storyboard in Resources */,
 				2724C98A18639EEB00A68E0D /* InfoPlist.strings in Resources */,
@@ -323,6 +417,19 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
+		};
+		2752B3A41884E35800E0C870 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "BUILT_INFOPLIST_FILE=\"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Info.plist\"\n\necho \"Updating built Info.plist ${BUILT_INFOPLIST_FILE}\"\n./scripts/update-built-info-plist.sh ${BUILT_INFOPLIST_FILE}\n";
 		};
 		4927E6ABC72843AAA0204F69 /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -376,10 +483,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27AE1BFA1896FEB500C27C38 /* SSNovaFlashService.m in Sources */,
 				27BB942D1863A7CD00A31BCF /* SSCameraViewController.m in Sources */,
+				2719089E187EC5E500996A2D /* SSPhotoViewController.m in Sources */,
+				27554D04188E9A68008E4C32 /* SSPassThroughView.m in Sources */,
 				2724C99018639EEB00A68E0D /* SSAppDelegate.m in Sources */,
 				27BB94331863AB3300A31BCF /* SSCameraPreviewView.m in Sources */,
+				2752B3A21884BC0F00E0C870 /* SSCenteredScrollView.m in Sources */,
+				27AE1C10189918D000C27C38 /* SSSettingsCell.m in Sources */,
 				272F87C518752DE90005BA58 /* SSCaptureSessionManager.m in Sources */,
+				27AE1C071897700B00C27C38 /* SSTheme.m in Sources */,
+				27728B4F188F5C2A004D67A4 /* ALAsset+FilteredImage.m in Sources */,
+				27AE1C0A189910A300C27C38 /* SSSettingsViewController.m in Sources */,
+				27F266C21892710F00B47C7B /* SSFlashSettingsViewController.m in Sources */,
+				27AE1C0D1899116900C27C38 /* SSSettingsService.m in Sources */,
+				27EF5B091886ACAD00AFBD0E /* SSLibraryViewController.m in Sources */,
+				27728B48188F5757004D67A4 /* SSChronologicalAssetsLibraryService.m in Sources */,
 				2724C98C18639EEB00A68E0D /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -390,6 +509,7 @@
 			files = (
 				2724C9AE18639EEB00A68E0D /* Nova_CameraTests.m in Sources */,
 				272F87C618752DE90005BA58 /* SSCaptureSessionManager.m in Sources */,
+				27728B50188F5C2A004D67A4 /* ALAsset+FilteredImage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

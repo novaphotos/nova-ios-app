@@ -25,7 +25,7 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
 @property (nonatomic, copy) void (^shutterHandler)();
 
 - (BOOL)setDevice:(AVCaptureDevice *)device withError:(NSError **)error;
-- (void)configureSession;
+- (BOOL)configureSession;
 - (void)subjectAreaDidChange:(NSNotification *)notification;
 
 @end
@@ -54,6 +54,9 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
         self.shouldAutoFocusAndAutoExposeOnDeviceAreaChange = YES;
         self.shouldAutoFocusAndExposeOnDeviceChange = YES;
         self.videoGravity = AVLayerVideoGravityResizeAspectFill;
+        
+        // Create session
+        _session = [[AVCaptureSession alloc] init];
     }
     return self;
 }
@@ -66,40 +69,49 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
         
         // Configure session (one time per session)
         if (!_sessionHasBeenConfigured) {
-            [self configureSession];
+            if (![self configureSession]) {
+                // Unable to start session
+                [self willChangeValueForKey:@"session"];
+                _session = nil;
+                [self didChangeValueForKey:@"session"];
+            }
         }
         
-        // Add observer for image capture (shutter indication)
-		[self addObserver:self forKeyPath:@"stillImageOutput.capturingStillImage" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:CapturingStillImageContext];
-        
-        // Add error notification observer
-        __block typeof(self) bSelf = self;
-		self.runtimeErrorObserver = [[NSNotificationCenter defaultCenter] addObserverForName:AVCaptureSessionRuntimeErrorNotification object:self.session queue:nil usingBlock:^(NSNotification *note) {
-			dispatch_async(bSelf.sessionQueue, ^{
-				// Manually restarting the session since it must have been stopped due to an error.
-                DDLogError(@"Received AVCaptureSessionRuntimeErrorNotification; restarting session");
-                [bSelf.session startRunning];
-			});
-        }];
-        
-        // Add subject area change notification
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(subjectAreaDidChange:) name:AVCaptureDeviceSubjectAreaDidChangeNotification object:self.device];
-        
-        // Start the capture session
-        [self.session startRunning];
+        if (_sessionHasBeenConfigured) {
+            // Add observer for image capture (shutter indication)
+            [self addObserver:self forKeyPath:@"stillImageOutput.capturingStillImage" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:CapturingStillImageContext];
+            
+            // Add error notification observer
+            __block typeof(self) bSelf = self;
+            self.runtimeErrorObserver = [[NSNotificationCenter defaultCenter] addObserverForName:AVCaptureSessionRuntimeErrorNotification object:self.session queue:nil usingBlock:^(NSNotification *note) {
+                dispatch_async(bSelf.sessionQueue, ^{
+                    // Manually restarting the session since it must have been stopped due to an error.
+                    DDLogError(@"Received AVCaptureSessionRuntimeErrorNotification; restarting session");
+                    [bSelf.session startRunning];
+                });
+            }];
+            
+            // Add subject area change notification
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(subjectAreaDidChange:) name:AVCaptureDeviceSubjectAreaDidChangeNotification object:self.device];
+            
+            // Start the capture session
+            [self.session startRunning];
+        }
     });
 }
 
 - (void)stopSession {
-    dispatch_async(self.sessionQueue, ^{
-        [self.session stopRunning];
-        
-		[self removeObserver:self forKeyPath:@"stillImageOutput.capturingStillImage" context:CapturingStillImageContext];
-        
-        [[NSNotificationCenter defaultCenter] removeObserver:self.runtimeErrorObserver];
-        
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:AVCaptureDeviceSubjectAreaDidChangeNotification object:self.device];
-    });
+    if (_sessionHasBeenConfigured) {
+        dispatch_async(self.sessionQueue, ^{
+            [self.session stopRunning];
+            
+            [self removeObserver:self forKeyPath:@"stillImageOutput.capturingStillImage" context:CapturingStillImageContext];
+            
+            [[NSNotificationCenter defaultCenter] removeObserver:self.runtimeErrorObserver];
+            
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:AVCaptureDeviceSubjectAreaDidChangeNotification object:self.device];
+        });
+    }
 }
 
 #pragma mark Authorization
@@ -212,15 +224,6 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
 #pragma mark - Properties
 
 - (AVCaptureSession *)session {
-    if (!_session) {
-        [self willChangeValueForKey:@"session"];
-        [self willChangeValueForKey:@"previewLayer"];
-        _session = [[AVCaptureSession alloc] init];
-        _sessionHasBeenConfigured = NO;
-        _previewLayer = nil;
-        [self didChangeValueForKey:@"session"];
-        [self didChangeValueForKey:@"previewLayer"];
-    }
     return _session;
 }
 
@@ -414,7 +417,7 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
     return YES;
 }
 
-- (void)configureSession {
+- (BOOL)configureSession {
     self.session.sessionPreset = AVCaptureSessionPresetPhoto;
     
     // Find suitable capture device (default to back facing)
@@ -432,7 +435,7 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
     if (![self setDevice:selectedDevice withError:&error]) {
         // Error setting up device
         DDLogError(@"Error setting up device; giving up. %@", error);
-        return;
+        return NO;
     }
     
     // Configure still image output
@@ -444,10 +447,11 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
     } else {
         DDLogError(@"Unable to add still image output");
         self.stillImageOutput = nil;
-        return;
+        return NO;
     }
     
     _sessionHasBeenConfigured = YES;
+    return YES;
 }
 
 - (void)subjectAreaDidChange:(NSNotification *)notification {

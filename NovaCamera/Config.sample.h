@@ -9,6 +9,9 @@
 #ifndef NovaCamera_Config_h
 #define NovaCamera_Config_h
 
+#define AVIARY_KEY @""
+#define AVIARY_SECRET @""
+
 #define TESTFLIGHT_TOKEN @""
 
 #endif

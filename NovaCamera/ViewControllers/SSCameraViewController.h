@@ -7,10 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SSFlashSettingsViewController.h"
 
 @class SSCameraPreviewView;
+@class SSNovaFlashService;
 
-@interface SSCameraViewController : UIViewController
+/**
+ * Camera capture view; handles preview, camera capture, displaying of
+ * various settings, and transitions to library view
+ */
+@interface SSCameraViewController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate, SSFlashSettingsViewControllerDelegate>
 
 @property (nonatomic, strong) IBOutlet SSCameraPreviewView *previewView;
 @property (nonatomic, strong) IBOutlet UIButton *captureButton;
@@ -18,6 +24,10 @@
 @property (nonatomic, strong) IBOutlet UIButton *flashSettingsButton;
 @property (nonatomic, strong) IBOutlet UIButton *generalSettingsButton;
 @property (nonatomic, strong) IBOutlet UIButton *toggleCameraButton;
+
+@property (nonatomic, strong) IBOutlet SSFlashSettingsViewController *flashSettingsViewController;
+
+@property (nonatomic, strong) SSNovaFlashService *flashService;
 
 - (IBAction)capture:(id)sender;
 - (IBAction)showGeneralSettings:(id)sender;

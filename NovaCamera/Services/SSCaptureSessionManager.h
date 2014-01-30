@@ -16,7 +16,7 @@
 @interface SSCaptureSessionManager : NSObject
 
 /**
- * Capture session; will be instantiated when first referenced.
+ * Capture session, instantiated when SSCaptureSessionManager is instantiated
  */
 @property (nonatomic, readonly) AVCaptureSession *session;
 

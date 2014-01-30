@@ -9,15 +9,24 @@
 #import "SSCameraViewController.h"
 #import "SSCameraPreviewView.h"
 #import "SSCaptureSessionManager.h"
+#import "SSLibraryViewController.h"
+#import "SSNovaFlashService.h"
+#import "SSFlashSettingsViewController.h"
 #import <AVFoundation/AVFoundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <CocoaLumberjack/DDLog.h>
 
 static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDeviceAuthorizedContext;
 
-@interface SSCameraViewController ()
+static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
+
+@interface SSCameraViewController () {
+    NSURL *_showPhotoURL;
+}
 @property (nonatomic, strong) SSCaptureSessionManager *captureSessionManager;
 - (void)runStillImageCaptureAnimation;
+- (void)showFlashSettingsAnimated:(BOOL)animated;
+- (void)hideFlashSettingsAnimated:(BOOL)animated;
 @end
 
 @implementation SSCameraViewController
@@ -51,10 +60,20 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     // Setup preview layer
     self.previewView.session = self.captureSessionManager.session;
     
+    // Add flash service
+    self.flashService = [[SSNovaFlashService alloc] init];
+    
     // Add gesture recognizer
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(focusAndExposeTap:)];
     tapGesture.numberOfTapsRequired = 1;
     [self.previewView addGestureRecognizer:tapGesture];
+    
+    // Set up flash settings
+    self.flashSettingsViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"flashSettings"];
+    self.flashSettingsViewController.delegate = self;
+    
+    // Remove "Back" text from navigation item
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -87,6 +106,14 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
     connection.videoOrientation = (AVCaptureVideoOrientation)toInterfaceOrientation;
 }
 
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"showPhoto"]) {
+        SSLibraryViewController *vc = (SSLibraryViewController *)segue.destinationViewController;
+        [vc showAssetWithURL:_showPhotoURL];
+        _showPhotoURL = nil;
+    }
+}
+
 #pragma mark - KVO
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
@@ -113,7 +140,10 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             DDLogError(@"Error capturing: %@", error);
         } else {
             DDLogVerbose(@"Saving to asset library");
-            [[[ALAssetsLibrary alloc] init] writeImageToSavedPhotosAlbum:[image CGImage] orientation:(ALAssetOrientation)[image imageOrientation] completionBlock:nil];
+            __block typeof(self) bSelf = self;
+            [[[ALAssetsLibrary alloc] init] writeImageToSavedPhotosAlbum:[image CGImage] orientation:(ALAssetOrientation)[image imageOrientation] completionBlock:^(NSURL *assetURL, NSError *error) {
+                [bSelf performSegueWithIdentifier:@"showPhoto" sender:self];
+            }];
         }
     } shutterHandler:^{
         [self runStillImageCaptureAnimation];
@@ -121,12 +151,16 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 }
 
 - (IBAction)showGeneralSettings:(id)sender {
+    [self performSegueWithIdentifier:@"showSettings" sender:sender];
 }
 
 - (IBAction)showFlashSettings:(id)sender {
+    [self showFlashSettingsAnimated:YES];
 }
 
 - (IBAction)showLibrary:(id)sender {
+    _showPhotoURL = nil;
+    [self performSegueWithIdentifier:@"showPhoto" sender:nil];
 }
 
 - (IBAction)toggleCamera:(id)sender {
@@ -153,6 +187,59 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
             self.previewView.layer.opacity = 1.0;
 		}];
 	});
+}
+
+- (void)showFlashSettingsAnimated:(BOOL)animated {
+    [self.flashSettingsViewController viewWillAppear:animated];
+    [self.view addSubview:self.flashSettingsViewController.view];
+    
+    // Load settings from flash service
+    self.flashSettingsViewController.flashSettings = self.flashService.flashSettings;
+    
+    if (animated) {
+        CGRect flashSettingsFrame = self.view.frame;
+        flashSettingsFrame.origin.y += flashSettingsFrame.size.height;
+        self.flashSettingsViewController.view.frame = flashSettingsFrame;
+        
+        [UIView animateWithDuration:flashSettingsAnimationDuration delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+            self.flashSettingsViewController.view.frame = self.view.frame;
+        } completion:^(BOOL finished) {
+            [self.flashSettingsViewController viewDidAppear:animated];
+        }];
+    } else {
+        self.flashSettingsViewController.view.frame = self.view.frame;
+        [self.flashSettingsViewController viewDidAppear:animated];
+    }
+}
+
+- (void)hideFlashSettingsAnimated:(BOOL)animated {
+    [self.flashSettingsViewController viewWillDisappear:animated];
+    
+    if (animated) {
+        [UIView animateWithDuration:flashSettingsAnimationDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+            CGRect flashSettingsFrame = self.view.frame;
+            flashSettingsFrame.origin.y += flashSettingsFrame.size.height;
+            self.flashSettingsViewController.view.frame = flashSettingsFrame;
+        } completion:^(BOOL finished) {
+            [self.flashSettingsViewController.view removeFromSuperview];
+            [self.flashSettingsViewController viewDidDisappear:animated];
+        }];
+    } else {
+        [self.flashSettingsViewController.view removeFromSuperview];
+        [self.flashSettingsViewController viewDidDisappear:animated];
+    }
+}
+
+#pragma mark - SSFlashSettingsViewControllerDelegate
+
+- (void)flashSettingsViewController:(SSFlashSettingsViewController *)flashSettingsViewController didConfirmSettings:(SSFlashSettings)flashSettings {
+    // Update settings in flash service
+    self.flashService.flashSettings = flashSettings;
+    [self hideFlashSettingsAnimated:YES];
+}
+
+- (void)flashSettingsViewController:(SSFlashSettingsViewController *)flashSettingsViewController testFlashWithSettings:(SSFlashSettings)flashSettings {
+    [self hideFlashSettingsAnimated:YES];
 }
 
 @end
