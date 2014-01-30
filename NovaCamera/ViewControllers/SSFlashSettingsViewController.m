@@ -194,6 +194,7 @@ static const NSTimeInterval customSettingsAnimationDuration = 0.25;
     }
     
     if (flashSettings.flashMode == SSFlashModeCustom) {
+        self.previousCustomFlashSettings = flashSettings;
     }
     
     [self updateFlashModeButtons];
