@@ -619,7 +619,7 @@
                                                 <state key="normal" image="btn-test">
                                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
-                                                <state key="highlighted" image="btn-ok-on"/>
+                                                <state key="highlighted" image="btn-test-on"/>
                                                 <connections>
                                                     <action selector="testFlash:" destination="i9U-49-zHT" eventType="touchUpInside" id="Oyo-sP-CvB"/>
                                                 </connections>
@@ -718,6 +718,7 @@
         <image name="btn-share" width="50" height="50"/>
         <image name="btn-switch-camera-round" width="50" height="50"/>
         <image name="btn-test" width="53" height="53"/>
+        <image name="btn-test-on" width="53" height="53"/>
         <image name="btn-trash" width="50" height="50"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
