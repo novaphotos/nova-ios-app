@@ -17,6 +17,7 @@
     BOOL _assetsLoaded;
     BOOL _viewWillAppear;
     BOOL _waitingToDisplayInsertedAsset;
+    BOOL _imagePickerCanceled;
     
     UIAlertView *_confirmDeleteAlertView;
     ALAsset *_assetToDelete;
@@ -64,7 +65,7 @@
     return self;
 }
 
-- (void)Dealloc {
+- (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:(NSString *)SSChronologicalAssetsLibraryUpdatedNotification object:self.libraryService];
 }
 
@@ -77,6 +78,7 @@
     self.selectedIndex = NSNotFound;
     _assetsLoaded = NO;
     _viewWillAppear = NO;
+    _imagePickerCanceled = NO;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(assetLibraryUpdatedWithNotification:) name:(NSString *)SSChronologicalAssetsLibraryUpdatedNotification object:self.libraryService];
 
@@ -93,9 +95,15 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    
     if (self.selectedIndex == NSNotFound) {
-        // Show library
-        [self showLibraryAnimated:YES sender:self];
+        if (_imagePickerCanceled) {
+            // User didn't pick an image; hide the library screen
+            [self.presentingViewController dismissViewControllerAnimated:animated completion:nil];
+        } else {
+            // Show library
+            [self showLibraryAnimated:animated sender:self];
+        }
     }
 }
 
@@ -358,6 +366,7 @@
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
     [self dismissViewControllerAnimated:YES completion:nil];
+    _imagePickerCanceled = YES;
 }
 
 #pragma mark UIAlertViewDelegate
