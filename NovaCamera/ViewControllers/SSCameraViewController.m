@@ -100,12 +100,6 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
     return YES;
 }
 
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    AVCaptureVideoPreviewLayer *previewLayer = (AVCaptureVideoPreviewLayer *)self.previewView.layer;
-    AVCaptureConnection *connection = previewLayer.connection;
-    connection.videoOrientation = (AVCaptureVideoOrientation)toInterfaceOrientation;
-}
-
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"showPhoto"]) {
         SSLibraryViewController *vc = (SSLibraryViewController *)segue.destinationViewController;
