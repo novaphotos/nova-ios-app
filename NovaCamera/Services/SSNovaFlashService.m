@@ -8,6 +8,8 @@
 
 #import "SSNovaFlashService.h"
 
+static const NSString *SSNovaFlashServiceStatusChanged = @"SSNovaFlashServiceStatusChanged";
+
 static const NSString *kLastFlashSettingsUserDefaultsPrefix = @"lastFlashSettings_";
 
 @interface SSNovaFlashService ()

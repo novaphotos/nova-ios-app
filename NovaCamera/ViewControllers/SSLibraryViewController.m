@@ -39,6 +39,11 @@
 @property (nonatomic, strong) AFPhotoEditorSession *photoEditorSession;
 
 /**
+ * Reference currently displayed picker
+ */
+@property (nonatomic, strong) UIImagePickerController *imagePickerController;
+
+/**
  * Instantiate a view controller for the specified asset URL
  */
 - (SSPhotoViewController *)photoViewControllerForAssetURL:(NSURL *)assetURL markAsActive:(BOOL)isActive;
@@ -135,10 +140,10 @@
 #pragma mark - Public methods
 
 - (void)showLibraryAnimated:(BOOL)animated sender:(id)sender {
-    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-    picker.delegate = self;
-    picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    [self presentViewController:picker animated:animated completion:nil];
+    self.imagePickerController = [[UIImagePickerController alloc] init];
+    self.imagePickerController.delegate = self;
+    self.imagePickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    [self presentViewController:self.imagePickerController animated:animated completion:nil];
 }
 
 - (IBAction)showLibrary:(id)sender {
@@ -360,12 +365,16 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         NSURL *mediaURL = info[UIImagePickerControllerReferenceURL];
         [self showAssetWithURL:mediaURL];
-        [self dismissViewControllerAnimated:YES completion:nil];
+        [self dismissViewControllerAnimated:YES completion:^{
+            self.imagePickerController = nil;
+        }];
     });
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:YES completion:^{
+        self.imagePickerController = nil;
+    }];
     _imagePickerCanceled = YES;
 }
 

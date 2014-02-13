@@ -35,6 +35,22 @@ static const SSFlashSettings SSFlashSettingsBright = { SSFlashModeBright, 0.5, 1
 static const SSFlashSettings SSFlashSettingsCustomDefault = { SSFlashModeCustom, 0.5, 0.5 };
 
 /**
+ * Flash status
+ */
+typedef enum {
+    SSNovaFlashStatusDisabled = 0,
+    SSNovaFlashStatusSearching,
+    SSNovaFlashStatusOK,
+    SSNovaFlashStatusError,
+    SSNovaFlashStatusUnknown = -1,
+} SSNovaFlashStatus;
+
+/**
+ * Notifications
+ */
+static const NSString *SSNovaFlashServiceStatusChanged;
+
+/**
  * Abstraction for Nova Flash, handling persistence of flash settings as well as
  * Nova Flash SDK interaction.
  */
@@ -47,5 +63,10 @@ static const SSFlashSettings SSFlashSettingsCustomDefault = { SSFlashModeCustom,
  * saving new settings to NSUseDefaults.
  */
 @property (nonatomic, assign) SSFlashSettings flashSettings;
+
+/**
+ * SSNovaFlashStatus describing the status of the flash unit (or units).
+ */
+@property (nonatomic, readonly) SSNovaFlashStatus status;
 
 @end
