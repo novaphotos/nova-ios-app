@@ -8,6 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
+extern NSString *kSettingsServiceEditAfterCaptureKey;
+extern NSString *kSettingsServiceShareAfterCaptureKey;
+extern NSString *kSettingsServiceShowGridLinesKey;
+extern NSString *kSettingsServiceSquarePhotosKey;
+extern NSString *kSettingsServiceMultipleNovasKey;
+
 /**
  * Simple class managing general Nova settings.
  */

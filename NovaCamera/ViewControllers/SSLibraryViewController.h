@@ -16,6 +16,21 @@
 @property (nonatomic, assign) NSUInteger selectedIndex;
 
 /**
+ * URL of asset to display as soon as the view is displayed
+ */
+@property (nonatomic, strong) NSURL *prepareToDisplayAssetURL;
+
+/**
+ * Flag to determine whetehr this photo should be automatically edited
+ */
+@property (nonatomic, assign) BOOL automaticallyEditPhoto;
+
+/**
+ * Flag to determine whether this photo should be automatically shared
+ */
+@property (nonatomic, assign) BOOL automaticallySharePhoto;
+
+/**
  * Parent view containing controls
  */
 @property (nonatomic, strong) IBOutlet UIView *controlsView;
@@ -63,7 +78,11 @@
 /**
  * Show specified asset
  */
-- (void)showAssetWithURL:(NSURL *)assetURL;
+- (void)showAssetWithURL:(NSURL *)assetURL animated:(BOOL)animated;
 
+/**
+ * Edit specified asset
+ */
+- (void)editAssetWithURL:(NSURL *)assetURL animated:(BOOL)animated;
 
 @end

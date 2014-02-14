@@ -8,6 +8,12 @@
 
 #import "SSSettingsService.h"
 
+const NSString *kSettingsServiceEditAfterCaptureKey = @"SettingsServiceEditAfterCaptureKey";
+const NSString *kSettingsServiceShareAfterCaptureKey = @"SettingsServiceShareAfterCaptureKey";
+const NSString *kSettingsServiceShowGridLinesKey = @"SettingsServiceShowGridLinesKey";
+const NSString *kSettingsServiceSquarePhotosKey = @"SettingsServiceSquarePhotosKey";
+const NSString *kSettingsServiceMultipleNovasKey = @"SettingsServiceMultipleNovasKey";
+
 @implementation SSSettingsService
 
 - (id)init {
@@ -51,11 +57,11 @@
 
 - (NSArray *)generalSettingsKeys {
     return @[
-             @"edit_after_capture",
-             @"share_after_capture",
-             @"show_grid_lines",
-             @"square_photos",
-             @"multiple_novas",
+             kSettingsServiceEditAfterCaptureKey,
+             kSettingsServiceShareAfterCaptureKey,
+             kSettingsServiceShowGridLinesKey,
+             kSettingsServiceSquarePhotosKey,
+             kSettingsServiceMultipleNovasKey,
              ];
 }
 
@@ -83,9 +89,11 @@
 }
 
 - (void)setBool:(BOOL)value forKey:(NSString *)key {
+    [self willChangeValueForKey:key];
     [[NSUserDefaults standardUserDefaults] setBool:value forKey:key];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         [[NSUserDefaults standardUserDefaults] synchronize];
+        [self didChangeValueForKey:key];
     });
 }
 
