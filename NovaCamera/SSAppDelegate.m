@@ -9,11 +9,17 @@
 #import "SSAppDelegate.h"
 #import "SSTheme.h"
 #import "SSSettingsService.h"
+#import "SSNovaFlashService.h"
 #import <TestFlightSDK/TestFlight.h>
 #import <CocoaLumberjack/DDTTYLogger.h>
 #import <TestFlightLogger/TestFlightLogger.h>
 
-@implementation SSAppDelegate
+NSString *kMultipleNovasKey = @"multiple_novas";
+
+@implementation SSAppDelegate {
+    SSSettingsService *_settingsService;
+    SSNovaFlashService *_flashService;
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -30,8 +36,14 @@
     [[SSTheme currentTheme] styleAppearanceProxies];
     
     // Setup general settings
-    SSSettingsService *settingsService = [SSSettingsService sharedService];
-    [settingsService initializeUserDefaults];
+    _settingsService = [SSSettingsService sharedService];
+    [_settingsService initializeUserDefaults];
+    // Subscribe to KVO notifications for multiple novas flag changes
+    [_settingsService addObserver:self forKeyPath:kMultipleNovasKey options:0 context:nil];
+    
+    // Setup flash service
+    _flashService = [SSNovaFlashService sharedService];
+    _flashService.useMultipleNovas = [_settingsService boolForKey:kMultipleNovasKey];
     
     return YES;
 }
@@ -61,6 +73,15 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+#pragma mark - KVO
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if (object == _settingsService && [keyPath isEqualToString:kMultipleNovasKey]) {
+        DDLogVerbose(@"App delegate forwarding useMultipleNovas setting from settings to flash service");
+        _flashService.useMultipleNovas = [_settingsService boolForKey:kMultipleNovasKey];
+    }
 }
 
 @end

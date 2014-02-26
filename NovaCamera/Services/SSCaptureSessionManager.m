@@ -203,6 +203,9 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
     dispatch_async(self.sessionQueue, ^{
         // Set up capture connection
         AVCaptureConnection *connection = [self.stillImageOutput connectionWithMediaType:AVMediaTypeVideo];
+        
+        
+        
         [self.stillImageOutput captureStillImageAsynchronouslyFromConnection:connection completionHandler:^(CMSampleBufferRef imageDataSampleBuffer, NSError *error) {
             // Save to asset library
             if (imageDataSampleBuffer) {

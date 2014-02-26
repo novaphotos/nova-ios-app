@@ -61,7 +61,7 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
     self.previewView.session = self.captureSessionManager.session;
     
     // Add flash service
-    self.flashService = [[SSNovaFlashService alloc] init];
+    self.flashService = [SSNovaFlashService sharedService];
     
     // Add gesture recognizer
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(focusAndExposeTap:)];
@@ -135,18 +135,22 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
 
 - (IBAction)capture:(id)sender {
     DDLogVerbose(@"Capture!");
-    [self.captureSessionManager captureStillImageWithCompletionHandler:^(NSData *imageData, UIImage *image, NSError *error) {
-        if (error) {
-            DDLogError(@"Error capturing: %@", error);
-        } else {
-            DDLogVerbose(@"Saving to asset library");
-            __block typeof(self) bSelf = self;
-            [[[ALAssetsLibrary alloc] init] writeImageToSavedPhotosAlbum:[image CGImage] orientation:(ALAssetOrientation)[image imageOrientation] completionBlock:^(NSURL *assetURL, NSError *error) {
-                [bSelf performSegueWithIdentifier:@"showPhoto" sender:self];
-            }];
-        }
-    } shutterHandler:^{
-        [self runStillImageCaptureAnimation];
+    [self.flashService beginFlashWithCallback:^(BOOL status) {
+        DDLogVerbose(@"Nova flash begin returned with status %d; performing capture", status);
+        [self.captureSessionManager captureStillImageWithCompletionHandler:^(NSData *imageData, UIImage *image, NSError *error) {
+            if (error) {
+                DDLogError(@"Error capturing: %@", error);
+            } else {
+                DDLogVerbose(@"Saving to asset library");
+                __block typeof(self) bSelf = self;
+                [[[ALAssetsLibrary alloc] init] writeImageToSavedPhotosAlbum:[image CGImage] orientation:(ALAssetOrientation)[image imageOrientation] completionBlock:^(NSURL *assetURL, NSError *error) {
+                    [bSelf performSegueWithIdentifier:@"showPhoto" sender:self];
+                }];
+            }
+        } shutterHandler:^{
+            [self runStillImageCaptureAnimation];
+            [self.flashService endFlashWithCallback:nil];
+        }];
     }];
 }
 
