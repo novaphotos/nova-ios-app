@@ -31,8 +31,7 @@ static const NSString *kLastFlashSettingsUserDefaultsPrefix = @"lastFlashSetting
         // Load previous values from NSUserDefaults
         [self restoreFromUserDefaults];
         
-        // Create NVFlashService
-        self.nvFlashService = [[NVFlashService alloc] init];
+        [self setupFlash];
     }
     return self;
 }
@@ -187,6 +186,8 @@ static const NSString *kLastFlashSettingsUserDefaultsPrefix = @"lastFlashSetting
     // Initialize NVFlashService
     self.nvFlashService = [NVFlashService new];
     [self.nvFlashService addObserver:self forKeyPath:@"status" options:0 context:nil];
+    [self configureFlash];
+    [self enableFlash];
 }
 
 - (void)teardownFlash {
@@ -225,6 +226,7 @@ static const NSString *kLastFlashSettingsUserDefaultsPrefix = @"lastFlashSetting
     if ([keyPath isEqualToString:@"status"]) {
         [self willChangeValueForKey:@"status"];
         _status = [[self class] novaFlashStatusForNVFlashServiceStatus:self.nvFlashService.status];
+        DDLogVerbose(@"Nova flash status changed to %d", _status);
         [self didChangeValueForKey:@"status"];
     }
 }

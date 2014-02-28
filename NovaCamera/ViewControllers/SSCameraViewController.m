@@ -148,8 +148,8 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
                 }];
             }
         } shutterHandler:^{
-            [self runStillImageCaptureAnimation];
             [self.flashService endFlashWithCallback:nil];
+            [self runStillImageCaptureAnimation];
         }];
     }];
 }
