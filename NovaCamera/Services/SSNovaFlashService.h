@@ -111,6 +111,16 @@ static const NSString *SSNovaFlashServiceStatusChanged;
 - (void)refreshFlash;
 
 /**
+ * Temporarily enable the flash if it is currently disabled
+ */
+- (void)temporaryEnableFlashIfDisabled;
+
+/**
+ * Disable the flash if it was temporary enabled
+ */
+- (void)endTemporaryEnableFlash;
+
+/**
  * Perform actual flash with specific settings
  */
 - (void)beginFlashWithSettings:(SSFlashSettings)flashSettings callback:(void (^)(BOOL status))callback;

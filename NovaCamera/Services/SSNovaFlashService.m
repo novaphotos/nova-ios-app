@@ -14,7 +14,9 @@ static const NSString *SSNovaFlashServiceStatusChanged = @"SSNovaFlashServiceSta
 
 static const NSString *kLastFlashSettingsUserDefaultsPrefix = @"lastFlashSettings_";
 
-@interface SSNovaFlashService ()
+@interface SSNovaFlashService () {
+    BOOL _temporarilyEnabled;
+}
 + (SSNovaFlashStatus)novaFlashStatusForNVFlashServiceStatus:(NVFlashServiceStatus)nvFlashServiceStatus;
 + (NVFlashSettings *)nvFlashSettingsForNovaFlashSettings:(SSFlashSettings)settings;
 - (void)setupFlash;
@@ -28,6 +30,8 @@ static const NSString *kLastFlashSettingsUserDefaultsPrefix = @"lastFlashSetting
 - (id)init {
     self = [super init];
     if (self) {
+        _temporarilyEnabled = NO;
+        
         // Load previous values from NSUserDefaults
         [self restoreFromUserDefaults];
         
@@ -56,6 +60,12 @@ static const NSString *kLastFlashSettingsUserDefaultsPrefix = @"lastFlashSetting
     } else {
         self.nvFlashService.autoPairMode = NVAutoPairClosest;
     }
+    
+    if (self.flashSettings.flashMode == SSFlashModeOff) {
+        [self disableFlash];
+    } else {
+        [self enableFlash];
+    }
 }
 
 - (void)enableFlash {
@@ -68,6 +78,20 @@ static const NSString *kLastFlashSettingsUserDefaultsPrefix = @"lastFlashSetting
 
 - (void)refreshFlash {
     [self.nvFlashService refresh];
+}
+
+- (void)temporaryEnableFlashIfDisabled {
+    if (self.flashSettings.flashMode == SSFlashModeOff && !_temporarilyEnabled) {
+        _temporarilyEnabled = YES;
+        [self enableFlash];
+    }
+}
+
+- (void)endTemporaryEnableFlash {
+    if (self.flashSettings.flashMode == SSFlashModeOff && _temporarilyEnabled) {
+        _temporarilyEnabled = NO;
+        [self disableFlash];
+    }
 }
 
 - (void)beginFlashWithSettings:(SSFlashSettings)flashSettings callback:(void (^)(BOOL status))callback {
@@ -101,8 +125,11 @@ static const NSString *kLastFlashSettingsUserDefaultsPrefix = @"lastFlashSetting
 #pragma - Properties
 
 - (void)setFlashSettings:(SSFlashSettings)flashSettings {
+    [self willChangeValueForKey:@"flashSettings"];
     _flashSettings = flashSettings;
+    [self configureFlash];
     [self saveToUserDefaults];
+    [self didChangeValueForKey:@"flashSettings"];
 }
 
 - (void)setUseMultipleNovas:(BOOL)useMultipleNovas {
@@ -191,7 +218,6 @@ static const NSString *kLastFlashSettingsUserDefaultsPrefix = @"lastFlashSetting
     self.nvFlashService = [NVFlashService new];
     [self.nvFlashService addObserver:self forKeyPath:@"status" options:0 context:nil];
     [self configureFlash];
-    [self enableFlash];
 }
 
 - (void)teardownFlash {

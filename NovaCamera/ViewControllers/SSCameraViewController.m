@@ -137,7 +137,7 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
         dispatch_async(dispatch_get_main_queue(), ^{
             [self updateFlashStatusIcon];
         });
-	}
+    }
 }
 
 
@@ -224,6 +224,8 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
         self.flashSettingsViewController.view.frame = self.view.frame;
         [self.flashSettingsViewController viewDidAppear:animated];
     }
+    
+    [self.flashService temporaryEnableFlashIfDisabled];
 }
 
 - (void)hideFlashSettingsAnimated:(BOOL)animated {
@@ -242,6 +244,8 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
         [self.flashSettingsViewController.view removeFromSuperview];
         [self.flashSettingsViewController viewDidDisappear:animated];
     }
+    
+    [self.flashService endTemporaryEnableFlash];
 }
 
 - (void)updateFlashStatusIcon {
