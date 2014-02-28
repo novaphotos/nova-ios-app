@@ -111,7 +111,12 @@ static const NSString *SSNovaFlashServiceStatusChanged;
 - (void)refreshFlash;
 
 /**
- * Perform actual flash
+ * Perform actual flash with specific settings
+ */
+- (void)beginFlashWithSettings:(SSFlashSettings)flashSettings callback:(void (^)(BOOL status))callback;
+
+/**
+ * Perform actual flash with the configured settings
  */
 - (void)beginFlashWithCallback:(void (^)(BOOL status))callback;
 

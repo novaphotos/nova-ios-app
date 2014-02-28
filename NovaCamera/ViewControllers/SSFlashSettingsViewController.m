@@ -167,6 +167,11 @@ static const NSTimeInterval customSettingsAnimationDuration = 0.25;
 }
 
 - (IBAction)testFlash:(id)sender {
+    if (self.delegate) {
+        [self.delegate flashSettingsViewController:self testFlashWithSettings:self.flashSettings];
+    } else {
+        DDLogError(@"No delegate set for SSFlashSettingsViewController");
+    }
 }
 
 - (IBAction)confirmFlashSettings:(id)sender {

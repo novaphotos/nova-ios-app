@@ -70,8 +70,8 @@ static const NSString *kLastFlashSettingsUserDefaultsPrefix = @"lastFlashSetting
     [self.nvFlashService refresh];
 }
 
-- (void)beginFlashWithCallback:(void (^)(BOOL status))callback {
-    NVFlashSettings *nvFlashSettings = [[self class] nvFlashSettingsForNovaFlashSettings:self.flashSettings];
+- (void)beginFlashWithSettings:(SSFlashSettings)flashSettings callback:(void (^)(BOOL status))callback {
+    NVFlashSettings *nvFlashSettings = [[self class] nvFlashSettingsForNovaFlashSettings:flashSettings];
     DDLogVerbose(@"Calling nvFlashService beginFlash with settings %@", nvFlashSettings);
     [self.nvFlashService beginFlash:nvFlashSettings withCallback:^(BOOL status) {
         DDLogVerbose(@"NVFlashService beginFlash:withCallback: callback fired with status %d", status);
@@ -81,6 +81,10 @@ static const NSString *kLastFlashSettingsUserDefaultsPrefix = @"lastFlashSetting
             });
         }
     }];
+}
+
+- (void)beginFlashWithCallback:(void (^)(BOOL))callback {
+    return [self beginFlashWithSettings:self.flashSettings callback:callback];
 }
 
 - (void)endFlashWithCallback:(void (^)(BOOL status))callback {

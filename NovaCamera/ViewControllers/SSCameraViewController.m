@@ -243,7 +243,10 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
 }
 
 - (void)flashSettingsViewController:(SSFlashSettingsViewController *)flashSettingsViewController testFlashWithSettings:(SSFlashSettings)flashSettings {
-    [self hideFlashSettingsAnimated:YES];
+    DDLogVerbose(@"Testing flash");
+    [self.flashService beginFlashWithSettings:flashSettings callback:^(BOOL status) {
+        DDLogVerbose(@"Tested flash");
+    }];
 }
 
 @end
