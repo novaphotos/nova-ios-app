@@ -17,6 +17,7 @@
 #import <CocoaLumberjack/DDLog.h>
 
 static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDeviceAuthorizedContext;
+static void * NovaFlashServiceStatus = &NovaFlashServiceStatus;
 
 static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
 
@@ -27,6 +28,7 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
 - (void)runStillImageCaptureAnimation;
 - (void)showFlashSettingsAnimated:(BOOL)animated;
 - (void)hideFlashSettingsAnimated:(BOOL)animated;
+- (void)updateFlashStatusIcon;
 @end
 
 @implementation SSCameraViewController
@@ -81,6 +83,9 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
     
     // Add observers
     [self.captureSessionManager addObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:SessionRunningAndDeviceAuthorizedContext];
+    [self.flashService addObserver:self forKeyPath:@"status" options:0 context:NovaFlashServiceStatus];
+    
+    [self updateFlashStatusIcon];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -88,6 +93,7 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
     
     // Remove observers
     [self.captureSessionManager removeObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" context:SessionRunningAndDeviceAuthorizedContext];
+    [self.flashService removeObserver:self forKeyPath:@"status"];
 }
 
 - (void)didReceiveMemoryWarning
@@ -127,6 +133,10 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
                 self.captureButton.enabled = NO;
 			}
 		});
+    } else if (context == NovaFlashServiceStatus) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self updateFlashStatusIcon];
+        });
 	}
 }
 
@@ -231,6 +241,34 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
     } else {
         [self.flashSettingsViewController.view removeFromSuperview];
         [self.flashSettingsViewController viewDidDisappear:animated];
+    }
+}
+
+- (void)updateFlashStatusIcon {
+    // Update flash status icon to match flash service status
+    SSNovaFlashStatus status = self.flashService.status;
+    NSString *iconImageName = nil;
+    switch (status) {
+        case SSNovaFlashStatusDisabled:
+        case SSNovaFlashStatusUnknown:
+        default:
+            iconImageName = nil;
+            break;
+        case SSNovaFlashStatusOK:
+            iconImageName = @"icon-ok";
+            break;
+        case SSNovaFlashStatusError:
+            iconImageName = @"icon-error";
+            break;
+        case SSNovaFlashStatusSearching:
+            iconImageName = @"icon-searching";
+            break;
+    }
+    if (iconImageName) {
+        self.flashIconImage.image = [UIImage imageNamed:iconImageName];
+        self.flashIconImage.hidden = NO;
+    } else {
+        self.flashIconImage.hidden = YES;
     }
 }
 
