@@ -12,7 +12,6 @@
 #import "SSLibraryViewController.h"
 #import "SSNovaFlashService.h"
 #import "SSFlashSettingsViewController.h"
-#import "SSSettingsService.h"
 #import <AVFoundation/AVFoundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <CocoaLumberjack/DDLog.h>
@@ -24,8 +23,6 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
 
 @interface SSCameraViewController () {
     NSURL *_showPhotoURL;
-    BOOL _editPhoto;
-    BOOL _sharePhoto;
 }
 @property (nonatomic, strong) SSCaptureSessionManager *captureSessionManager;
 - (void)runStillImageCaptureAnimation;
@@ -109,21 +106,17 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
     return YES;
 }
 
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    AVCaptureVideoPreviewLayer *previewLayer = (AVCaptureVideoPreviewLayer *)self.previewView.layer;
+    AVCaptureConnection *connection = previewLayer.connection;
+    connection.videoOrientation = (AVCaptureVideoOrientation)toInterfaceOrientation;
+}
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"showPhoto"]) {
         SSLibraryViewController *vc = (SSLibraryViewController *)segue.destinationViewController;
-        if (_showPhotoURL) {
-            vc.prepareToDisplayAssetURL = _showPhotoURL;
-            vc.automaticallyEditPhoto = _editPhoto;
-            vc.automaticallySharePhoto = _sharePhoto;
-            _editPhoto = NO;
-            _sharePhoto = NO;
-            _showPhotoURL = nil;
-        } else {
-            DDLogVerbose(@"showPhoto with no photo URL");
-        }
-    } else {
-        DDLogVerbose(@"Got unknown segue %@", segue.identifier);
+        [vc showAssetWithURL:_showPhotoURL];
+        _showPhotoURL = nil;
     }
 }
 
@@ -161,7 +154,6 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
                 DDLogVerbose(@"Saving to asset library");
                 __block typeof(self) bSelf = self;
                 [[[ALAssetsLibrary alloc] init] writeImageToSavedPhotosAlbum:[image CGImage] orientation:(ALAssetOrientation)[image imageOrientation] completionBlock:^(NSURL *assetURL, NSError *error) {
-
                     if ([self.settingsService boolForKey:kSettingsServiceEditAfterCaptureKey]) {
                         _editPhoto = YES;
                     } else {
@@ -175,7 +167,6 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
                     }
                     
                     _showPhotoURL = assetURL;
-                    
                     [bSelf performSegueWithIdentifier:@"showPhoto" sender:self];
                 }];
             }
@@ -200,7 +191,6 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
 
 - (IBAction)showLibrary:(id)sender {
     _showPhotoURL = nil;
-    _editPhoto = NO;
     [self performSegueWithIdentifier:@"showPhoto" sender:nil];
 }
 
@@ -217,15 +207,6 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
         CGPoint devicePoint = [previewLayer captureDevicePointOfInterestForPoint:viewPoint];
         [self.captureSessionManager focusWithMode:AVCaptureFocusModeAutoFocus exposeWithMode:AVCaptureExposureModeContinuousAutoExposure atDevicePoint:devicePoint];
     }
-}
-
-#pragma mark - Properties
-
-- (SSSettingsService *)settingsService {
-    if (_settingsService == nil) {
-        _settingsService = [SSSettingsService sharedService];
-    }
-    return _settingsService;
 }
 
 #pragma mark - Private methods

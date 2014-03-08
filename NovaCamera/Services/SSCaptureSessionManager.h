@@ -141,6 +141,6 @@
  * @param shutter Block to call at the moment the actual image capture begins and can be used to fire a 
  * shutter animation.
  */
-- (void)captureStillImageWithCompletionHandler:(void (^)(NSData *imageData, UIImage *image, NSError *error))completion shutterHandler:(void (^)())shutter;
+- (void)captureStillImageWithCompletionHandler:(void (^)(NSData *imageData, UIImage *image, NSError *error))completion shutterHandler:(void (^)(int shutterCurtain))shutter;
 
 @end

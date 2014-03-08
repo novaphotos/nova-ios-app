@@ -25,6 +25,7 @@
 @property (nonatomic, strong) IBOutlet UIButton *flashSettingsButton;
 @property (nonatomic, strong) IBOutlet UIButton *generalSettingsButton;
 @property (nonatomic, strong) IBOutlet UIButton *toggleCameraButton;
+@property (nonatomic, strong) IBOutlet UIImageView *flashIconImage;
 
 @property (nonatomic, strong) IBOutlet SSFlashSettingsViewController *flashSettingsViewController;
 

@@ -91,6 +91,7 @@ const NSString *kSettingsServiceMultipleNovasKey = @"SettingsServiceMultipleNova
 - (void)setBool:(BOOL)value forKey:(NSString *)key {
     [self willChangeValueForKey:key];
     [[NSUserDefaults standardUserDefaults] setBool:value forKey:key];
+    [self didChangeValueForKey:key];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         [[NSUserDefaults standardUserDefaults] synchronize];
         [self didChangeValueForKey:key];
