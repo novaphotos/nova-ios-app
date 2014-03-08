@@ -204,20 +204,22 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
         // Set up capture connection
         AVCaptureConnection *connection = [self.stillImageOutput connectionWithMediaType:AVMediaTypeVideo];
         
-        
-        
         [self.stillImageOutput captureStillImageAsynchronouslyFromConnection:connection completionHandler:^(CMSampleBufferRef imageDataSampleBuffer, NSError *error) {
             // Save to asset library
             if (imageDataSampleBuffer) {
                 if (completion) {
                     NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
                     UIImage *image = [[UIImage alloc] initWithData:imageData];
-                    completion(imageData, image, error);
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        completion(imageData, image, error);
+                    });
                 }
             } else if (error) {
                 DDLogError(@"Error capturing image: %@", error);
                 if (completion) {
-                    completion(nil, nil, error);
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        completion(nil, nil, error);
+                    });
                 }
             }
         }];

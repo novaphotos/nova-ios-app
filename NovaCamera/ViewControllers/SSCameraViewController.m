@@ -158,6 +158,10 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
     [self.flashService beginFlashWithCallback:^(BOOL status) {
         DDLogVerbose(@"Nova flash begin returned with status %d; performing capture", status);
         [self.captureSessionManager captureStillImageWithCompletionHandler:^(NSData *imageData, UIImage *image, NSError *error) {
+            
+            DDLogVerbose(@"Finished capture; turning off flash");
+            [self.flashService endFlashWithCallback:nil];
+            
             if (error) {
                 DDLogError(@"Error capturing: %@", error);
             } else {
@@ -186,8 +190,6 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
             DDLogVerbose(@"Shutter curtain %d", shutterCurtain);
             if (shutterCurtain == 1) {
                 [self runStillImageCaptureAnimation];
-            } else {
-                [self.flashService endFlashWithCallback:nil];
             }
         }];
     }];
