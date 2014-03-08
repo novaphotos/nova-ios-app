@@ -167,11 +167,10 @@ static const NSTimeInterval customSettingsAnimationDuration = 0.25;
 }
 
 - (IBAction)testFlash:(id)sender {
-    if (self.delegate) {
-        [self.delegate flashSettingsViewController:self testFlashWithSettings:self.flashSettings];
-    } else {
-        DDLogError(@"No delegate set for SSFlashSettingsViewController");
-    }
+    DDLogVerbose(@"Testing flash");
+    [self.flashService beginFlashWithSettings:self.flashSettings callback:^(BOOL status) {
+        DDLogVerbose(@"Tested flash");
+    }];
 }
 
 - (IBAction)confirmFlashSettings:(id)sender {
@@ -211,6 +210,13 @@ static const NSTimeInterval customSettingsAnimationDuration = 0.25;
 
 - (void)setFlashSettings:(SSFlashSettings)flashSettings {
     [self setFlashSettings:flashSettings animated:NO];
+}
+
+- (SSNovaFlashService *)flashService {
+    if (!_flashService) {
+        _flashService = [SSNovaFlashService sharedService];
+    }
+    return _flashService;
 }
 
 #pragma mark - Private methods
