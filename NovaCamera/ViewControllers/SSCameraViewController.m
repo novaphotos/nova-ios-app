@@ -89,6 +89,9 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
     [self.flashService addObserver:self forKeyPath:@"status" options:0 context:NovaFlashServiceStatus];
     
     [self updateFlashStatusIcon];
+    
+    // Ensure flash is enabled, if appropriate
+    [self.flashService enableFlashIfNeeded];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {

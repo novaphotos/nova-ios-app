@@ -96,9 +96,14 @@ static const NSString *SSNovaFlashServiceStatusChanged;
 - (void)configureFlash;
 
 /**
- * Enabe flash (if it was disabled)
+ * Enable flash (if it was disabled)
  */
 - (void)enableFlash;
+
+/**
+ * Enable flash if it was disabled and the current settings dictate
+ */
+- (void)enableFlashIfNeeded;
 
 /**
  * Disable flash.

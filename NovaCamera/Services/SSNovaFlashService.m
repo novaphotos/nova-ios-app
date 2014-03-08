@@ -72,6 +72,13 @@ static const NSString *kLastFlashSettingsUserDefaultsPrefix = @"lastFlashSetting
     [self.nvFlashService enable];
 }
 
+- (void)enableFlashIfNeeded {
+    if (self.flashSettings.flashMode != SSFlashModeOff
+        && self.status == SSNovaFlashStatusDisabled) {
+        [self enableFlash];
+    }
+}
+
 - (void)disableFlash {
     [self.nvFlashService disable];
 }
