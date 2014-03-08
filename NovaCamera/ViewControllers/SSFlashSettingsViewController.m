@@ -12,6 +12,8 @@
 static const CGFloat customSettingsHeight = 70.0;
 static const NSTimeInterval customSettingsAnimationDuration = 0.25;
 
+static void * NovaFlashServiceStatus = &NovaFlashServiceStatus;
+
 @interface SSFlashSettingsViewController () {
     NSArray *_flashModeButtons;
     NSArray *_flashModes;
@@ -42,6 +44,11 @@ static const NSTimeInterval customSettingsAnimationDuration = 0.25;
  * Update button images to indicate active flash mode
  */
 - (void)updateFlashModeButtons;
+
+/**
+ * Update flash status text
+ */
+- (void)updateFlashStatus;
 
 /**
  * Persist changes to color temp to flashSettings
@@ -131,12 +138,31 @@ static const NSTimeInterval customSettingsAnimationDuration = 0.25;
     }
     
     [self updateFlashModeButtons];
+    [self updateFlashStatus];
+    
+    [self.flashService addObserver:self forKeyPath:@"status" options:0 context:NovaFlashServiceStatus];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    [self.flashService removeObserver:self forKeyPath:@"status"];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - KVO
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if (context == NovaFlashServiceStatus) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self updateFlashStatus];
+        });
+    }
 }
 
 #pragma mark - Public methods
@@ -174,6 +200,7 @@ static const NSTimeInterval customSettingsAnimationDuration = 0.25;
 }
 
 - (IBAction)confirmFlashSettings:(id)sender {
+    self.flashService.flashSettings = self.flashSettings;
     if (self.delegate) {
         [self.delegate flashSettingsViewController:self didConfirmSettings:self.flashSettings];
     } else {
@@ -268,6 +295,33 @@ static const NSTimeInterval customSettingsAnimationDuration = 0.25;
         UIImage *image = [UIImage imageNamed:imgName];
         [flashButton setImage:image forState:UIControlStateNormal];
     }
+}
+
+- (void)updateFlashStatus {
+    SSNovaFlashStatus status = self.flashService.status;
+    NSString *statusStr = nil;
+    NSString *strengthStr = nil;
+    switch (status) {
+        case SSNovaFlashStatusDisabled:
+            statusStr = @"Disabled";
+            break;
+        case SSNovaFlashStatusError:
+            statusStr = @"Error";
+            break;
+        case SSNovaFlashStatusOK:
+            statusStr = @"OK";
+            strengthStr = @"Good";
+            break;
+        case SSNovaFlashStatusSearching:
+            statusStr = @"Searching";
+            break;
+        case SSNovaFlashStatusUnknown:
+        default:
+            statusStr = @"Unknown";
+            break;
+    }
+    self.flashStatusLabel.text = statusStr;
+    self.flashStrengthLabel.text = strengthStr;
 }
 
 - (IBAction)flashColorTempChanged:(id)sender {
