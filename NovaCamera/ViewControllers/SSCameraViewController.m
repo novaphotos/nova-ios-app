@@ -157,9 +157,13 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
                     [bSelf performSegueWithIdentifier:@"showPhoto" sender:self];
                 }];
             }
-        } shutterHandler:^{
-            [self.flashService endFlashWithCallback:nil];
-            [self runStillImageCaptureAnimation];
+        } shutterHandler:^(int shutterCurtain) {
+            DDLogVerbose(@"Shutter curtain %d", shutterCurtain);
+            if (shutterCurtain == 1) {
+                [self runStillImageCaptureAnimation];
+            } else {
+                [self.flashService endFlashWithCallback:nil];
+            }
         }];
     }];
 }

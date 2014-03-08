@@ -22,7 +22,7 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
 @property (nonatomic, strong) AVCaptureDeviceInput *deviceInput;
 @property (nonatomic, strong) AVCaptureStillImageOutput *stillImageOutput;
 @property (nonatomic, strong) id runtimeErrorObserver;
-@property (nonatomic, copy) void (^shutterHandler)();
+@property (nonatomic, copy) void (^shutterHandler)(int shutterCurtain);
 
 - (BOOL)setDevice:(AVCaptureDevice *)device withError:(NSError **)error;
 - (BOOL)configureSession;
@@ -198,7 +198,7 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
     });
 }
 
-- (void)captureStillImageWithCompletionHandler:(void (^)(NSData *imageData, UIImage *image, NSError *error))completion shutterHandler:(void (^)())shutter {
+- (void)captureStillImageWithCompletionHandler:(void (^)(NSData *imageData, UIImage *image, NSError *error))completion shutterHandler:(void (^)(int shutterCurtain))shutter {
     self.shutterHandler = shutter;
     dispatch_async(self.sessionQueue, ^{
         // Set up capture connection
@@ -480,14 +480,19 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
 	if (context == CapturingStillImageContext) {
 		BOOL isCapturingStillImage = [change[NSKeyValueChangeNewKey] boolValue];
-		
-		if (isCapturingStillImage) {
-            if (self.shutterHandler) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    self.shutterHandler();
-                });
-            }
-		}
+        
+        int shutterCurtain;
+        if (isCapturingStillImage) {
+            shutterCurtain = 1;
+        } else {
+            shutterCurtain = 2;
+        }
+        
+        if (self.shutterHandler) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.shutterHandler(shutterCurtain);
+            });
+        }
 	}
 }
 
