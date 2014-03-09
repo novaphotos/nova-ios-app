@@ -27,11 +27,6 @@
  */
 - (void)flashSettingsViewController:(SSFlashSettingsViewController *)flashSettingsViewController didConfirmSettings:(SSFlashSettings)flashSettings;
 
-/**
- * User has requested a test flash be fired with the specified settings
- */
-- (void)flashSettingsViewController:(id)flashSettingsViewController testFlashWithSettings:(SSFlashSettings)flashSettings;
-
 @end
 
 @interface SSFlashSettingsViewController : UIViewController <UIGestureRecognizerDelegate>
@@ -51,6 +46,11 @@
  * Remember the user's previously-used custom flash settings.
  */
 @property (nonatomic, assign) SSFlashSettings previousCustomFlashSettings;
+
+/**
+ * Reference to flash service
+ */
+@property (nonatomic, strong) SSNovaFlashService *flashService;
 
 // Flash modes
 @property (nonatomic, strong) IBOutlet UIView *flashModesView;

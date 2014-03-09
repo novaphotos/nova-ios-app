@@ -12,21 +12,26 @@
 #import "SSLibraryViewController.h"
 #import "SSNovaFlashService.h"
 #import "SSFlashSettingsViewController.h"
+#import "SSSettingsService.h"
 #import <AVFoundation/AVFoundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <CocoaLumberjack/DDLog.h>
 
 static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDeviceAuthorizedContext;
+static void * NovaFlashServiceStatus = &NovaFlashServiceStatus;
 
 static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
 
 @interface SSCameraViewController () {
     NSURL *_showPhotoURL;
+    BOOL _editPhoto;
+    BOOL _sharePhoto;
 }
 @property (nonatomic, strong) SSCaptureSessionManager *captureSessionManager;
 - (void)runStillImageCaptureAnimation;
 - (void)showFlashSettingsAnimated:(BOOL)animated;
 - (void)hideFlashSettingsAnimated:(BOOL)animated;
+- (void)updateFlashStatusIcon;
 @end
 
 @implementation SSCameraViewController
@@ -61,7 +66,7 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
     self.previewView.session = self.captureSessionManager.session;
     
     // Add flash service
-    self.flashService = [[SSNovaFlashService alloc] init];
+    self.flashService = [SSNovaFlashService sharedService];
     
     // Add gesture recognizer
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(focusAndExposeTap:)];
@@ -81,6 +86,12 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
     
     // Add observers
     [self.captureSessionManager addObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:SessionRunningAndDeviceAuthorizedContext];
+    [self.flashService addObserver:self forKeyPath:@"status" options:0 context:NovaFlashServiceStatus];
+    
+    [self updateFlashStatusIcon];
+    
+    // Ensure flash is enabled, if appropriate
+    [self.flashService enableFlashIfNeeded];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -88,6 +99,7 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
     
     // Remove observers
     [self.captureSessionManager removeObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" context:SessionRunningAndDeviceAuthorizedContext];
+    [self.flashService removeObserver:self forKeyPath:@"status"];
 }
 
 - (void)didReceiveMemoryWarning
@@ -100,17 +112,21 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
     return YES;
 }
 
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    AVCaptureVideoPreviewLayer *previewLayer = (AVCaptureVideoPreviewLayer *)self.previewView.layer;
-    AVCaptureConnection *connection = previewLayer.connection;
-    connection.videoOrientation = (AVCaptureVideoOrientation)toInterfaceOrientation;
-}
-
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"showPhoto"]) {
         SSLibraryViewController *vc = (SSLibraryViewController *)segue.destinationViewController;
-        [vc showAssetWithURL:_showPhotoURL];
-        _showPhotoURL = nil;
+        if (_showPhotoURL) {
+            vc.prepareToDisplayAssetURL = _showPhotoURL;
+            vc.automaticallyEditPhoto = _editPhoto;
+            vc.automaticallySharePhoto = _sharePhoto;
+            _editPhoto = NO;
+            _sharePhoto = NO;
+            _showPhotoURL = nil;
+        } else {
+            DDLogVerbose(@"showPhoto with no photo URL");
+        }
+    } else {
+        DDLogVerbose(@"Got unknown segue %@", segue.identifier);
     }
 }
 
@@ -127,7 +143,11 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
                 self.captureButton.enabled = NO;
 			}
 		});
-	}
+    } else if (context == NovaFlashServiceStatus) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self updateFlashStatusIcon];
+        });
+    }
 }
 
 
@@ -135,18 +155,43 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
 
 - (IBAction)capture:(id)sender {
     DDLogVerbose(@"Capture!");
-    [self.captureSessionManager captureStillImageWithCompletionHandler:^(NSData *imageData, UIImage *image, NSError *error) {
-        if (error) {
-            DDLogError(@"Error capturing: %@", error);
-        } else {
-            DDLogVerbose(@"Saving to asset library");
-            __block typeof(self) bSelf = self;
-            [[[ALAssetsLibrary alloc] init] writeImageToSavedPhotosAlbum:[image CGImage] orientation:(ALAssetOrientation)[image imageOrientation] completionBlock:^(NSURL *assetURL, NSError *error) {
-                [bSelf performSegueWithIdentifier:@"showPhoto" sender:self];
-            }];
-        }
-    } shutterHandler:^{
-        [self runStillImageCaptureAnimation];
+    [self.flashService beginFlashWithCallback:^(BOOL status) {
+        DDLogVerbose(@"Nova flash begin returned with status %d; performing capture", status);
+        [self.captureSessionManager captureStillImageWithCompletionHandler:^(NSData *imageData, UIImage *image, NSError *error) {
+            
+            DDLogVerbose(@"Finished capture; turning off flash");
+            [self.flashService endFlashWithCallback:nil];
+            
+            if (error) {
+                DDLogError(@"Error capturing: %@", error);
+            } else {
+                DDLogVerbose(@"Saving to asset library");
+                __block typeof(self) bSelf = self;
+                [[[ALAssetsLibrary alloc] init] writeImageToSavedPhotosAlbum:[image CGImage] orientation:(ALAssetOrientation)[image imageOrientation] completionBlock:^(NSURL *assetURL, NSError *error) {
+
+                    if ([self.settingsService boolForKey:kSettingsServiceEditAfterCaptureKey]) {
+                        _editPhoto = YES;
+                    } else {
+                        _editPhoto = NO;
+                    }
+                    
+                    if ([self.settingsService boolForKey:kSettingsServiceShareAfterCaptureKey]) {
+                        _sharePhoto = YES;
+                    } else {
+                        _sharePhoto = NO;
+                    }
+                    
+                    _showPhotoURL = assetURL;
+                    
+                    [bSelf performSegueWithIdentifier:@"showPhoto" sender:self];
+                }];
+            }
+        } shutterHandler:^(int shutterCurtain) {
+            DDLogVerbose(@"Shutter curtain %d", shutterCurtain);
+            if (shutterCurtain == 1) {
+                [self runStillImageCaptureAnimation];
+            }
+        }];
     }];
 }
 
@@ -160,6 +205,7 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
 
 - (IBAction)showLibrary:(id)sender {
     _showPhotoURL = nil;
+    _editPhoto = NO;
     [self performSegueWithIdentifier:@"showPhoto" sender:nil];
 }
 
@@ -176,6 +222,15 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
         CGPoint devicePoint = [previewLayer captureDevicePointOfInterestForPoint:viewPoint];
         [self.captureSessionManager focusWithMode:AVCaptureFocusModeAutoFocus exposeWithMode:AVCaptureExposureModeContinuousAutoExposure atDevicePoint:devicePoint];
     }
+}
+
+#pragma mark - Properties
+
+- (SSSettingsService *)settingsService {
+    if (_settingsService == nil) {
+        _settingsService = [SSSettingsService sharedService];
+    }
+    return _settingsService;
 }
 
 #pragma mark - Private methods
@@ -210,6 +265,8 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
         self.flashSettingsViewController.view.frame = self.view.frame;
         [self.flashSettingsViewController viewDidAppear:animated];
     }
+    
+    [self.flashService temporaryEnableFlashIfDisabled];
 }
 
 - (void)hideFlashSettingsAnimated:(BOOL)animated {
@@ -228,17 +285,41 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
         [self.flashSettingsViewController.view removeFromSuperview];
         [self.flashSettingsViewController viewDidDisappear:animated];
     }
+    
+    [self.flashService endTemporaryEnableFlash];
+}
+
+- (void)updateFlashStatusIcon {
+    // Update flash status icon to match flash service status
+    SSNovaFlashStatus status = self.flashService.status;
+    NSString *iconImageName = nil;
+    switch (status) {
+        case SSNovaFlashStatusDisabled:
+        case SSNovaFlashStatusUnknown:
+        default:
+            iconImageName = nil;
+            break;
+        case SSNovaFlashStatusOK:
+            iconImageName = @"icon-ok";
+            break;
+        case SSNovaFlashStatusError:
+            iconImageName = @"icon-error";
+            break;
+        case SSNovaFlashStatusSearching:
+            iconImageName = @"icon-searching";
+            break;
+    }
+    if (iconImageName) {
+        self.flashIconImage.image = [UIImage imageNamed:iconImageName];
+        self.flashIconImage.hidden = NO;
+    } else {
+        self.flashIconImage.hidden = YES;
+    }
 }
 
 #pragma mark - SSFlashSettingsViewControllerDelegate
 
 - (void)flashSettingsViewController:(SSFlashSettingsViewController *)flashSettingsViewController didConfirmSettings:(SSFlashSettings)flashSettings {
-    // Update settings in flash service
-    self.flashService.flashSettings = flashSettings;
-    [self hideFlashSettingsAnimated:YES];
-}
-
-- (void)flashSettingsViewController:(SSFlashSettingsViewController *)flashSettingsViewController testFlashWithSettings:(SSFlashSettings)flashSettings {
     [self hideFlashSettingsAnimated:YES];
 }
 

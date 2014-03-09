@@ -11,6 +11,7 @@
 
 @class SSCameraPreviewView;
 @class SSNovaFlashService;
+@class SSSettingsService;
 
 /**
  * Camera capture view; handles preview, camera capture, displaying of
@@ -24,10 +25,12 @@
 @property (nonatomic, strong) IBOutlet UIButton *flashSettingsButton;
 @property (nonatomic, strong) IBOutlet UIButton *generalSettingsButton;
 @property (nonatomic, strong) IBOutlet UIButton *toggleCameraButton;
+@property (nonatomic, strong) IBOutlet UIImageView *flashIconImage;
 
 @property (nonatomic, strong) IBOutlet SSFlashSettingsViewController *flashSettingsViewController;
 
 @property (nonatomic, strong) SSNovaFlashService *flashService;
+@property (nonatomic, strong) SSSettingsService *settingsService;
 
 - (IBAction)capture:(id)sender;
 - (IBAction)showGeneralSettings:(id)sender;
