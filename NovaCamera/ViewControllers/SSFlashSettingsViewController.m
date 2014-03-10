@@ -250,6 +250,9 @@ static void * NovaFlashServiceStatus = &NovaFlashServiceStatus;
 
 - (void)initialSetup {
     self.previousCustomFlashSettings = SSFlashSettingsCustomDefault;
+    
+    // Read flash settings from flash service
+    self.flashSettings = self.flashService.flashSettings;
 }
 
 - (void)showCustomSettingsAnimated:(BOOL)animated {
@@ -294,6 +297,10 @@ static void * NovaFlashServiceStatus = &NovaFlashServiceStatus;
         }
         UIImage *image = [UIImage imageNamed:imgName];
         [flashButton setImage:image forState:UIControlStateNormal];
+    }
+    if (!self.flashService.allowCustomFlashMode) {
+        DDLogVerbose(@"Hiding custom flash mode button");
+        self.flashCustomButton.hidden = YES;
     }
 }
 

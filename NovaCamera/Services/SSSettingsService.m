@@ -36,11 +36,15 @@ const NSString *kSettingsServiceMultipleNovasKey = @"SettingsServiceMultipleNova
 
 - (void)initializeUserDefaults {
     NSArray *defaults = @[
-                          @NO,
-                          @NO,
-                          @NO,
-                          @NO,
-                          @NO,
+                          @NO,      // kSettingsServiceEditAfterCaptureKey
+                          @NO,      // kSettingsServiceShareAfterCaptureKey
+                          /*
+                           * TODO: Re-enable after 0.1.0 release
+                           *
+                          @NO,      // kSettingsServiceShowGridLinesKey
+                          @NO,      // kSettingsServiceSquarePhotosKey
+                           */
+                          @NO,      // kSettingsServiceMultipleNovasKey
                           ];
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSArray *keys = [self generalSettingsKeys];
@@ -59,8 +63,12 @@ const NSString *kSettingsServiceMultipleNovasKey = @"SettingsServiceMultipleNova
     return @[
              kSettingsServiceEditAfterCaptureKey,
              kSettingsServiceShareAfterCaptureKey,
+             /*
+              * TODO: Re-enable after 0.1.0 release
+              *
              kSettingsServiceShowGridLinesKey,
              kSettingsServiceSquarePhotosKey,
+              */
              kSettingsServiceMultipleNovasKey,
              ];
 }
@@ -69,8 +77,12 @@ const NSString *kSettingsServiceMultipleNovasKey = @"SettingsServiceMultipleNova
     return @[
              @"Ask to edit after taking",
              @"Ask to share after taking",
+             /*
+              * TODO: Re-enable after 0.1.0 release
+              *
              @"Show grid lines",
              @"Square shaped photos",
+              */
              @"Use multiple Novas",
              ];
 }
