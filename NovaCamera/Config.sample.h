@@ -12,6 +12,4 @@
 #define AVIARY_KEY @""
 #define AVIARY_SECRET @""
 
-#define TESTFLIGHT_TOKEN @""
-
 #endif

@@ -10,9 +10,7 @@
 #import "SSTheme.h"
 #import "SSSettingsService.h"
 #import "SSNovaFlashService.h"
-#import <TestFlightSDK/TestFlight.h>
 #import <CocoaLumberjack/DDTTYLogger.h>
-#import <TestFlightLogger/TestFlightLogger.h>
 
 @implementation SSAppDelegate {
     SSSettingsService *_settingsService;
@@ -21,14 +19,9 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // TestFlight setup
-    [TestFlight takeOff:TESTFLIGHT_TOKEN];
-    
     // CocoaLumberjack logging setup
     // Xcode console logging
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
-    // TestFlight logging
-    [DDLog addLogger:[TestFlightLogger sharedInstance] withLogLevel:LOG_LEVEL_WARN];
     
     // Setup theme
     [[SSTheme currentTheme] styleAppearanceProxies];
