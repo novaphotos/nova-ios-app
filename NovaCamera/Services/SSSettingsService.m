@@ -43,8 +43,8 @@ const NSString *kSettingsServiceMultipleNovasKey = @"SettingsServiceMultipleNova
                            *
                           @NO,      // kSettingsServiceShowGridLinesKey
                           @NO,      // kSettingsServiceSquarePhotosKey
-                           */
                           @NO,      // kSettingsServiceMultipleNovasKey
+                           */
                           ];
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSArray *keys = [self generalSettingsKeys];
@@ -68,8 +68,8 @@ const NSString *kSettingsServiceMultipleNovasKey = @"SettingsServiceMultipleNova
               *
              kSettingsServiceShowGridLinesKey,
              kSettingsServiceSquarePhotosKey,
-              */
              kSettingsServiceMultipleNovasKey,
+              */
              ];
 }
 
@@ -82,8 +82,8 @@ const NSString *kSettingsServiceMultipleNovasKey = @"SettingsServiceMultipleNova
               *
              @"Show grid lines",
              @"Square shaped photos",
-              */
              @"Use multiple Novas",
+              */
              ];
 }
 
