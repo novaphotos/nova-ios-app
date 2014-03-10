@@ -1,0 +1,33 @@
+//
+//  Prefix header
+//
+//  The contents of this file are implicitly included at the beginning of every source file.
+//
+
+#import <Availability.h>
+
+#ifndef __IPHONE_5_0
+#warning "This project uses features only available in iOS SDK 5.0 and later."
+#endif
+
+#ifdef __OBJC__
+    #import <UIKit/UIKit.h>
+    #import <Foundation/Foundation.h>
+    #import <CocoaLumberjack/DDLog.h>
+#endif
+
+// CocoaLumberjack log level
+#ifdef DEBUG
+static const int ddLogLevel = LOG_LEVEL_VERBOSE;
+#else
+static const int ddLogLevel = LOG_LEVEL_ERROR;
+#endif
+
+#ifdef DEBUG
+// UIView -recursiveDescription (only in DEBUG! don't release with this!)
+@interface UIView (recursiveDescription)
+- (NSString *)recursiveDescription __attribute__((deprecated("only use recursiveDescription when debugging!")));
+@end
+#endif
+
+#import "Config.h"

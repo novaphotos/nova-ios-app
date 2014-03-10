@@ -20,3 +20,9 @@ DerivedData
 # CocoaPods
 Podfile.lock
 Pods/*
+
+# Doc generation
+docs
+
+# Local configuration
+NovaCamera/Config.h
