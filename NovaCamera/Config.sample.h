@@ -12,4 +12,7 @@
 #define AVIARY_KEY @""
 #define AVIARY_SECRET @""
 
+#define CRASHLYTICS_API_KEY @""
+#define CRASHLYTICS_ID @""
+
 #endif

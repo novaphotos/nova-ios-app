@@ -314,6 +314,7 @@
 				2724C97A18639EEB00A68E0D /* Resources */,
 				C7EC3CFAD39349C6B51F5F1F /* Copy Pods Resources */,
 				2752B3A41884E35800E0C870 /* ShellScript */,
+				122810D518CE4A8D0052255C /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -403,6 +404,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		122810D518CE4A8D0052255C /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\n\necho \"Activating Crashlytics\"\nCRASHLYTICS_API_KEY=$(./scripts/get-config-var.sh CRASHLYTICS_API_KEY)\nCRASHLYTICS_ID=$(./scripts/get-config-var.sh CRASHLYTICS_ID)\necho ./Pods/CrashlyticsFramework/Crashlytics.framework/run \"$CRASHLYTICS_API_KEY\" \"$CRASHLYTICS_ID\"";
+		};
 		12BFA340311B4AAB9EE31D41 /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;

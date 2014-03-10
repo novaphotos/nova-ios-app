@@ -11,6 +11,8 @@
 #import "SSSettingsService.h"
 #import "SSNovaFlashService.h"
 #import <CocoaLumberjack/DDTTYLogger.h>
+#import <Crashlytics/Crashlytics.h>
+#import <CrashlyticsLumberjack/CrashlyticsLogger.h>
 
 @implementation SSAppDelegate {
     SSSettingsService *_settingsService;
@@ -19,9 +21,13 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [Crashlytics startWithAPIKey:CRASHLYTICS_API_KEY];
+
     // CocoaLumberjack logging setup
     // Xcode console logging
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
+    // Log warnings to Crashlytics
+    [DDLog addLogger:[CrashlyticsLogger sharedInstance] withLogLevel:LOG_LEVEL_WARN];
     
     // Setup theme
     [[SSTheme currentTheme] styleAppearanceProxies];
