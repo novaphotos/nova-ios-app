@@ -443,7 +443,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "BUILT_INFOPLIST_FILE=\"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Info.plist\"\n\necho \"Updating built Info.plist ${BUILT_INFOPLIST_FILE}\"\n./scripts/update-built-info-plist.sh ${BUILT_INFOPLIST_FILE}\n";
+			shellScript = "set -e\n\nBUILT_INFOPLIST_FILE=\"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Info.plist\"\n\necho \"Updating built Info.plist ${BUILT_INFOPLIST_FILE}\"\n./scripts/update-built-info-plist.sh ${BUILT_INFOPLIST_FILE}";
 		};
 		4927E6ABC72843AAA0204F69 /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
