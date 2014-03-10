@@ -195,7 +195,11 @@
 }
 
 - (IBAction)deletePhoto:(id)sender {
-    [self.libraryService assetAtIndex:self.selectedIndex withCompletion:^(ALAsset *asset) {
+    if (!_lastAssetURL) {
+        DDLogError(@"Unable to delete asset with no _lastAsseURL");
+        return;
+    }
+    [self.libraryService assetForURL:_lastAssetURL withCompletion:^(ALAsset *asset) {
         if (asset.editable) {
             _confirmDeleteAlertView = [[UIAlertView alloc] initWithTitle:@"Delete Photo" message:@"Are you sure?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Delete", nil];
             _assetToDelete = asset;
