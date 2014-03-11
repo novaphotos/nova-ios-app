@@ -21,8 +21,6 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [Crashlytics startWithAPIKey:CRASHLYTICS_API_KEY];
-
     // CocoaLumberjack logging setup
     // Xcode console logging
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
@@ -41,6 +39,9 @@
     // Setup flash service
     _flashService = [SSNovaFlashService sharedService];
     _flashService.useMultipleNovas = [_settingsService boolForKey:kSettingsServiceMultipleNovasKey];
+
+    // Crashlytics crash reporting service. This should be the last thing in this method.
+    [Crashlytics startWithAPIKey:CRASHLYTICS_API_KEY];
     
     return YES;
 }
