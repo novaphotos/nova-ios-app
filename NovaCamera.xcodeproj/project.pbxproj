@@ -415,7 +415,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\n\necho \"Activating Crashlytics\"\nCRASHLYTICS_API_KEY=$(./scripts/get-config-var.sh CRASHLYTICS_API_KEY)\nCRASHLYTICS_ID=$(./scripts/get-config-var.sh CRASHLYTICS_ID)\necho ./Pods/CrashlyticsFramework/Crashlytics.framework/run \"$CRASHLYTICS_API_KEY\" \"$CRASHLYTICS_ID\"";
+			shellScript = "set -e\n\necho \"Activating Crashlytics\"\nCRASHLYTICS_API_KEY=$(./scripts/get-config-var.sh CRASHLYTICS_API_KEY)\nCRASHLYTICS_ID=$(./scripts/get-config-var.sh CRASHLYTICS_ID)\n./Pods/CrashlyticsFramework/Crashlytics.framework/run \"$CRASHLYTICS_API_KEY\" \"$CRASHLYTICS_ID\"";
 		};
 		12BFA340311B4AAB9EE31D41 /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
