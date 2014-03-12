@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		122810D818CE50B10052255C /* SSStatsService.m in Sources */ = {isa = PBXBuildFile; fileRef = 122810D718CE50B10052255C /* SSStatsService.m */; };
 		2719089E187EC5E500996A2D /* SSPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2719089D187EC5E500996A2D /* SSPhotoViewController.m */; };
 		2724C98018639EEB00A68E0D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2724C97F18639EEB00A68E0D /* Foundation.framework */; };
 		2724C98218639EEB00A68E0D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2724C98118639EEB00A68E0D /* CoreGraphics.framework */; };
@@ -56,6 +57,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		122810D618CE50B10052255C /* SSStatsService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSStatsService.h; sourceTree = "<group>"; };
+		122810D718CE50B10052255C /* SSStatsService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSStatsService.m; sourceTree = "<group>"; };
 		2719089C187EC5E500996A2D /* SSPhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSPhotoViewController.h; sourceTree = "<group>"; };
 		2719089D187EC5E500996A2D /* SSPhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSPhotoViewController.m; sourceTree = "<group>"; };
 		2724C97C18639EEB00A68E0D /* NovaCamera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NovaCamera.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -231,6 +234,8 @@
 		272F8728186E6DE90005BA58 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				122810D618CE50B10052255C /* SSStatsService.h */,
+				122810D718CE50B10052255C /* SSStatsService.m */,
 				272F87C318752DE90005BA58 /* SSCaptureSessionManager.h */,
 				272F87C418752DE90005BA58 /* SSCaptureSessionManager.m */,
 				27728B46188F5757004D67A4 /* SSChronologicalAssetsLibraryService.h */,
@@ -501,6 +506,7 @@
 				27BB942D1863A7CD00A31BCF /* SSCameraViewController.m in Sources */,
 				2719089E187EC5E500996A2D /* SSPhotoViewController.m in Sources */,
 				27554D04188E9A68008E4C32 /* SSPassThroughView.m in Sources */,
+				122810D818CE50B10052255C /* SSStatsService.m in Sources */,
 				2724C99018639EEB00A68E0D /* SSAppDelegate.m in Sources */,
 				27BB94331863AB3300A31BCF /* SSCameraPreviewView.m in Sources */,
 				2752B3A21884BC0F00E0C870 /* SSCenteredScrollView.m in Sources */,

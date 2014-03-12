@@ -29,6 +29,8 @@ typedef struct {
     double flashBrightness;
 } SSFlashSettings;
 
+NSString * SSFlashSettingsDescribe(SSFlashSettings settings);
+
 /**
  * Predefined flash settings
  */

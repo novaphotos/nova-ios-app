@@ -12,6 +12,7 @@
 @class SSCameraPreviewView;
 @class SSNovaFlashService;
 @class SSSettingsService;
+@class SSStatsService;
 
 /**
  * Camera capture view; handles preview, camera capture, displaying of
@@ -31,6 +32,7 @@
 
 @property (nonatomic, strong) SSNovaFlashService *flashService;
 @property (nonatomic, strong) SSSettingsService *settingsService;
+@property (nonatomic, strong) SSStatsService *statsService;
 
 - (IBAction)capture:(id)sender;
 - (IBAction)showGeneralSettings:(id)sender;

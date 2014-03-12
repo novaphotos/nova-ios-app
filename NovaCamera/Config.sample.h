@@ -15,4 +15,6 @@
 #define CRASHLYTICS_API_KEY @""
 #define CRASHLYTICS_ID @""
 
+#define MIXPANEL_TOKEN @""
+
 #endif

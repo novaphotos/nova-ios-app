@@ -9,6 +9,7 @@ target "NovaCamera" do
 	pod 'CocoaLumberjack', '~> 1.7.0'
 	pod 'CrashlyticsFramework', '~> 2.1.7'
 	pod 'CrashlyticsLumberjack', '~> 1.0.1'
+	pod 'Mixpanel', '~> 2.3.2'
 end
 
 target "NovaCameraTests" do

@@ -10,6 +10,7 @@
 #import "SSNovaFlashService.h"
 
 @class SSFlashSettingsViewController;
+@class SSStatsService;
 
 /**
  * Delegate protocol handling settings changes. The delegate, typically
@@ -51,6 +52,11 @@
  * Reference to flash service
  */
 @property (nonatomic, strong) SSNovaFlashService *flashService;
+
+/**
+ * Reference to stats service
+ */
+@property (nonatomic, strong) SSStatsService *statsService;
 
 // Flash modes
 @property (nonatomic, strong) IBOutlet UIView *flashModesView;

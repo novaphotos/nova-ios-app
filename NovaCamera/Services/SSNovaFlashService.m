@@ -14,6 +14,23 @@ static const NSString *SSNovaFlashServiceStatusChanged = @"SSNovaFlashServiceSta
 
 static const NSString *kLastFlashSettingsUserDefaultsPrefix = @"lastFlashSettings_";
 
+NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
+    switch (settings.flashMode) {
+        case SSFlashModeOff:
+            return @"Off";
+        case SSFlashModeGentle:
+            return @"Gentle";
+        case SSFlashModeWarm:
+            return @"Warm";
+        case SSFlashModeBright:
+            return @"Bright";
+        case SSFlashModeCustom:
+            return @"Custom";
+        default:
+            return @"Unknown";
+    }
+}
+
 @interface SSNovaFlashService () {
     BOOL _temporarilyEnabled;
 }

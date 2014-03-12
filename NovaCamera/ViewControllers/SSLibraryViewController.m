@@ -9,6 +9,7 @@
 #import "SSLibraryViewController.h"
 #import "SSChronologicalAssetsLibraryService.h"
 #import "SSPhotoViewController.h"
+#import "SSStatsService.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <AviarySDK/AFPhotoEditorController.h>
 
@@ -29,6 +30,11 @@
  * Asset library service; enumerates and tracks assets
  */
 @property (nonatomic, strong) SSChronologicalAssetsLibraryService *libraryService;
+
+/**
+ * Stats service
+ */
+@property (nonatomic, strong) SSStatsService *statsService;
 
 /**
  * Aviary editor
@@ -114,6 +120,8 @@
     
     // Custom initialization
     self.libraryService = [SSChronologicalAssetsLibraryService sharedService];
+    
+    self.statsService = [SSStatsService sharedService];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(assetLibraryUpdatedWithNotification:) name:(NSString *)SSChronologicalAssetsLibraryUpdatedNotification object:self.libraryService];
 }
@@ -201,10 +209,12 @@
     }
     [self.libraryService assetForURL:_lastAssetURL withCompletion:^(ALAsset *asset) {
         if (asset.editable) {
+            [self.statsService report:@"Photo Delete"];
             _confirmDeleteAlertView = [[UIAlertView alloc] initWithTitle:@"Delete Photo" message:@"Are you sure?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Delete", nil];
             _assetToDelete = asset;
             [_confirmDeleteAlertView show];
         } else {
+            [self.statsService report:@"Photo Could Not Delete"];
             NSString *msg = @"Unable to delete this photo because it was not created with the Nova app. Instead, try deleting the photo using the built-in Photos app.";
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:msg delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
             [alert show];
@@ -234,8 +244,15 @@
         NSArray *activityItems = @[
                                    image,
                                    ];
+        [self.statsService report:@"Share Start"];
         UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
         activityVC.completionHandler = ^(NSString *activityType, BOOL completed) {
+            if (completed) {
+                [self.statsService report:@"Share Success" properties:@{ @"Activity": activityType }];
+            } else {
+                [self.statsService report:@"Share Fail"];
+            }
+            
         };
         [bSelf presentViewController:activityVC animated:YES completion:nil];
     }];
@@ -271,6 +288,7 @@
 
 - (void)launchEditorForAssetWithURL:(NSURL *)assetURL {
     __block typeof(self) bSelf = self;
+    [self.statsService report:@"Aviary Launch"];
     [self.libraryService fullResolutionImageForAssetWithURL:assetURL withCompletion:^(UIImage *image) {
         DDLogVerbose(@"Loading Aviary photo editor with image: %@", image);
         
@@ -293,9 +311,11 @@
             // `result` will be nil if the image was not modified in the session, or non-nil if the session was closed successfully
             if (result != nil) {
                 DDLogVerbose(@"Photo editor context returned the modified hi-res image; saving");
+                [self.statsService report:@"Aviary Saved"];
                 [bSelf saveHiResImage:result];
             } else {
                 DDLogVerbose(@"Photo editor context returned nil; must not have been modified");
+                [self.statsService report:@"Aviary Canceled"];
             }
             
             // Release session

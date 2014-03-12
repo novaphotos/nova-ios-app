@@ -10,13 +10,16 @@
 #import "SSTheme.h"
 #import "SSSettingsService.h"
 #import "SSNovaFlashService.h"
+#import "SSStatsService.h"
 #import <CocoaLumberjack/DDTTYLogger.h>
 #import <Crashlytics/Crashlytics.h>
 #import <CrashlyticsLumberjack/CrashlyticsLogger.h>
+#import <Mixpanel/Mixpanel.h>
 
 @implementation SSAppDelegate {
     SSSettingsService *_settingsService;
     SSNovaFlashService *_flashService;
+    SSStatsService *_statsService;
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -40,6 +43,9 @@
     _flashService = [SSNovaFlashService sharedService];
     _flashService.useMultipleNovas = [_settingsService boolForKey:kSettingsServiceMultipleNovasKey];
 
+    // Anonymous stats service
+    _statsService = [SSStatsService sharedService];
+
     // Crashlytics crash reporting service. This should be the last thing in this method.
     [Crashlytics startWithAPIKey:CRASHLYTICS_API_KEY];
     
@@ -53,6 +59,7 @@
     
     // Turn off flash when going into background
     [_flashService disableFlash];
+    [_statsService report:@"Application Leave"];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
@@ -72,6 +79,7 @@
     
     // Re-enable the flash if appropriate
     [_flashService enableFlashIfNeeded];
+    [_statsService report:@"Application Enter"];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
