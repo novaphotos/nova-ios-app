@@ -9,12 +9,14 @@
 
 #import "SSCaptureSessionManager.h"
 #import <CoreMedia/CoreMedia.h>
+#import <AVFoundation/AVCaptureSession.h>
 
 
 static void * CapturingStillImageContext = &CapturingStillImageContext;
 
 @interface SSCaptureSessionManager () {
     BOOL _sessionHasBeenConfigured;
+    AVCaptureVideoOrientation _orientation;
 }
 
 @property (nonatomic, strong) dispatch_queue_t sessionQueue;
@@ -27,6 +29,7 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
 - (BOOL)setDevice:(AVCaptureDevice *)device withError:(NSError **)error;
 - (BOOL)configureSession;
 - (void)subjectAreaDidChange:(NSNotification *)notification;
+- (void)deviceOrientationDidChange;
 
 @end
 
@@ -91,6 +94,10 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
                 });
             }];
             
+            // Add device orientation observer
+            [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange) name:UIDeviceOrientationDidChangeNotification object:nil];
+            
             // Add subject area change notification
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(subjectAreaDidChange:) name:AVCaptureDeviceSubjectAreaDidChangeNotification object:self.device];
             
@@ -110,6 +117,8 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
             [[NSNotificationCenter defaultCenter] removeObserver:self.runtimeErrorObserver];
             
             [[NSNotificationCenter defaultCenter] removeObserver:self name:AVCaptureDeviceSubjectAreaDidChangeNotification object:self.device];
+            
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
         });
     }
 }
@@ -203,6 +212,11 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
     dispatch_async(self.sessionQueue, ^{
         // Set up capture connection
         AVCaptureConnection *connection = [self.stillImageOutput connectionWithMediaType:AVMediaTypeVideo];
+        
+        // Attempt to set orientation
+        if ([connection isVideoOrientationSupported]) {
+            [connection setVideoOrientation:_orientation];
+        }
         
         [self.stillImageOutput captureStillImageAsynchronouslyFromConnection:connection completionHandler:^(CMSampleBufferRef imageDataSampleBuffer, NSError *error) {
             // Save to asset library
@@ -463,6 +477,25 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
     DDLogVerbose(@"subjectAreaDidChange");
     if (self.shouldAutoFocusAndAutoExposeOnDeviceAreaChange) {
         [self continuousAutoFocusAndExposeAtCenterPoint];
+    }
+}
+             
+- (void)deviceOrientationDidChange {
+    UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
+    switch (deviceOrientation) {
+        case UIDeviceOrientationPortrait:
+        default:
+            _orientation = AVCaptureVideoOrientationPortrait;
+            break;
+        case UIDeviceOrientationPortraitUpsideDown:
+            _orientation = AVCaptureVideoOrientationPortraitUpsideDown;
+            break;
+        case UIDeviceOrientationLandscapeLeft:
+            _orientation = AVCaptureVideoOrientationLandscapeLeft;
+            break;
+        case UIDeviceOrientationLandscapeRight:
+            _orientation = AVCaptureVideoOrientationLandscapeRight;
+            break;
     }
 }
 
