@@ -12,6 +12,7 @@
 #import "SSStatsService.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <AviarySDK/AFPhotoEditorController.h>
+#import <MBProgressHUD/MBProgressHUD.h>
 
 @interface SSLibraryViewController () <AFPhotoEditorControllerDelegate, UIPageViewControllerDataSource, UIPageViewControllerDelegate> {
     
@@ -142,7 +143,6 @@
         DDLogVerbose(@"Automatically edit photo");
         [self launchEditorForCurrentAsset];
         self.automaticallyEditPhoto = NO;
-        self.automaticallySharePhoto = NO;
     } else if (self.automaticallySharePhoto) {
         DDLogVerbose(@"Automatically share photo");
         [self sharePhoto:self];
@@ -316,6 +316,15 @@
             } else {
                 DDLogVerbose(@"Photo editor context returned nil; must not have been modified");
                 [self.statsService report:@"Aviary Canceled"];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    // Remove HUD
+                    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                    // Share photo
+                    if (self.automaticallySharePhoto) {
+                        self.automaticallySharePhoto = NO;
+                        [self sharePhoto:nil];
+                    }
+                });
             }
             
             // Release session
@@ -352,6 +361,13 @@
                     _waitingToDisplayInsertedAsset = YES;
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [bSelf showAssetWithURL:assetURL animated:NO];
+                        // Remove HUD
+                        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                        // Share photo
+                        if (self.automaticallySharePhoto) {
+                            self.automaticallySharePhoto = NO;
+                            [self sharePhoto:nil];
+                        }
                     });
                 }
             }];
@@ -459,9 +475,13 @@
 
 - (void)photoEditor:(AFPhotoEditorController *)editor finishedWithImage:(UIImage *)image {
     DDLogVerbose(@"photoEditor:%@ finishedWithImage:%@", editor, image);
-    // TODO: Show an activity indicator while the hi-res photo loads
-    [self dismissViewControllerAnimated:YES completion:nil];
-    self.photoEditorController = nil;
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.labelText = @"Processing image";
+        [self dismissViewControllerAnimated:YES completion:nil];
+        self.photoEditorController = nil;
+    });
 }
 
 - (void)photoEditorCanceled:(AFPhotoEditorController *)editor {
