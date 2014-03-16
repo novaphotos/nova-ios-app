@@ -20,6 +20,7 @@
     BOOL _viewWillAppear;
     BOOL _waitingToDisplayInsertedAsset;
     BOOL _imagePickerCanceled;
+    BOOL _didEditPhoto;
     
     UIAlertView *_confirmDeleteAlertView;
     ALAsset *_assetToDelete;
@@ -143,7 +144,7 @@
         DDLogVerbose(@"Automatically edit photo");
         [self launchEditorForCurrentAsset];
         self.automaticallyEditPhoto = NO;
-    } else if (self.automaticallySharePhoto) {
+    } else if (self.automaticallySharePhoto && !_didEditPhoto) {
         DDLogVerbose(@"Automatically share photo");
         [self sharePhoto:self];
         self.automaticallySharePhoto = NO;
@@ -158,6 +159,8 @@
             [self showLibraryAnimated:animated sender:self];
         }
     }
+    
+    _didEditPhoto = NO;
 }
 
 - (void)didReceiveMemoryWarning
@@ -475,6 +478,7 @@
 
 - (void)photoEditor:(AFPhotoEditorController *)editor finishedWithImage:(UIImage *)image {
     DDLogVerbose(@"photoEditor:%@ finishedWithImage:%@", editor, image);
+    _didEditPhoto = YES;
     
     dispatch_async(dispatch_get_main_queue(), ^{
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
