@@ -491,10 +491,12 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
             _orientation = AVCaptureVideoOrientationPortraitUpsideDown;
             break;
         case UIDeviceOrientationLandscapeLeft:
-            _orientation = AVCaptureVideoOrientationLandscapeLeft;
+            // Swap right and left?
+            _orientation = AVCaptureVideoOrientationLandscapeRight;
             break;
         case UIDeviceOrientationLandscapeRight:
-            _orientation = AVCaptureVideoOrientationLandscapeRight;
+            // Swap right and left?
+            _orientation = AVCaptureVideoOrientationLandscapeLeft;
             break;
     }
 }
