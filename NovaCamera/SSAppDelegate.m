@@ -24,11 +24,20 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    
+#ifdef CRASHLYTICS_API_KEY
+    NSString *crashlyticsAPIKey = CRASHLYTICS_API_KEY;
+#else
+    NSString *crashlyticsAPIKey = nil;
+#endif
+    
     // CocoaLumberjack logging setup
     // Xcode console logging
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
-    // Log warnings to Crashlytics
-    [DDLog addLogger:[CrashlyticsLogger sharedInstance] withLogLevel:LOG_LEVEL_WARN];
+    if (crashlyticsAPIKey && crashlyticsAPIKey.length > 0) {
+        // Log warnings to Crashlytics
+        [DDLog addLogger:[CrashlyticsLogger sharedInstance] withLogLevel:LOG_LEVEL_WARN];
+    }
     
     // Setup theme
     [[SSTheme currentTheme] styleAppearanceProxies];
@@ -46,8 +55,10 @@
     // Anonymous stats service
     _statsService = [SSStatsService sharedService];
 
-    // Crashlytics crash reporting service. This should be the last thing in this method.
-    [Crashlytics startWithAPIKey:CRASHLYTICS_API_KEY];
+    if (crashlyticsAPIKey && crashlyticsAPIKey.length > 0) {
+        // Crashlytics crash reporting service. This should be the last thing in this method.
+        [Crashlytics startWithAPIKey:crashlyticsAPIKey];
+    }
     
     return YES;
 }
