@@ -10,6 +10,7 @@
 
 @class ALAsset;
 @class SSChronologicalAssetsLibraryService;
+@class SSStatsService;
 
 /**
  * Photo viewer; UIImageView embedded in a UIScrollView allowing user to
@@ -21,6 +22,8 @@
  * Assets library service used to retrieve full resolution images
  */
 @property (nonatomic, weak) SSChronologicalAssetsLibraryService *libraryService;
+
+@property (nonatomic, strong) SSStatsService *statsService;
 
 /**
  * Asset URL of photo

@@ -12,6 +12,9 @@
 #define AVIARY_KEY @""
 #define AVIARY_SECRET @""
 
-#define TESTFLIGHT_TOKEN @""
+#define CRASHLYTICS_API_KEY @""
+#define CRASHLYTICS_ID @""
+
+#define MIXPANEL_TOKEN @""
 
 #endif

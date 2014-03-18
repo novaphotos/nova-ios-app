@@ -9,8 +9,10 @@
 #import "SSLibraryViewController.h"
 #import "SSChronologicalAssetsLibraryService.h"
 #import "SSPhotoViewController.h"
+#import "SSStatsService.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <AviarySDK/AFPhotoEditorController.h>
+#import <MBProgressHUD/MBProgressHUD.h>
 
 @interface SSLibraryViewController () <AFPhotoEditorControllerDelegate, UIPageViewControllerDataSource, UIPageViewControllerDelegate> {
     
@@ -18,6 +20,7 @@
     BOOL _viewWillAppear;
     BOOL _waitingToDisplayInsertedAsset;
     BOOL _imagePickerCanceled;
+    BOOL _didEditPhoto;
     
     UIAlertView *_confirmDeleteAlertView;
     ALAsset *_assetToDelete;
@@ -29,6 +32,11 @@
  * Asset library service; enumerates and tracks assets
  */
 @property (nonatomic, strong) SSChronologicalAssetsLibraryService *libraryService;
+
+/**
+ * Stats service
+ */
+@property (nonatomic, strong) SSStatsService *statsService;
 
 /**
  * Aviary editor
@@ -114,6 +122,8 @@
     
     // Custom initialization
     self.libraryService = [SSChronologicalAssetsLibraryService sharedService];
+    
+    self.statsService = [SSStatsService sharedService];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(assetLibraryUpdatedWithNotification:) name:(NSString *)SSChronologicalAssetsLibraryUpdatedNotification object:self.libraryService];
 }
@@ -134,8 +144,7 @@
         DDLogVerbose(@"Automatically edit photo");
         [self launchEditorForCurrentAsset];
         self.automaticallyEditPhoto = NO;
-        self.automaticallySharePhoto = NO;
-    } else if (self.automaticallySharePhoto) {
+    } else if (self.automaticallySharePhoto && !_didEditPhoto) {
         DDLogVerbose(@"Automatically share photo");
         [self sharePhoto:self];
         self.automaticallySharePhoto = NO;
@@ -150,6 +159,8 @@
             [self showLibraryAnimated:animated sender:self];
         }
     }
+    
+    _didEditPhoto = NO;
 }
 
 - (void)didReceiveMemoryWarning
@@ -195,12 +206,18 @@
 }
 
 - (IBAction)deletePhoto:(id)sender {
-    [self.libraryService assetAtIndex:self.selectedIndex withCompletion:^(ALAsset *asset) {
+    if (!_lastAssetURL) {
+        DDLogError(@"Unable to delete asset with no _lastAsseURL");
+        return;
+    }
+    [self.libraryService assetForURL:_lastAssetURL withCompletion:^(ALAsset *asset) {
         if (asset.editable) {
+            [self.statsService report:@"Photo Delete"];
             _confirmDeleteAlertView = [[UIAlertView alloc] initWithTitle:@"Delete Photo" message:@"Are you sure?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Delete", nil];
             _assetToDelete = asset;
             [_confirmDeleteAlertView show];
         } else {
+            [self.statsService report:@"Photo Could Not Delete"];
             NSString *msg = @"Unable to delete this photo because it was not created with the Nova app. Instead, try deleting the photo using the built-in Photos app.";
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:msg delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
             [alert show];
@@ -230,8 +247,15 @@
         NSArray *activityItems = @[
                                    image,
                                    ];
+        [self.statsService report:@"Share Start"];
         UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
         activityVC.completionHandler = ^(NSString *activityType, BOOL completed) {
+            if (completed) {
+                [self.statsService report:@"Share Success" properties:@{ @"Activity": activityType }];
+            } else {
+                [self.statsService report:@"Share Fail"];
+            }
+            
         };
         [bSelf presentViewController:activityVC animated:YES completion:nil];
     }];
@@ -267,6 +291,7 @@
 
 - (void)launchEditorForAssetWithURL:(NSURL *)assetURL {
     __block typeof(self) bSelf = self;
+    [self.statsService report:@"Aviary Launch"];
     [self.libraryService fullResolutionImageForAssetWithURL:assetURL withCompletion:^(UIImage *image) {
         DDLogVerbose(@"Loading Aviary photo editor with image: %@", image);
         
@@ -289,9 +314,20 @@
             // `result` will be nil if the image was not modified in the session, or non-nil if the session was closed successfully
             if (result != nil) {
                 DDLogVerbose(@"Photo editor context returned the modified hi-res image; saving");
+                [self.statsService report:@"Aviary Saved"];
                 [bSelf saveHiResImage:result];
             } else {
                 DDLogVerbose(@"Photo editor context returned nil; must not have been modified");
+                [self.statsService report:@"Aviary Canceled"];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    // Remove HUD
+                    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                    // Share photo
+                    if (self.automaticallySharePhoto) {
+                        self.automaticallySharePhoto = NO;
+                        [self sharePhoto:nil];
+                    }
+                });
             }
             
             // Release session
@@ -328,6 +364,13 @@
                     _waitingToDisplayInsertedAsset = YES;
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [bSelf showAssetWithURL:assetURL animated:NO];
+                        // Remove HUD
+                        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                        // Share photo
+                        if (self.automaticallySharePhoto) {
+                            self.automaticallySharePhoto = NO;
+                            [self sharePhoto:nil];
+                        }
                     });
                 }
             }];
@@ -435,9 +478,14 @@
 
 - (void)photoEditor:(AFPhotoEditorController *)editor finishedWithImage:(UIImage *)image {
     DDLogVerbose(@"photoEditor:%@ finishedWithImage:%@", editor, image);
-    // TODO: Show an activity indicator while the hi-res photo loads
-    [self dismissViewControllerAnimated:YES completion:nil];
-    self.photoEditorController = nil;
+    _didEditPhoto = YES;
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.labelText = @"Processing image";
+        [self dismissViewControllerAnimated:YES completion:nil];
+        self.photoEditorController = nil;
+    });
 }
 
 - (void)photoEditorCanceled:(AFPhotoEditorController *)editor {

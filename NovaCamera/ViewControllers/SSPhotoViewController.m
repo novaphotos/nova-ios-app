@@ -8,6 +8,7 @@
 
 #import "SSPhotoViewController.h"
 #import "SSChronologicalAssetsLibraryService.h"
+#import "SSStatsService.h"
 #import "SSCenteredScrollView.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 
@@ -55,6 +56,8 @@
 {
     [super viewDidLoad];
     
+    self.statsService = [SSStatsService sharedService];
+
     // Use auto layout for scroll view & image view layout
     self.scrollView.translatesAutoresizingMaskIntoConstraints = NO;
     self.imageView.translatesAutoresizingMaskIntoConstraints = NO;

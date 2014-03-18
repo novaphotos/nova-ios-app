@@ -7,7 +7,9 @@
 //
 
 #import "SSFlashSettingsViewController.h"
+#import "SSStatsService.h"
 #import "SSTheme.h"
+
 
 static const CGFloat customSettingsHeight = 70.0;
 static const NSTimeInterval customSettingsAnimationDuration = 0.25;
@@ -125,6 +127,9 @@ static void * NovaFlashServiceStatus = &NovaFlashServiceStatus;
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backgroundViewTapped:)];
     tapGestureRecognizer.delegate = self;
     [self.view addGestureRecognizer:tapGestureRecognizer];
+    
+    // Add stats service
+    self.statsService = [SSStatsService sharedService];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -193,9 +198,9 @@ static void * NovaFlashServiceStatus = &NovaFlashServiceStatus;
 }
 
 - (IBAction)testFlash:(id)sender {
-    DDLogVerbose(@"Testing flash");
     [self.flashService beginFlashWithSettings:self.flashSettings callback:^(BOOL status) {
-        DDLogVerbose(@"Tested flash");
+        [self.statsService report:status ? @"Test Flash Succeeded" : @"Test Flash Failed"
+                       properties:@{ @"Flash Mode": SSFlashSettingsDescribe(self.flashService.flashSettings) }];
     }];
 }
 
@@ -250,6 +255,9 @@ static void * NovaFlashServiceStatus = &NovaFlashServiceStatus;
 
 - (void)initialSetup {
     self.previousCustomFlashSettings = SSFlashSettingsCustomDefault;
+    
+    // Read flash settings from flash service
+    self.flashSettings = self.flashService.flashSettings;
 }
 
 - (void)showCustomSettingsAnimated:(BOOL)animated {
@@ -294,6 +302,10 @@ static void * NovaFlashServiceStatus = &NovaFlashServiceStatus;
         }
         UIImage *image = [UIImage imageNamed:imgName];
         [flashButton setImage:image forState:UIControlStateNormal];
+    }
+    if (!self.flashService.allowCustomFlashMode) {
+        DDLogVerbose(@"Hiding custom flash mode button");
+        self.flashCustomButton.hidden = YES;
     }
 }
 

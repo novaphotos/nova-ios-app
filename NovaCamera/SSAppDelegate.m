@@ -10,27 +10,34 @@
 #import "SSTheme.h"
 #import "SSSettingsService.h"
 #import "SSNovaFlashService.h"
-#import <TestFlightSDK/TestFlight.h>
+#import "SSStatsService.h"
 #import <CocoaLumberjack/DDTTYLogger.h>
-#import <TestFlightLogger/TestFlightLogger.h>
-
-NSString *kMultipleNovasKey = @"multiple_novas";
+#import <Crashlytics/Crashlytics.h>
+#import <CrashlyticsLumberjack/CrashlyticsLogger.h>
+#import <Mixpanel/Mixpanel.h>
 
 @implementation SSAppDelegate {
     SSSettingsService *_settingsService;
     SSNovaFlashService *_flashService;
+    SSStatsService *_statsService;
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // TestFlight setup
-    [TestFlight takeOff:TESTFLIGHT_TOKEN];
+    
+#ifdef CRASHLYTICS_API_KEY
+    NSString *crashlyticsAPIKey = CRASHLYTICS_API_KEY;
+#else
+    NSString *crashlyticsAPIKey = nil;
+#endif
     
     // CocoaLumberjack logging setup
     // Xcode console logging
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
-    // TestFlight logging
-    [DDLog addLogger:[TestFlightLogger sharedInstance] withLogLevel:LOG_LEVEL_WARN];
+    if (crashlyticsAPIKey && crashlyticsAPIKey.length > 0) {
+        // Log warnings to Crashlytics
+        [DDLog addLogger:[CrashlyticsLogger sharedInstance] withLogLevel:LOG_LEVEL_WARN];
+    }
     
     // Setup theme
     [[SSTheme currentTheme] styleAppearanceProxies];
@@ -39,11 +46,19 @@ NSString *kMultipleNovasKey = @"multiple_novas";
     _settingsService = [SSSettingsService sharedService];
     [_settingsService initializeUserDefaults];
     // Subscribe to KVO notifications for multiple novas flag changes
-    [_settingsService addObserver:self forKeyPath:kMultipleNovasKey options:0 context:nil];
+    [_settingsService addObserver:self forKeyPath:kSettingsServiceMultipleNovasKey options:0 context:nil];
     
     // Setup flash service
     _flashService = [SSNovaFlashService sharedService];
-    _flashService.useMultipleNovas = [_settingsService boolForKey:kMultipleNovasKey];
+    _flashService.useMultipleNovas = [_settingsService boolForKey:kSettingsServiceMultipleNovasKey];
+
+    // Anonymous stats service
+    _statsService = [SSStatsService sharedService];
+
+    if (crashlyticsAPIKey && crashlyticsAPIKey.length > 0) {
+        // Crashlytics crash reporting service. This should be the last thing in this method.
+        [Crashlytics startWithAPIKey:crashlyticsAPIKey];
+    }
     
     return YES;
 }
@@ -55,6 +70,7 @@ NSString *kMultipleNovasKey = @"multiple_novas";
     
     // Turn off flash when going into background
     [_flashService disableFlash];
+    [_statsService report:@"Application Leave"];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
@@ -74,6 +90,7 @@ NSString *kMultipleNovasKey = @"multiple_novas";
     
     // Re-enable the flash if appropriate
     [_flashService enableFlashIfNeeded];
+    [_statsService report:@"Application Enter"];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -87,9 +104,9 @@ NSString *kMultipleNovasKey = @"multiple_novas";
 #pragma mark - KVO
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    if (object == _settingsService && [keyPath isEqualToString:kMultipleNovasKey]) {
+    if (object == _settingsService && [keyPath isEqualToString:kSettingsServiceMultipleNovasKey]) {
         DDLogVerbose(@"App delegate forwarding useMultipleNovas setting from settings to flash service");
-        _flashService.useMultipleNovas = [_settingsService boolForKey:kMultipleNovasKey];
+        _flashService.useMultipleNovas = [_settingsService boolForKey:kSettingsServiceMultipleNovasKey];
     }
 }
 

@@ -13,6 +13,7 @@
 #import "SSNovaFlashService.h"
 #import "SSFlashSettingsViewController.h"
 #import "SSSettingsService.h"
+#import "SSStatsService.h"
 #import <AVFoundation/AVFoundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <CocoaLumberjack/DDLog.h>
@@ -67,6 +68,9 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
     
     // Add flash service
     self.flashService = [SSNovaFlashService sharedService];
+    
+    // Add stats service
+    self.statsService = [SSStatsService sharedService];
     
     // Add gesture recognizer
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(focusAndExposeTap:)];
@@ -155,7 +159,10 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
 
 - (IBAction)capture:(id)sender {
     DDLogVerbose(@"Capture!");
+    [self.statsService report:@"Take Photo"
+                   properties:@{ @"Flash Mode": SSFlashSettingsDescribe(self.flashService.flashSettings) }];
     [self.flashService beginFlashWithCallback:^(BOOL status) {
+        [self.statsService report: status ? @"Flash Succeeded" : @"Flash Failed"];
         DDLogVerbose(@"Nova flash begin returned with status %d; performing capture", status);
         [self.captureSessionManager captureStillImageWithCompletionHandler:^(NSData *imageData, UIImage *image, NSError *error) {
             
@@ -300,9 +307,11 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
             iconImageName = nil;
             break;
         case SSNovaFlashStatusOK:
+            [self.statsService report:@"Flash Connection OK"];
             iconImageName = @"icon-ok";
             break;
         case SSNovaFlashStatusError:
+            [self.statsService report:@"Flash Connection Error"];
             iconImageName = @"icon-error";
             break;
         case SSNovaFlashStatusSearching:
