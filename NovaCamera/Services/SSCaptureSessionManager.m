@@ -97,6 +97,8 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
             // Add device orientation observer
             [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange) name:UIDeviceOrientationDidChangeNotification object:nil];
+            // Setup initial orientation
+            [self deviceOrientationDidChange];
             
             // Add subject area change notification
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(subjectAreaDidChange:) name:AVCaptureDeviceSubjectAreaDidChangeNotification object:self.device];
