@@ -320,13 +320,12 @@
                 DDLogVerbose(@"Photo editor context returned nil; must not have been modified");
                 [self.statsService report:@"Aviary Canceled"];
                 dispatch_async(dispatch_get_main_queue(), ^{
+                    
                     // Remove HUD
                     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                    // Share photo
-                    if (self.automaticallySharePhoto) {
-                        self.automaticallySharePhoto = NO;
-                        [self sharePhoto:nil];
-                    }
+                    
+                    // Set edit flag to no; edit will be triggered when view appears
+                    _didEditPhoto = NO;
                 });
             }
             
@@ -356,16 +355,15 @@
         [self.libraryService assetForURL:_lastAssetURL withCompletion:^(ALAsset *asset) {
             [asset writeModifiedImageDataToSavedPhotosAlbum:imageData metadata:metadata completionBlock:^(NSURL *assetURL, NSError *error) {
                 DDLogVerbose(@"Modified image saved to asset library: %@ (Error: %@)", assetURL, error);
-                
-                DDLogVerbose(@"Has the asset changed notification fired yet?");
-                
+
+                // Remove HUD
+                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+
                 if (!error) {
                     // Load new asset
                     _waitingToDisplayInsertedAsset = YES;
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [bSelf showAssetWithURL:assetURL animated:NO];
-                        // Remove HUD
-                        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
                         // Share photo
                         if (self.automaticallySharePhoto) {
                             self.automaticallySharePhoto = NO;
