@@ -234,7 +234,7 @@
     
     NSURL *assetURL = _lastAssetURL;
     if (!assetURL) {
-        [self.libraryService assetURLAtIndex:self.selectedIndex];
+        assetURL = [self.libraryService assetURLAtIndex:self.selectedIndex];
     }
     [self.libraryService fullResolutionImageForAssetWithURL:assetURL withCompletion:^(UIImage *image) {
         NSArray *activityItems = @[
@@ -340,7 +340,7 @@
 - (void)launchEditorForCurrentAsset {
     NSURL *assetURL = _lastAssetURL;
     if (!assetURL) {
-        [self.libraryService assetURLAtIndex:self.selectedIndex];
+        assetURL = [self.libraryService assetURLAtIndex:self.selectedIndex];
     }
     [self launchEditorForAssetWithURL:assetURL];
 }
