@@ -87,12 +87,12 @@ NSString * const SSChronologicalAssetsLibraryDeletedAssetIndexesKey = @"SSChrono
         DDLogVerbose(@"Enumerating group");
         if (group) {
             [group enumerateAssetsWithOptions:NSEnumerationReverse usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
-                DDLogVerbose(@"Enumerating item");
                 if (result) {
                     NSURL *url = result.defaultURL;
                     [mutableURLs addObject:url];
                 }
             }];
+            DDLogVerbose(@"Found %u assets in group", mutableURLs.count);
         } else {
             finishedEnumerating();
         }
