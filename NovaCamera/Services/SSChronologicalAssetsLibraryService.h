@@ -42,13 +42,7 @@ NSString * const SSChronologicalAssetsLibraryDeletedAssetIndexesKey;
 + (id)sharedService;
 
 /**
- * Trigger enumeration of assets of specified asset group types. Completion called
- * with the total number of assets found.
- */
-- (void)enumerateAssetsWithGroupTypes:(ALAssetsGroupType)types completion:(void (^)(NSUInteger numberOfAssets))completion;
-
-/**
- * Trigger enumeration of all assets. Completion called with the total number of assets found.
+ * Trigger enumeration of assets. Completion called with the total number of assets found.
  */
 - (void)enumerateAssetsWithCompletion:(void (^)(NSUInteger numberOfAssets))completion;
 

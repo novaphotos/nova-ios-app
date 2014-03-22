@@ -66,7 +66,7 @@ NSString * const SSChronologicalAssetsLibraryDeletedAssetIndexesKey = @"SSChrono
 
 #pragma mark - Public methods
 
-- (void)enumerateAssetsWithGroupTypes:(ALAssetsGroupType)types completion:(void (^)(NSUInteger numberOfAssets))completion {
+- (void)enumerateAssetsWithCompletion:(void (^)(NSUInteger numberOfAssets))completion {
     __block typeof(self) bSelf = self;
     __block NSMutableArray *mutableURLs = [NSMutableArray array];
     __block typeof(completion) bCompletion = completion;
@@ -82,8 +82,11 @@ NSString * const SSChronologicalAssetsLibraryDeletedAssetIndexesKey = @"SSChrono
     };
     
     DDLogVerbose(@"Starting enumeration");
+
+    // Filter to user's Camera Roll photos only.
+    ALAssetsGroupType assetsGroup = ALAssetsGroupSavedPhotos;
     
-    [self.assetsLibrary enumerateGroupsWithTypes:types usingBlock:^(ALAssetsGroup *group, BOOL *groupStop) {
+    [self.assetsLibrary enumerateGroupsWithTypes:assetsGroup usingBlock:^(ALAssetsGroup *group, BOOL *groupStop) {
         DDLogVerbose(@"Enumerating group");
         if (group) {
             [group enumerateAssetsWithOptions:NSEnumerationReverse usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
@@ -101,10 +104,6 @@ NSString * const SSChronologicalAssetsLibraryDeletedAssetIndexesKey = @"SSChrono
             completion(0);
         }
     }];
-}
-
-- (void)enumerateAssetsWithCompletion:(void (^)(NSUInteger numberOfAssets))completion {
-    [self enumerateAssetsWithGroupTypes:ALAssetsGroupAll completion:completion];
 }
 
 - (void)assetAtIndex:(NSUInteger)index withCompletion:(void (^)(ALAsset *))completion {

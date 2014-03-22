@@ -115,7 +115,7 @@
     
     // Enumerate assets
     __block typeof(self) bSelf = self;
-    [self.libraryService enumerateAssetsWithGroupTypes:ALAssetsGroupSavedPhotos completion:^(NSUInteger numberOfAssets) {
+    [self.libraryService enumerateAssetsWithCompletion:^(NSUInteger numberOfAssets) {
         bSelf->_assetsLoaded = YES;
     }];
 
