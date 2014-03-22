@@ -17,17 +17,20 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <MediaPlayer/MediaPlayer.h>
+#import <QuartzCore/QuartzCore.h>
 #import <CocoaLumberjack/DDLog.h>
 
 static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDeviceAuthorizedContext;
 static void * NovaFlashServiceStatus = &NovaFlashServiceStatus;
 
 static const NSTimeInterval kFlashSettingsAnimationDuration = 0.25;
+static const CFTimeInterval kMinimumTimeBeforeVolumeButtonCapture = 0.1;
 
 @interface SSCameraViewController () {
     NSURL *_showPhotoURL;
     BOOL _editPhoto;
     BOOL _sharePhoto;
+    CFTimeInterval _audioSessionTimestamp; // Ugly workaround for premature volume notification
 }
 @property (nonatomic, strong) SSCaptureSessionManager *captureSessionManager;
 @property (nonatomic, strong) AVAudioPlayer *captureButtonAudioPlayer;
@@ -343,12 +346,14 @@ static const NSTimeInterval kFlashSettingsAnimationDuration = 0.25;
     NSError *audioPlayerError = nil;
     NSURL *emptySoundURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"empty" ofType:@"wav"]];
     
+    DDLogVerbose(@"Created new audio player");
     self.captureButtonAudioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:emptySoundURL error:&audioPlayerError];
     if (audioPlayerError) {
         DDLogError(@"Error setting up audio player: %@", audioPlayerError);
     } else {
         [self.captureButtonAudioPlayer prepareToPlay];
         [self.captureButtonAudioPlayer stop];
+        _audioSessionTimestamp = CACurrentMediaTime();
     }
     
     if (self.volumeView) {
@@ -363,7 +368,12 @@ static const NSTimeInterval kFlashSettingsAnimationDuration = 0.25;
 
 - (void)volumeChanged:(id)sender {
     DDLogVerbose(@"Volume button pressed");
-    [self capture:nil];
+    CFTimeInterval timeSinceSessionSetup = CACurrentMediaTime() - _audioSessionTimestamp;
+    if (timeSinceSessionSetup > kMinimumTimeBeforeVolumeButtonCapture) {
+        [self capture:nil];
+    } else {
+        DDLogVerbose(@"Ignoring volume change notification as only %g has passed since session init", timeSinceSessionSetup);
+    }
 }
 
 #pragma mark - SSFlashSettingsViewControllerDelegate
