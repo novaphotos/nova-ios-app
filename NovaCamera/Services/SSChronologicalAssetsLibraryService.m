@@ -174,7 +174,9 @@ NSString * const SSChronologicalAssetsLibraryDeletedAssetIndexesKey = @"SSChrono
         } failureBlock:^(NSError *error) {
             DDLogError(@"Unable to retrieve asset for URL: %@", assetURL);
             if (completion) {
-                completion(nil);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(nil);
+                });
             }
         }];
     });
