@@ -66,7 +66,7 @@ NSString * const SSChronologicalAssetsLibraryDeletedAssetIndexesKey = @"SSChrono
 
 #pragma mark - Public methods
 
-- (void)enumerateAssetsWithCompletion:(void (^)(NSUInteger numberOfAssets))completion {
+- (void)enumerateAssetsWithGroupTypes:(ALAssetsGroupType)types completion:(void (^)(NSUInteger numberOfAssets))completion {
     __block typeof(self) bSelf = self;
     __block NSMutableArray *mutableURLs = [NSMutableArray array];
     __block typeof(completion) bCompletion = completion;
@@ -83,7 +83,7 @@ NSString * const SSChronologicalAssetsLibraryDeletedAssetIndexesKey = @"SSChrono
     
     DDLogVerbose(@"Starting enumeration");
     
-    [self.assetsLibrary enumerateGroupsWithTypes:ALAssetsGroupAll usingBlock:^(ALAssetsGroup *group, BOOL *groupStop) {
+    [self.assetsLibrary enumerateGroupsWithTypes:types usingBlock:^(ALAssetsGroup *group, BOOL *groupStop) {
         DDLogVerbose(@"Enumerating group");
         if (group) {
             [group enumerateAssetsWithOptions:NSEnumerationReverse usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
@@ -101,6 +101,10 @@ NSString * const SSChronologicalAssetsLibraryDeletedAssetIndexesKey = @"SSChrono
             completion(0);
         }
     }];
+}
+
+- (void)enumerateAssetsWithCompletion:(void (^)(NSUInteger numberOfAssets))completion {
+    [self enumerateAssetsWithGroupTypes:ALAssetsGroupAll completion:completion];
 }
 
 - (void)assetAtIndex:(NSUInteger)index withCompletion:(void (^)(ALAsset *))completion {
