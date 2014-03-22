@@ -299,10 +299,13 @@
 
 - (void)launchEditorForAssetWithURL:(NSURL *)assetURL {
     __block typeof(self) bSelf = self;
+    __block MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [self.statsService report:@"Aviary Launch"];
     [self.libraryService fullResolutionImageForAssetWithURL:assetURL withCompletion:^(UIImage *image) {
         DDLogVerbose(@"Loading Aviary photo editor with image: %@", image);
-        
+
+        [hud hide:YES];
+
         // Create editor
         bSelf.photoEditorController = [[AFPhotoEditorController alloc] initWithImage:image];
         [bSelf.photoEditorController setDelegate:bSelf];
