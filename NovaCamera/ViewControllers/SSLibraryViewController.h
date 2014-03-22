@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+@class SSChronologicalAssetsLibraryService;
+
 @interface SSLibraryViewController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIPageViewControllerDataSource, UIPageViewControllerDelegate, UIAlertViewDelegate>
 
 /**
@@ -29,6 +31,9 @@
  * Flag to determine whether this photo should be automatically shared
  */
 @property (nonatomic, assign) BOOL automaticallySharePhoto;
+
+
+@property (nonatomic, strong) SSChronologicalAssetsLibraryService *libraryService;
 
 /**
  * Parent view containing controls
