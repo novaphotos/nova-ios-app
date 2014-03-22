@@ -392,7 +392,7 @@
     
     NSUInteger newIndex = NSNotFound;
     if (_lastAssetURL) {
-        [self.libraryService indexOfAssetWithURL:_lastAssetURL];
+        newIndex = [self.libraryService indexOfAssetWithURL:_lastAssetURL];
     }
     
     DDLogVerbose(@"Before update logic; self.selectedIndex=%d newIndex=%d _lastAssetURL=%@", self.selectedIndex, newIndex, _lastAssetURL);
