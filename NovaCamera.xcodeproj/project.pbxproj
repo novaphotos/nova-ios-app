@@ -38,6 +38,7 @@
 		27AE1C0A189910A300C27C38 /* SSSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27AE1C09189910A300C27C38 /* SSSettingsViewController.m */; };
 		27AE1C0D1899116900C27C38 /* SSSettingsService.m in Sources */ = {isa = PBXBuildFile; fileRef = 27AE1C0C1899116900C27C38 /* SSSettingsService.m */; };
 		27AE1C10189918D000C27C38 /* SSSettingsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27AE1C0F189918D000C27C38 /* SSSettingsCell.m */; };
+		27AF863818DD7E5B007C175F /* empty.wav in Resources */ = {isa = PBXBuildFile; fileRef = 27AF863718DD7E5B007C175F /* empty.wav */; };
 		27BB942D1863A7CD00A31BCF /* SSCameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27BB942C1863A7CD00A31BCF /* SSCameraViewController.m */; };
 		27BB94331863AB3300A31BCF /* SSCameraPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27BB94321863AB3300A31BCF /* SSCameraPreviewView.m */; };
 		27EF5B091886ACAD00AFBD0E /* SSLibraryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EF5B081886ACAD00AFBD0E /* SSLibraryViewController.m */; };
@@ -104,6 +105,7 @@
 		27AE1C0C1899116900C27C38 /* SSSettingsService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSSettingsService.m; sourceTree = "<group>"; };
 		27AE1C0E189918D000C27C38 /* SSSettingsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSSettingsCell.h; sourceTree = "<group>"; };
 		27AE1C0F189918D000C27C38 /* SSSettingsCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSSettingsCell.m; sourceTree = "<group>"; };
+		27AF863718DD7E5B007C175F /* empty.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = empty.wav; sourceTree = "<group>"; };
 		27BB942B1863A7CD00A31BCF /* SSCameraViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSCameraViewController.h; sourceTree = "<group>"; };
 		27BB942C1863A7CD00A31BCF /* SSCameraViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSCameraViewController.m; sourceTree = "<group>"; };
 		27BB94311863AB3300A31BCF /* SSCameraPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSCameraPreviewView.h; sourceTree = "<group>"; };
@@ -209,6 +211,7 @@
 				2724C98D18639EEB00A68E0D /* NovaCamera-Prefix.pch */,
 				276AC62B187AAF0200A7DC0B /* Config.h */,
 				276AC62C187AAFD400A7DC0B /* Config.sample.h */,
+				27AF863718DD7E5B007C175F /* empty.wav */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -391,6 +394,7 @@
 			files = (
 				27AE1C0318976F4C00C27C38 /* LICENSE.txt in Resources */,
 				2724C99618639EEB00A68E0D /* Main_iPad.storyboard in Resources */,
+				27AF863818DD7E5B007C175F /* empty.wav in Resources */,
 				27AE1C0418976F4C00C27C38 /* OpenSans-Light.ttf in Resources */,
 				2724C99B18639EEB00A68E0D /* Images.xcassets in Resources */,
 				2724C99318639EEB00A68E0D /* Main_iPhone.storyboard in Resources */,

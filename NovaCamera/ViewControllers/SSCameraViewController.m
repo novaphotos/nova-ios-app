@@ -16,23 +16,31 @@
 #import "SSStatsService.h"
 #import <AVFoundation/AVFoundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
+#import <MediaPlayer/MediaPlayer.h>
+#import <QuartzCore/QuartzCore.h>
 #import <CocoaLumberjack/DDLog.h>
 
 static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDeviceAuthorizedContext;
 static void * NovaFlashServiceStatus = &NovaFlashServiceStatus;
 
-static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
+static const NSTimeInterval kFlashSettingsAnimationDuration = 0.25;
+static const CFTimeInterval kMinimumTimeBeforeVolumeButtonCapture = 0.1;
 
 @interface SSCameraViewController () {
     NSURL *_showPhotoURL;
     BOOL _editPhoto;
     BOOL _sharePhoto;
+    CFTimeInterval _audioSessionTimestamp; // Ugly workaround for premature volume notification
 }
 @property (nonatomic, strong) SSCaptureSessionManager *captureSessionManager;
+@property (nonatomic, strong) AVAudioPlayer *captureButtonAudioPlayer;
+@property (nonatomic, strong) MPVolumeView *volumeView;
 - (void)runStillImageCaptureAnimation;
 - (void)showFlashSettingsAnimated:(BOOL)animated;
 - (void)hideFlashSettingsAnimated:(BOOL)animated;
 - (void)updateFlashStatusIcon;
+- (void)setupCaptureButtonAudioPlayer;
+- (void)volumeChanged:(id)sender;
 @end
 
 @implementation SSCameraViewController
@@ -91,11 +99,15 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
     // Add observers
     [self.captureSessionManager addObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:SessionRunningAndDeviceAuthorizedContext];
     [self.flashService addObserver:self forKeyPath:@"status" options:0 context:NovaFlashServiceStatus];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(volumeChanged:) name:@"AVSystemController_SystemVolumeDidChangeNotification" object:nil];
     
     [self updateFlashStatusIcon];
     
     // Ensure flash is enabled, if appropriate
     [self.flashService enableFlashIfNeeded];
+    
+    // Setup capture button
+    [self setupCaptureButtonAudioPlayer];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -104,6 +116,7 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
     // Remove observers
     [self.captureSessionManager removeObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" context:SessionRunningAndDeviceAuthorizedContext];
     [self.flashService removeObserver:self forKeyPath:@"status"];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"AVSystemController_SystemVolumeDidChangeNotification" object:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -263,7 +276,7 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
         flashSettingsFrame.origin.y += flashSettingsFrame.size.height;
         self.flashSettingsViewController.view.frame = flashSettingsFrame;
         
-        [UIView animateWithDuration:flashSettingsAnimationDuration delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        [UIView animateWithDuration:kFlashSettingsAnimationDuration delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
             self.flashSettingsViewController.view.frame = self.view.frame;
         } completion:^(BOOL finished) {
             [self.flashSettingsViewController viewDidAppear:animated];
@@ -280,7 +293,7 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
     [self.flashSettingsViewController viewWillDisappear:animated];
     
     if (animated) {
-        [UIView animateWithDuration:flashSettingsAnimationDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        [UIView animateWithDuration:kFlashSettingsAnimationDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
             CGRect flashSettingsFrame = self.view.frame;
             flashSettingsFrame.origin.y += flashSettingsFrame.size.height;
             self.flashSettingsViewController.view.frame = flashSettingsFrame;
@@ -323,6 +336,43 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
         self.flashIconImage.hidden = NO;
     } else {
         self.flashIconImage.hidden = YES;
+    }
+}
+
+- (void)setupCaptureButtonAudioPlayer {
+    // Hack to enable physical volume button: set up an audio player
+    // See: http://stackoverflow.com/a/10460866/72
+    
+    NSError *audioPlayerError = nil;
+    NSURL *emptySoundURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"empty" ofType:@"wav"]];
+    
+    DDLogVerbose(@"Created new audio player");
+    self.captureButtonAudioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:emptySoundURL error:&audioPlayerError];
+    if (audioPlayerError) {
+        DDLogError(@"Error setting up audio player: %@", audioPlayerError);
+    } else {
+        [self.captureButtonAudioPlayer prepareToPlay];
+        [self.captureButtonAudioPlayer stop];
+        _audioSessionTimestamp = CACurrentMediaTime();
+    }
+    
+    if (self.volumeView) {
+        [self.volumeView removeFromSuperview];
+    }
+    
+    // Create volume view off-screen
+    self.volumeView = [[MPVolumeView alloc] initWithFrame:CGRectMake(-1000, -1000, 100, 100)];
+    [self.volumeView sizeToFit];
+    [self.view addSubview:self.volumeView];
+}
+
+- (void)volumeChanged:(id)sender {
+    DDLogVerbose(@"Volume button pressed");
+    CFTimeInterval timeSinceSessionSetup = CACurrentMediaTime() - _audioSessionTimestamp;
+    if (timeSinceSessionSetup > kMinimumTimeBeforeVolumeButtonCapture) {
+        [self capture:nil];
+    } else {
+        DDLogVerbose(@"Ignoring volume change notification as only %g has passed since session init", timeSinceSessionSetup);
     }
 }
 
