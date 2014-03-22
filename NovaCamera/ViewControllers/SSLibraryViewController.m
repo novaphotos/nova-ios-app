@@ -113,6 +113,8 @@
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(assetLibraryUpdatedWithNotification:) name:(NSString *)SSChronologicalAssetsLibraryUpdatedNotification object:self.libraryService];
     
+    [AFPhotoEditorCustomization setStatusBarStyle:UIStatusBarStyleDefault];
+
     // Enumerate assets
     __block typeof(self) bSelf = self;
     [self.libraryService enumerateAssetsWithCompletion:^(NSUInteger numberOfAssets) {
@@ -160,6 +162,10 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (BOOL)prefersStatusBarHidden {
+    return YES;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

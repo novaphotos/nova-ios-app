@@ -61,6 +61,10 @@ static const CGFloat kTableViewHeaderSpacing = 6;
     [self.navigationController setNavigationBarHidden:_wasNavBarHidden animated:animated];
 }
 
+- (BOOL)prefersStatusBarHidden {
+    return YES;
+}
+
 #pragma mark - Properties
 
 - (SSSettingsService *)settingsService {
