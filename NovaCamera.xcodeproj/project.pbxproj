@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		122810D818CE50B10052255C /* SSStatsService.m in Sources */ = {isa = PBXBuildFile; fileRef = 122810D718CE50B10052255C /* SSStatsService.m */; };
+		1235487718DDFBF50027EB9C /* SSAviaryWhiteLabel.avyPermission in Resources */ = {isa = PBXBuildFile; fileRef = 1235487618DDFBF50027EB9C /* SSAviaryWhiteLabel.avyPermission */; };
 		2719089E187EC5E500996A2D /* SSPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2719089D187EC5E500996A2D /* SSPhotoViewController.m */; };
 		2724C98018639EEB00A68E0D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2724C97F18639EEB00A68E0D /* Foundation.framework */; };
 		2724C98218639EEB00A68E0D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2724C98118639EEB00A68E0D /* CoreGraphics.framework */; };
@@ -60,6 +61,7 @@
 /* Begin PBXFileReference section */
 		122810D618CE50B10052255C /* SSStatsService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSStatsService.h; sourceTree = "<group>"; };
 		122810D718CE50B10052255C /* SSStatsService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSStatsService.m; sourceTree = "<group>"; };
+		1235487618DDFBF50027EB9C /* SSAviaryWhiteLabel.avyPermission */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SSAviaryWhiteLabel.avyPermission; sourceTree = "<group>"; };
 		2719089C187EC5E500996A2D /* SSPhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSPhotoViewController.h; sourceTree = "<group>"; };
 		2719089D187EC5E500996A2D /* SSPhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSPhotoViewController.m; sourceTree = "<group>"; };
 		2724C97C18639EEB00A68E0D /* NovaCamera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NovaCamera.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -185,6 +187,7 @@
 		2724C98518639EEB00A68E0D /* NovaCamera */ = {
 			isa = PBXGroup;
 			children = (
+				1235487618DDFBF50027EB9C /* SSAviaryWhiteLabel.avyPermission */,
 				2724C98E18639EEB00A68E0D /* SSAppDelegate.h */,
 				2724C98F18639EEB00A68E0D /* SSAppDelegate.m */,
 				27AE1C051897700B00C27C38 /* SSTheme.h */,
@@ -395,6 +398,7 @@
 				27AE1C0318976F4C00C27C38 /* LICENSE.txt in Resources */,
 				2724C99618639EEB00A68E0D /* Main_iPad.storyboard in Resources */,
 				27AF863818DD7E5B007C175F /* empty.wav in Resources */,
+				1235487718DDFBF50027EB9C /* SSAviaryWhiteLabel.avyPermission in Resources */,
 				27AE1C0418976F4C00C27C38 /* OpenSans-Light.ttf in Resources */,
 				2724C99B18639EEB00A68E0D /* Images.xcassets in Resources */,
 				2724C99318639EEB00A68E0D /* Main_iPhone.storyboard in Resources */,
