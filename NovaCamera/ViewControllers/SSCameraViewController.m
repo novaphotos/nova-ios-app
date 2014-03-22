@@ -22,7 +22,7 @@
 static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDeviceAuthorizedContext;
 static void * NovaFlashServiceStatus = &NovaFlashServiceStatus;
 
-static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
+static const NSTimeInterval kFlashSettingsAnimationDuration = 0.25;
 
 @interface SSCameraViewController () {
     NSURL *_showPhotoURL;
@@ -273,7 +273,7 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
         flashSettingsFrame.origin.y += flashSettingsFrame.size.height;
         self.flashSettingsViewController.view.frame = flashSettingsFrame;
         
-        [UIView animateWithDuration:flashSettingsAnimationDuration delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        [UIView animateWithDuration:kFlashSettingsAnimationDuration delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
             self.flashSettingsViewController.view.frame = self.view.frame;
         } completion:^(BOOL finished) {
             [self.flashSettingsViewController viewDidAppear:animated];
@@ -290,7 +290,7 @@ static const NSTimeInterval flashSettingsAnimationDuration = 0.25;
     [self.flashSettingsViewController viewWillDisappear:animated];
     
     if (animated) {
-        [UIView animateWithDuration:flashSettingsAnimationDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        [UIView animateWithDuration:kFlashSettingsAnimationDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
             CGRect flashSettingsFrame = self.view.frame;
             flashSettingsFrame.origin.y += flashSettingsFrame.size.height;
             self.flashSettingsViewController.view.frame = flashSettingsFrame;
