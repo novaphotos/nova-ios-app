@@ -29,11 +29,6 @@
 }
 
 /**
- * Asset library service; enumerates and tracks assets
- */
-@property (nonatomic, strong) SSChronologicalAssetsLibraryService *libraryService;
-
-/**
  * Stats service
  */
 @property (nonatomic, strong) SSStatsService *statsService;
@@ -87,12 +82,6 @@
     _assetsLoaded = NO;
     _viewWillAppear = NO;
     _imagePickerCanceled = NO;
-    
-    __block typeof(self) bSelf = self;
-    
-    [self.libraryService enumerateAssetsWithCompletion:^(NSUInteger numberOfAssets) {
-        bSelf->_assetsLoaded = YES;
-    }];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -120,12 +109,16 @@
 {
     [super viewDidLoad];
     
-    // Custom initialization
-    self.libraryService = [SSChronologicalAssetsLibraryService sharedService];
-    
     self.statsService = [SSStatsService sharedService];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(assetLibraryUpdatedWithNotification:) name:(NSString *)SSChronologicalAssetsLibraryUpdatedNotification object:self.libraryService];
+    
+    // Enumerate assets
+    __block typeof(self) bSelf = self;
+    [self.libraryService enumerateAssetsWithGroupTypes:ALAssetsGroupSavedPhotos completion:^(NSUInteger numberOfAssets) {
+        bSelf->_assetsLoaded = YES;
+    }];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -193,7 +186,7 @@
 - (void)showLibraryAnimated:(BOOL)animated sender:(id)sender {
     self.imagePickerController = [[UIImagePickerController alloc] init];
     self.imagePickerController.delegate = self;
-    self.imagePickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    self.imagePickerController.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
     [self presentViewController:self.imagePickerController animated:animated completion:nil];
 }
 
@@ -278,6 +271,15 @@
 - (void)editAssetWithURL:(NSURL *)assetURL animated:(BOOL)animated {
     [self showAssetWithURL:assetURL animated:animated];
     [self launchEditorForAssetWithURL:assetURL];
+}
+
+#pragma mark - Properties
+
+- (SSChronologicalAssetsLibraryService *)libraryService {
+    if (!_libraryService) {
+        _libraryService = [SSChronologicalAssetsLibraryService sharedService];
+    }
+    return _libraryService;
 }
 
 #pragma mark - Private methods
