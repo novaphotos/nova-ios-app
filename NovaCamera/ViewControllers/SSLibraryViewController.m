@@ -114,6 +114,27 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(assetLibraryUpdatedWithNotification:) name:(NSString *)SSChronologicalAssetsLibraryUpdatedNotification object:self.libraryService];
     
     [AFPhotoEditorCustomization setStatusBarStyle:UIStatusBarStyleDefault];
+    [AFPhotoEditorCustomization setToolOrder:@[
+                                               // Effects
+                                               kAFEnhance,
+                                               kAFEffects,
+                                               kAFFocus,
+                                               kAFAdjustments,
+                                               // Fixes
+                                               kAFOrientation,
+                                               kAFCrop,
+                                               kAFSharpness,
+                                               // Face improvements
+                                               kAFWhiten,
+                                               kAFBlemish,
+                                               kAFRedeye,
+                                               // Fun things
+                                               kAFStickers,
+                                               kAFFrames,
+                                               kAFDraw,
+                                               kAFText,
+                                               kAFMeme
+                                               ]];
 
     // Enumerate assets
     __block typeof(self) bSelf = self;
