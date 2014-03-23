@@ -67,9 +67,11 @@
 - (void)didRotate:(NSNotification *)notification {
     DDLogVerbose(@"SSCameraPreviewView didRotate:%@", notification);
     UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
-    AVCaptureVideoPreviewLayer *previewLayer = (AVCaptureVideoPreviewLayer *)self.layer;
-    AVCaptureConnection *connection = previewLayer.connection;
-    connection.videoOrientation = (AVCaptureVideoOrientation)orientation;
+    if (UIDeviceOrientationIsPortrait(orientation) || UIDeviceOrientationIsLandscape(orientation)) {
+        AVCaptureVideoPreviewLayer *previewLayer = (AVCaptureVideoPreviewLayer *)self.layer;
+        AVCaptureConnection *connection = previewLayer.connection;
+        connection.videoOrientation = (AVCaptureVideoOrientation)orientation;
+    }
 }
 
 @end
