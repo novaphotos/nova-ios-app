@@ -271,7 +271,11 @@
     }
     self.selectedIndex = idx;
     DDLogVerbose(@"Updated selectedIndex to %d", idx);
-    [self.pageViewController setViewControllers:@[photoVC] direction:dir animated:animated completion:nil];
+    
+    // Never animate!
+    // This fixes a UIPageViewController caching problem that was wreaking havoc when
+    // deleting assets.
+    [self.pageViewController setViewControllers:@[photoVC] direction:dir animated:NO completion:nil];
 }
 
 - (void)editAssetWithURL:(NSURL *)assetURL animated:(BOOL)animated {
@@ -471,16 +475,16 @@
 #pragma mark - UIPageViewControllerDelegate
 
 - (void)pageViewController:(UIPageViewController *)pageViewController willTransitionToViewControllers:(NSArray *)pendingViewControllers {
+    // Don't update selected index here; instead do it after animation has finished.
+}
+
+- (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed {
     // Update selected index
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        SSPhotoViewController *vc = [pendingViewControllers firstObject];
+        SSPhotoViewController *vc = [pageViewController.viewControllers firstObject];
         self.selectedIndex = [self.libraryService indexOfAssetWithURL:vc.assetURL];
         _lastAssetURL = vc.assetURL;
-        
-        DDLogVerbose(@"Updated selectedIndex to %d", self.selectedIndex);
-        if (self.selectedIndex == NSNotFound) {
-            DDLogVerbose(@"asset URL not found: %@", vc.assetURL);
-        }
+        DDLogVerbose(@"pageViewController: didFinishAnimating: previousViewControllers: transitionComplete: updating selectedIndex to %d for asset URL %@", self.selectedIndex, _lastAssetURL);
     });
 }
 
