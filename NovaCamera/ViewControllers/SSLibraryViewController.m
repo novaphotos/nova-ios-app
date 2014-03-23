@@ -29,11 +29,6 @@
 }
 
 /**
- * Asset library service; enumerates and tracks assets
- */
-@property (nonatomic, strong) SSChronologicalAssetsLibraryService *libraryService;
-
-/**
  * Stats service
  */
 @property (nonatomic, strong) SSStatsService *statsService;
@@ -87,12 +82,6 @@
     _assetsLoaded = NO;
     _viewWillAppear = NO;
     _imagePickerCanceled = NO;
-    
-    __block typeof(self) bSelf = self;
-    
-    [self.libraryService enumerateAssetsWithCompletion:^(NSUInteger numberOfAssets) {
-        bSelf->_assetsLoaded = YES;
-    }];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -120,12 +109,39 @@
 {
     [super viewDidLoad];
     
-    // Custom initialization
-    self.libraryService = [SSChronologicalAssetsLibraryService sharedService];
-    
     self.statsService = [SSStatsService sharedService];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(assetLibraryUpdatedWithNotification:) name:(NSString *)SSChronologicalAssetsLibraryUpdatedNotification object:self.libraryService];
+    
+    [AFPhotoEditorCustomization setStatusBarStyle:UIStatusBarStyleDefault];
+    [AFPhotoEditorCustomization setToolOrder:@[
+                                               // Effects
+                                               kAFEnhance,
+                                               kAFEffects,
+                                               kAFFocus,
+                                               kAFAdjustments,
+                                               // Fixes
+                                               kAFOrientation,
+                                               kAFCrop,
+                                               kAFSharpness,
+                                               // Face improvements
+                                               kAFWhiten,
+                                               kAFBlemish,
+                                               kAFRedeye,
+                                               // Fun things
+                                               kAFStickers,
+                                               kAFFrames,
+                                               kAFDraw,
+                                               kAFText,
+                                               kAFMeme
+                                               ]];
+
+    // Enumerate assets
+    __block typeof(self) bSelf = self;
+    [self.libraryService enumerateAssetsWithCompletion:^(NSUInteger numberOfAssets) {
+        bSelf->_assetsLoaded = YES;
+    }];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -169,6 +185,10 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (BOOL)prefersStatusBarHidden {
+    return YES;
+}
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.destinationViewController isKindOfClass:[UIPageViewController class]]) {
         // Capture reference to UIPageViewController so that we can later setViewControllers:direction:animated:
@@ -193,7 +213,7 @@
 - (void)showLibraryAnimated:(BOOL)animated sender:(id)sender {
     self.imagePickerController = [[UIImagePickerController alloc] init];
     self.imagePickerController.delegate = self;
-    self.imagePickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    self.imagePickerController.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
     [self presentViewController:self.imagePickerController animated:animated completion:nil];
 }
 
@@ -241,7 +261,7 @@
     
     NSURL *assetURL = _lastAssetURL;
     if (!assetURL) {
-        [self.libraryService assetURLAtIndex:self.selectedIndex];
+        assetURL = [self.libraryService assetURLAtIndex:self.selectedIndex];
     }
     [self.libraryService fullResolutionImageForAssetWithURL:assetURL withCompletion:^(UIImage *image) {
         NSArray *activityItems = @[
@@ -272,12 +292,25 @@
     }
     self.selectedIndex = idx;
     DDLogVerbose(@"Updated selectedIndex to %d", idx);
-    [self.pageViewController setViewControllers:@[photoVC] direction:dir animated:animated completion:nil];
+    
+    // Never animate!
+    // This fixes a UIPageViewController caching problem that was wreaking havoc when
+    // deleting assets.
+    [self.pageViewController setViewControllers:@[photoVC] direction:dir animated:NO completion:nil];
 }
 
 - (void)editAssetWithURL:(NSURL *)assetURL animated:(BOOL)animated {
     [self showAssetWithURL:assetURL animated:animated];
     [self launchEditorForAssetWithURL:assetURL];
+}
+
+#pragma mark - Properties
+
+- (SSChronologicalAssetsLibraryService *)libraryService {
+    if (!_libraryService) {
+        _libraryService = [SSChronologicalAssetsLibraryService sharedService];
+    }
+    return _libraryService;
 }
 
 #pragma mark - Private methods
@@ -291,10 +324,13 @@
 
 - (void)launchEditorForAssetWithURL:(NSURL *)assetURL {
     __block typeof(self) bSelf = self;
+    __block MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [self.statsService report:@"Aviary Launch"];
     [self.libraryService fullResolutionImageForAssetWithURL:assetURL withCompletion:^(UIImage *image) {
         DDLogVerbose(@"Loading Aviary photo editor with image: %@", image);
-        
+
+        [hud hide:YES];
+
         // Create editor
         bSelf.photoEditorController = [[AFPhotoEditorController alloc] initWithImage:image];
         [bSelf.photoEditorController setDelegate:bSelf];
@@ -320,13 +356,12 @@
                 DDLogVerbose(@"Photo editor context returned nil; must not have been modified");
                 [self.statsService report:@"Aviary Canceled"];
                 dispatch_async(dispatch_get_main_queue(), ^{
+                    
                     // Remove HUD
                     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-                    // Share photo
-                    if (self.automaticallySharePhoto) {
-                        self.automaticallySharePhoto = NO;
-                        [self sharePhoto:nil];
-                    }
+                    
+                    // Set edit flag to no; edit will be triggered when view appears
+                    _didEditPhoto = NO;
                 });
             }
             
@@ -339,7 +374,7 @@
 - (void)launchEditorForCurrentAsset {
     NSURL *assetURL = _lastAssetURL;
     if (!assetURL) {
-        [self.libraryService assetURLAtIndex:self.selectedIndex];
+        assetURL = [self.libraryService assetURLAtIndex:self.selectedIndex];
     }
     [self launchEditorForAssetWithURL:assetURL];
 }
@@ -356,16 +391,15 @@
         [self.libraryService assetForURL:_lastAssetURL withCompletion:^(ALAsset *asset) {
             [asset writeModifiedImageDataToSavedPhotosAlbum:imageData metadata:metadata completionBlock:^(NSURL *assetURL, NSError *error) {
                 DDLogVerbose(@"Modified image saved to asset library: %@ (Error: %@)", assetURL, error);
-                
-                DDLogVerbose(@"Has the asset changed notification fired yet?");
-                
+
+                // Remove HUD
+                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+
                 if (!error) {
                     // Load new asset
                     _waitingToDisplayInsertedAsset = YES;
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [bSelf showAssetWithURL:assetURL animated:NO];
-                        // Remove HUD
-                        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
                         // Share photo
                         if (self.automaticallySharePhoto) {
                             self.automaticallySharePhoto = NO;
@@ -392,7 +426,7 @@
     
     NSUInteger newIndex = NSNotFound;
     if (_lastAssetURL) {
-        [self.libraryService indexOfAssetWithURL:_lastAssetURL];
+        newIndex = [self.libraryService indexOfAssetWithURL:_lastAssetURL];
     }
     
     DDLogVerbose(@"Before update logic; self.selectedIndex=%d newIndex=%d _lastAssetURL=%@", self.selectedIndex, newIndex, _lastAssetURL);
@@ -462,15 +496,16 @@
 #pragma mark - UIPageViewControllerDelegate
 
 - (void)pageViewController:(UIPageViewController *)pageViewController willTransitionToViewControllers:(NSArray *)pendingViewControllers {
+    // Don't update selected index here; instead do it after animation has finished.
+}
+
+- (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed {
     // Update selected index
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        SSPhotoViewController *vc = [pendingViewControllers firstObject];
+        SSPhotoViewController *vc = [pageViewController.viewControllers firstObject];
         self.selectedIndex = [self.libraryService indexOfAssetWithURL:vc.assetURL];
-        
-        DDLogVerbose(@"Updated selectedIndex to %d", self.selectedIndex);
-        if (self.selectedIndex == NSNotFound) {
-            DDLogVerbose(@"asset URL not found: %@", vc.assetURL);
-        }
+        _lastAssetURL = vc.assetURL;
+        DDLogVerbose(@"pageViewController: didFinishAnimating: previousViewControllers: transitionComplete: updating selectedIndex to %d for asset URL %@", self.selectedIndex, _lastAssetURL);
     });
 }
 

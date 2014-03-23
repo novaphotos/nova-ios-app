@@ -110,8 +110,8 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
 }
 
 - (void)stopSession {
-    if (_sessionHasBeenConfigured) {
-        dispatch_async(self.sessionQueue, ^{
+    dispatch_async(self.sessionQueue, ^{
+        if (_sessionHasBeenConfigured) {
             [self.session stopRunning];
             
             [self removeObserver:self forKeyPath:@"stillImageOutput.capturingStillImage" context:CapturingStillImageContext];
@@ -121,8 +121,8 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
             [[NSNotificationCenter defaultCenter] removeObserver:self name:AVCaptureDeviceSubjectAreaDidChangeNotification object:self.device];
             
             [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
-        });
-    }
+        }
+    });
 }
 
 #pragma mark Authorization

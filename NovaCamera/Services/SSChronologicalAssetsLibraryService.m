@@ -28,7 +28,11 @@ NSString * const SSChronologicalAssetsLibraryDeletedAssetIndexesKey = @"SSChrono
 
 @interface SSChronologicalAssetsLibraryService ()
 @property (nonatomic, strong) NSMutableArray *assetURLs;
+@property (atomic, assign) BOOL restartAssetEnumeration;
+@property (atomic, assign) BOOL assetsHaveChanged;
+@property (atomic, strong) NSArray *assetURLsBeforeEnumeration;
 - (void)assetsChangedWithNotification:(NSNotification *)notification;
+- (void)checkAssetsForChanges;
 @end
 
 @implementation SSChronologicalAssetsLibraryService
@@ -70,33 +74,57 @@ NSString * const SSChronologicalAssetsLibraryDeletedAssetIndexesKey = @"SSChrono
     __block typeof(self) bSelf = self;
     __block NSMutableArray *mutableURLs = [NSMutableArray array];
     __block typeof(completion) bCompletion = completion;
+    __block BOOL restartedEnumeration = NO;
     _enumeratingAssets = YES;
     
     void (^finishedEnumerating)() = ^{
         DDLogVerbose(@"finishedEnumerating");
         bSelf.assetURLs = mutableURLs;
         bSelf->_enumeratingAssets = NO;
+        
+        if (bSelf.assetsHaveChanged) {
+            bSelf.assetsHaveChanged = NO;
+            [bSelf checkAssetsForChanges];
+        }
+        
         if (bCompletion) {
             bCompletion(mutableURLs.count);
         }
     };
     
-    DDLogVerbose(@"Starting enumeration");
+    void (^restartEnumeration)() = ^{
+        bSelf.restartAssetEnumeration = NO;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+            [bSelf enumerateAssetsWithCompletion:bCompletion];
+        });
+    };
     
-    [self.assetsLibrary enumerateGroupsWithTypes:ALAssetsGroupAll usingBlock:^(ALAssetsGroup *group, BOOL *groupStop) {
+    DDLogVerbose(@"Starting enumeration");
+
+    // Filter to user's Camera Roll photos only.
+    ALAssetsGroupType assetsGroup = ALAssetsGroupSavedPhotos;
+    
+    [self.assetsLibrary enumerateGroupsWithTypes:assetsGroup usingBlock:^(ALAssetsGroup *group, BOOL *groupStop) {
         DDLogVerbose(@"Enumerating group");
         if (group) {
             [group enumerateAssetsWithOptions:NSEnumerationReverse usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
-                DDLogVerbose(@"Enumerating item");
                 if (result) {
                     NSURL *url = result.defaultURL;
                     [mutableURLs addObject:url];
                 }
+                if (bSelf.restartAssetEnumeration) {
+                    *stop = YES;
+                    restartedEnumeration = YES;
+                    restartEnumeration();
+                }
             }];
+            DDLogVerbose(@"Found %u assets in group", mutableURLs.count);
         } else {
-            finishedEnumerating();
+            if (!restartedEnumeration) {
+                finishedEnumerating();
+            }
         }
-    } failureBlock:^(NSError *error) {
+} failureBlock:^(NSError *error) {
         if (completion) {
             completion(0);
         }
@@ -170,7 +198,9 @@ NSString * const SSChronologicalAssetsLibraryDeletedAssetIndexesKey = @"SSChrono
         } failureBlock:^(NSError *error) {
             DDLogError(@"Unable to retrieve asset for URL: %@", assetURL);
             if (completion) {
-                completion(nil);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(nil);
+                });
             }
         }];
     });
@@ -187,11 +217,7 @@ NSString * const SSChronologicalAssetsLibraryDeletedAssetIndexesKey = @"SSChrono
 - (void)assetsChangedWithNotification:(NSNotification *)notification {
     DDLogVerbose(@"Assets changed! Notification: %@", notification);
     
-    if (_enumeratingAssets) {
-        DDLogVerbose(@"Already enumerating; skipping");
-        return;
-    }
-    
+    // First check whether any assets have been updated with this notification
     NSDictionary *userInfo = notification.userInfo;
     NSSet *updatedAssets = userInfo[ALAssetLibraryUpdatedAssetsKey];
     if (!updatedAssets.count) {
@@ -199,38 +225,57 @@ NSString * const SSChronologicalAssetsLibraryDeletedAssetIndexesKey = @"SSChrono
         return;
     }
     
-    __block typeof(self) bSelf = self;
-    __block NSArray *previousAssetURLs = [NSArray arrayWithArray:self.assetURLs];
-    [self enumerateAssetsWithCompletion:^(NSUInteger numberOfAssets) {
-        DDLogVerbose(@"Enumeration finished (triggered by assets changed notification)");
-        
-        // Compare old and new asset URLs; track which indexes have been added and removed
-        NSMutableSet *oldAssetURLs = [NSMutableSet setWithArray:previousAssetURLs];
-        NSMutableSet *newAssetURLs = [NSMutableSet set];
-        for (NSURL *url in self.assetURLs) {
-            if ([oldAssetURLs containsObject:url]) {
-                [oldAssetURLs removeObject:url];
-            } else {
-                [newAssetURLs addObject:url];
-            }
+    // Set flag indicating assets have changed;
+    // after enumeration is finished, assets will be compared and notifications
+    // will be sent.
+    self.assetsHaveChanged = YES;
+    
+    if (self.assetURLsBeforeEnumeration == nil) {
+        // Store asset URLs prior to enumeration
+        self.assetURLsBeforeEnumeration = [NSArray arrayWithArray:self.assetURLs];
+    }
+
+    if (_enumeratingAssets) {
+        // Restart enumeration if it's already in progress
+        self.restartAssetEnumeration = YES;
+        return;
+    } else {
+        // Trigger a new enumeration
+        [self enumerateAssetsWithCompletion:nil];
+    }
+}
+
+- (void)checkAssetsForChanges {
+    DDLogVerbose(@"checkAssetsForChanges");
+    
+    // Compare old and new asset URLs; track which indexes have been added and removed
+    NSMutableSet *oldAssetURLs = [NSMutableSet setWithArray:self.assetURLsBeforeEnumeration];
+    NSMutableSet *newAssetURLs = [NSMutableSet set];
+    for (NSURL *url in self.assetURLs) {
+        if ([oldAssetURLs containsObject:url]) {
+            [oldAssetURLs removeObject:url];
+        } else {
+            [newAssetURLs addObject:url];
         }
-        
-        NSMutableIndexSet *addedAssetIndexes = [NSMutableIndexSet indexSet];
-        for (NSURL *addedURL in newAssetURLs) {
-            [addedAssetIndexes addIndex:[bSelf.assetURLs indexOfObject:addedURL]];
-        }
-        
-        NSMutableIndexSet *removedAssetIndexes = [NSMutableIndexSet indexSet];
-        for (NSURL *removedURL in oldAssetURLs) {
-            [removedAssetIndexes addIndex:[previousAssetURLs indexOfObject:removedURL]];
-        }
-        
-        NSDictionary *userInfo = @{
-                                   SSChronologicalAssetsLibraryInsertedAssetIndexesKey: addedAssetIndexes,
-                                   SSChronologicalAssetsLibraryDeletedAssetIndexesKey: removedAssetIndexes,
-                                   };
-        [[NSNotificationCenter defaultCenter] postNotificationName:SSChronologicalAssetsLibraryUpdatedNotification object:self userInfo:userInfo];
-    }];
+    }
+    
+    NSMutableIndexSet *addedAssetIndexes = [NSMutableIndexSet indexSet];
+    for (NSURL *addedURL in newAssetURLs) {
+        [addedAssetIndexes addIndex:[self.assetURLs indexOfObject:addedURL]];
+    }
+    
+    NSMutableIndexSet *removedAssetIndexes = [NSMutableIndexSet indexSet];
+    for (NSURL *removedURL in oldAssetURLs) {
+        [removedAssetIndexes addIndex:[self.assetURLsBeforeEnumeration indexOfObject:removedURL]];
+    }
+    
+    NSDictionary *userInfo = @{
+                               SSChronologicalAssetsLibraryInsertedAssetIndexesKey: addedAssetIndexes,
+                               SSChronologicalAssetsLibraryDeletedAssetIndexesKey: removedAssetIndexes,
+                               };
+    [[NSNotificationCenter defaultCenter] postNotificationName:SSChronologicalAssetsLibraryUpdatedNotification object:self userInfo:userInfo];
+    
+    self.assetURLsBeforeEnumeration = nil;
 }
 
 @end

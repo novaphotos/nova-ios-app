@@ -42,8 +42,7 @@ NSString * const SSChronologicalAssetsLibraryDeletedAssetIndexesKey;
 + (id)sharedService;
 
 /**
- * Trigger enumeration of assets; completion will be called with the total
- * number of assets found.
+ * Trigger enumeration of assets. Completion called with the total number of assets found.
  */
 - (void)enumerateAssetsWithCompletion:(void (^)(NSUInteger numberOfAssets))completion;
 
