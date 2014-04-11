@@ -48,7 +48,7 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
     self = [super init];
     if (self) {
         _temporarilyEnabled = NO;
-        _allowCustomFlashMode = NO;
+        _allowCustomFlashMode = YES;
         
         // Load previous values from NSUserDefaults
         [self restoreFromUserDefaults];
