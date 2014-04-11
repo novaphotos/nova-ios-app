@@ -24,23 +24,38 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 static void * NovaFlashServiceStatus = &NovaFlashServiceStatus;
 
 static const NSTimeInterval kFlashSettingsAnimationDuration = 0.25;
+static const CFTimeInterval kTransformAnimationDuration = 0.025;
 static const CFTimeInterval kMinimumTimeBeforeVolumeButtonCapture = 0.1;
+static const CGFloat kZoomMaxScale = 2.5;
+static const CFTimeInterval kZoomSliderHideDelay = 3.0;
+static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
 
 @interface SSCameraViewController () {
     NSURL *_showPhotoURL;
     BOOL _editPhoto;
     BOOL _sharePhoto;
     CFTimeInterval _audioSessionTimestamp; // Ugly workaround for premature volume notification
+    
+    // Track zoom scale
+    CGFloat _beginGestureScale;
+    
+    // Zoom slider state
+    BOOL _zoomSliderVisible;
+    CFTimeInterval _zoomActiveTimestamp;
 }
 @property (nonatomic, strong) SSCaptureSessionManager *captureSessionManager;
 @property (nonatomic, strong) AVAudioPlayer *captureButtonAudioPlayer;
 @property (nonatomic, strong) MPVolumeView *volumeView;
+- (void)updateZoomTransform;
 - (void)runStillImageCaptureAnimation;
 - (void)showFlashSettingsAnimated:(BOOL)animated;
 - (void)hideFlashSettingsAnimated:(BOOL)animated;
 - (void)updateFlashStatusIcon;
 - (void)setupCaptureButtonAudioPlayer;
 - (void)volumeChanged:(id)sender;
+- (void)setupZoomSlider;
+- (void)zoomActive;
+- (void)zoomCheckActivityAndClose;
 @end
 
 @implementation SSCameraViewController
@@ -80,10 +95,21 @@ static const CFTimeInterval kMinimumTimeBeforeVolumeButtonCapture = 0.1;
     // Add stats service
     self.statsService = [SSStatsService sharedService];
     
-    // Add gesture recognizer
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(focusAndExposeTap:)];
+    // Add tap gesture recognizer for focus/expose
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapFrom:)];
     tapGesture.numberOfTapsRequired = 1;
     [self.previewView addGestureRecognizer:tapGesture];
+    
+    // Add pinch gesture recognizer for zoom
+    UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinchFrom:)];
+    pinchGesture.delegate = self;
+    [self.previewView addGestureRecognizer:pinchGesture];
+    
+    // Set effective zoom scale to 1.0 (default value)
+    _scaleAndCropFactor = 1.0;
+    
+    // Set up zoom slider
+    [self setupZoomSlider];
     
     // Set up flash settings
     self.flashSettingsViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"flashSettings"];
@@ -94,6 +120,8 @@ static const CFTimeInterval kMinimumTimeBeforeVolumeButtonCapture = 0.1;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
     [self.captureSessionManager startSession];
     
     // Add observers
@@ -108,9 +136,18 @@ static const CFTimeInterval kMinimumTimeBeforeVolumeButtonCapture = 0.1;
     
     // Setup capture button
     [self setupCaptureButtonAudioPlayer];
+   
+    // Reset zoom
+    [self resetZoom];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
     [self.captureSessionManager stopSession];
     
     // Remove observers
@@ -233,18 +270,50 @@ static const CFTimeInterval kMinimumTimeBeforeVolumeButtonCapture = 0.1;
     [self.captureSessionManager toggleCamera];
 }
 
-- (IBAction)focusAndExposeTap:(id)sender {
-    DDLogVerbose(@"focusAndExposeTap");
-    if ([sender isKindOfClass:[UIGestureRecognizer class]]) {
-        UIGestureRecognizer *gestureRecognizer = (UIGestureRecognizer *)sender;
-        AVCaptureVideoPreviewLayer *previewLayer = (AVCaptureVideoPreviewLayer *)self.previewView.layer;
-        CGPoint viewPoint = [gestureRecognizer locationInView:gestureRecognizer.view];
-        CGPoint devicePoint = [previewLayer captureDevicePointOfInterestForPoint:viewPoint];
-        [self.captureSessionManager focusWithMode:AVCaptureFocusModeAutoFocus exposeWithMode:AVCaptureExposureModeContinuousAutoExposure atDevicePoint:devicePoint];
-    }
+- (IBAction)zoomSliderValueChanged:(id)sender {
+    self.scaleAndCropFactor = self.zoomSlider.value;
+    [self zoomActive];
+}
+
+- (void)handleTapFrom:(UITapGestureRecognizer *)recognizer {
+    DDLogVerbose(@"handleTapFrom:%@", recognizer);
+    AVCaptureVideoPreviewLayer *previewLayer = (AVCaptureVideoPreviewLayer *)self.previewView.layer;
+    CGPoint viewPoint = [recognizer locationInView:recognizer.view];
+    CGPoint devicePoint = [previewLayer captureDevicePointOfInterestForPoint:viewPoint];
+    [self.captureSessionManager focusWithMode:AVCaptureFocusModeAutoFocus exposeWithMode:AVCaptureExposureModeContinuousAutoExposure atDevicePoint:devicePoint];
+}
+
+- (void)handlePinchFrom:(UIPinchGestureRecognizer *)recognizer {
+    DDLogVerbose(@"handlePinchFrom:%@", recognizer);
+    CGFloat scale = _beginGestureScale * recognizer.scale;
+    self.scaleAndCropFactor = scale;
+    self.zoomSlider.value = self.scaleAndCropFactor;
+    [self zoomActive];
+}
+
+- (void)resetZoom {
+    self.scaleAndCropFactor = 1.0;
+    self.zoomSlider.value = self.scaleAndCropFactor;
 }
 
 #pragma mark - Properties
+
+- (void)setScaleAndCropFactor:(CGFloat)scaleAndCropFactor {
+    CGFloat scale = scaleAndCropFactor;
+    if (scale < 1.0) {
+        scale = 1.0;
+    }
+    if (scale > kZoomMaxScale) {
+        scale = kZoomMaxScale;
+    }
+    [self willChangeValueForKey:@"scaleAndCropFactor"];
+    _scaleAndCropFactor = scale;
+    [self didChangeValueForKey:@"scaleAndCropFactor"];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self updateZoomTransform];
+        self.captureSessionManager.videoScaleAndCropFactor = scale;
+    });
+}
 
 - (SSSettingsService *)settingsService {
     if (_settingsService == nil) {
@@ -254,6 +323,17 @@ static const CFTimeInterval kMinimumTimeBeforeVolumeButtonCapture = 0.1;
 }
 
 #pragma mark - Private methods
+
+- (void)updateZoomTransform {
+    DDLogVerbose(@"updateZoomTransform; scaleAndCropFactor: %g", self.scaleAndCropFactor);
+    CGAffineTransform transform = CGAffineTransformMakeScale(self.scaleAndCropFactor, self.scaleAndCropFactor);
+    CGAffineTransform currTransform = self.previewView.layer.affineTransform;
+    DDLogVerbose(@"Current transform: %@ new transform: %@", NSStringFromCGAffineTransform(currTransform), NSStringFromCGAffineTransform(transform));
+    [CATransaction begin];
+    [CATransaction setAnimationDuration:kTransformAnimationDuration];
+    self.previewView.layer.affineTransform = transform;
+    [CATransaction commit];
+}
 
 - (void)runStillImageCaptureAnimation {
 	dispatch_async(dispatch_get_main_queue(), ^{
@@ -376,10 +456,81 @@ static const CFTimeInterval kMinimumTimeBeforeVolumeButtonCapture = 0.1;
     }
 }
 
+- (void)setupZoomSlider {
+    // Set up slider for zoom indication
+    UIImage *sliderTrack = [UIImage imageNamed:@"zoom-slider-track"];
+    UIImage *sliderThumb = [UIImage imageNamed:@"zoom-slider-thumb"];
+    [self.zoomSlider setMaximumTrackImage:sliderTrack forState:UIControlStateNormal];
+    [self.zoomSlider setMinimumTrackImage:sliderTrack forState:UIControlStateNormal];
+    [self.zoomSlider setThumbImage:sliderThumb forState:UIControlStateNormal];
+    self.zoomSlider.minimumValue = 1.0;
+    self.zoomSlider.maximumValue = kZoomMaxScale;
+    self.zoomSlider.value = 1.0;
+    self.zoomSlider.alpha = 0.0;
+    self.zoomSlider.userInteractionEnabled = NO;
+    _zoomActiveTimestamp = 0;
+    _zoomSliderVisible = NO;
+}
+
+- (void)zoomActive {
+    if (!_zoomSliderVisible) {
+        // Show slider
+        dispatch_async(dispatch_get_main_queue(), ^{
+            _zoomSliderVisible = YES;
+            self.zoomSlider.hidden = NO;
+            self.zoomSlider.userInteractionEnabled = YES;
+            [UIView animateWithDuration:kZoomSliderAnimationDuration animations:^{
+                self.zoomSlider.alpha = 1.0;
+            } completion:^(BOOL finished) {
+            }];
+        });
+    }
+    _zoomActiveTimestamp = CACurrentMediaTime();
+    
+    // Set timer to check activity after kZoomSliderHideDelay seconds
+    double delayInSeconds = (double)kZoomSliderHideDelay;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        [self zoomCheckActivityAndClose];
+    });
+}
+
+- (void)zoomCheckActivityAndClose {
+    DDLogVerbose(@"zoomCheckActivityAndClose");
+    if (_zoomSliderVisible) {
+        DDLogVerbose(@"slider visible");
+        CFTimeInterval elapsed = CACurrentMediaTime() - _zoomActiveTimestamp;
+        DDLogVerbose(@"elapsed = %g", elapsed);
+        if (elapsed >= kZoomSliderHideDelay) {
+            DDLogVerbose(@"Hiding slider");
+            // Hide slider
+            dispatch_async(dispatch_get_main_queue(), ^{
+                _zoomSliderVisible = NO;
+                [UIView animateWithDuration:kZoomSliderAnimationDuration animations:^{
+                    self.zoomSlider.alpha = 0.0;
+                } completion:^(BOOL finished) {
+                    self.zoomSlider.hidden = YES;
+                    self.zoomSlider.userInteractionEnabled = NO;
+                }];
+            });
+        }
+    }
+}
+
 #pragma mark - SSFlashSettingsViewControllerDelegate
 
 - (void)flashSettingsViewController:(SSFlashSettingsViewController *)flashSettingsViewController didConfirmSettings:(SSFlashSettings)flashSettings {
     [self hideFlashSettingsAnimated:YES];
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
+    if ([gestureRecognizer isKindOfClass:[UIPinchGestureRecognizer class]]) {
+        _beginGestureScale = self.scaleAndCropFactor;
+        DDLogVerbose(@"pinch gesture beginning with scale %g", self.scaleAndCropFactor);
+    }
+    return YES;
 }
 
 @end

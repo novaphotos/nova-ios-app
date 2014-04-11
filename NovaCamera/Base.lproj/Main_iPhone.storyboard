@@ -31,7 +31,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Si-W3-Mqg" customClass="SSCameraPreviewView">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6ig-CU-Xix" customClass="SSCameraPreviewView">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Si-W3-Mqg" customClass="SSPassThroughView">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
@@ -123,18 +128,29 @@
                                         <rect key="frame" x="277" y="496" width="27" height="27"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
+                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Isx-vn-YYg">
+                                        <rect key="frame" x="48" y="447" width="224" height="34"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <connections>
+                                            <action selector="zoomSliderValueChanged:" destination="vXZ-lx-hvc" eventType="valueChanged" id="dcM-qf-4lq"/>
+                                        </connections>
+                                    </slider>
                                 </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstItem="Ubh-N4-5IW" firstAttribute="top" secondItem="Isx-vn-YYg" secondAttribute="bottom" constant="8" id="5Ef-NM-2eT"/>
                                     <constraint firstItem="GSs-ex-cjL" firstAttribute="top" secondItem="2Si-W3-Mqg" secondAttribute="top" constant="11" id="9fO-IR-LS8"/>
                                     <constraint firstAttribute="trailing" secondItem="gFl-vq-I0h" secondAttribute="trailing" id="C7U-lL-D50"/>
                                     <constraint firstItem="13Y-yO-HUw" firstAttribute="top" secondItem="2Si-W3-Mqg" secondAttribute="top" constant="11" id="DH1-oo-YjZ"/>
                                     <constraint firstItem="gFl-vq-I0h" firstAttribute="leading" secondItem="2Si-W3-Mqg" secondAttribute="leading" id="KmO-0g-iWT"/>
                                     <constraint firstAttribute="bottom" secondItem="nb7-cS-TF2" secondAttribute="bottom" constant="19" id="N0o-su-kXd"/>
+                                    <constraint firstItem="Isx-vn-YYg" firstAttribute="leading" secondItem="2Si-W3-Mqg" secondAttribute="leading" constant="50" id="PUN-3P-746"/>
                                     <constraint firstAttribute="bottom" secondItem="Ubh-N4-5IW" secondAttribute="bottom" constant="8" id="Rsk-sC-b4H"/>
                                     <constraint firstItem="GSs-ex-cjL" firstAttribute="leading" secondItem="2Si-W3-Mqg" secondAttribute="leading" constant="8" id="SS7-ZV-lH8"/>
                                     <constraint firstAttribute="trailing" secondItem="nb7-cS-TF2" secondAttribute="trailing" constant="20" id="Uiy-CB-a42"/>
+                                    <constraint firstAttribute="trailing" secondItem="Isx-vn-YYg" secondAttribute="trailing" constant="50" id="XIk-q1-1oN"/>
                                     <constraint firstItem="lwO-ON-Kzh" firstAttribute="leading" secondItem="2Si-W3-Mqg" secondAttribute="leading" constant="20" id="aC5-4h-xEM"/>
+                                    <constraint firstAttribute="centerX" secondItem="Isx-vn-YYg" secondAttribute="centerX" id="gGa-Ga-8ZS"/>
                                     <constraint firstAttribute="bottom" secondItem="lwO-ON-Kzh" secondAttribute="bottom" constant="19" id="iPN-2m-veb"/>
                                     <constraint firstAttribute="trailing" secondItem="13Y-yO-HUw" secondAttribute="trailing" constant="10" id="ilj-1m-M5A"/>
                                     <constraint firstAttribute="bottom" secondItem="gFl-vq-I0h" secondAttribute="bottom" id="okZ-lc-GM9"/>
@@ -144,8 +160,12 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="6ig-CU-Xix" firstAttribute="top" secondItem="jDK-1B-82m" secondAttribute="bottom" id="2z9-ZF-fvn"/>
+                            <constraint firstItem="R1q-RJ-5fu" firstAttribute="top" secondItem="6ig-CU-Xix" secondAttribute="bottom" id="5Wh-pg-hcl"/>
                             <constraint firstItem="2Si-W3-Mqg" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="9om-8H-VTA"/>
                             <constraint firstAttribute="bottom" secondItem="2Si-W3-Mqg" secondAttribute="bottom" id="URU-JJ-iFY"/>
+                            <constraint firstItem="6ig-CU-Xix" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="idS-gh-ofS"/>
+                            <constraint firstAttribute="trailing" secondItem="6ig-CU-Xix" secondAttribute="trailing" id="ikp-aH-wEc"/>
                             <constraint firstItem="2Si-W3-Mqg" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="top" id="jcX-ZS-AnB"/>
                             <constraint firstAttribute="trailing" secondItem="2Si-W3-Mqg" secondAttribute="trailing" id="s9L-iu-SDl"/>
                         </constraints>
@@ -157,7 +177,8 @@
                         <outlet property="flashIconImage" destination="FDg-gd-Sz8" id="xYt-gP-1LE"/>
                         <outlet property="flashSettingsButton" destination="nb7-cS-TF2" id="5Fa-fs-NcP"/>
                         <outlet property="generalSettingsButton" destination="GSs-ex-cjL" id="AMh-dc-kr0"/>
-                        <outlet property="previewView" destination="2Si-W3-Mqg" id="aUr-MC-q6I"/>
+                        <outlet property="previewView" destination="6ig-CU-Xix" id="ZU8-aq-ZBd"/>
+                        <outlet property="zoomSlider" destination="Isx-vn-YYg" id="gkM-oK-ZZD"/>
                         <segue destination="4Kg-nv-94b" kind="modal" identifier="showPhoto" modalTransitionStyle="flipHorizontal" id="YwU-7w-q0s"/>
                         <segue destination="EMK-44-5OK" kind="push" identifier="showSettings" id="4ne-YE-5My"/>
                     </connections>
