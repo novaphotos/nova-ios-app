@@ -48,7 +48,7 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
     self = [super init];
     if (self) {
         _temporarilyEnabled = NO;
-        _allowCustomFlashMode = NO;
+        _allowCustomFlashMode = YES;
         
         // Load previous values from NSUserDefaults
         [self restoreFromUserDefaults];
@@ -213,22 +213,9 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
             break;
         case SSFlashModeCustom:
         {
-            // Convert a "temperature" from 0 to 1.0 to individual warm and cool components
-            double pctWarm = settings.flashColorTemperature;
-            double pctCool = 1.0 - pctWarm;
-            
-            // Normalize such that MAX(pctWarm, pctCool) == 1.0
-            if (pctWarm > 0.5) {
-                pctWarm = 1.0;
-                pctCool /= pctWarm;
-            } else {
-                pctCool = 1.0;
-                pctWarm /= pctCool;
-            }
-            
             // Scale down according to brightness setting(
-            pctWarm *= settings.flashBrightness;
-            pctCool *= settings.flashBrightness;
+            double pctWarm = settings.warmBrightness;
+            double pctCool = settings.coolBrightness;
             
             // Convert to 8bit
             uint8_t warm = (uint8_t)(pctWarm * 255.0);
@@ -255,13 +242,13 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
 - (void)saveToUserDefaults {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setInteger:self.flashSettings.flashMode forKey:[kLastFlashSettingsUserDefaultsPrefix stringByAppendingString:@"mode"]];
-    [defaults setFloat:self.flashSettings.flashBrightness forKey:[kLastFlashSettingsUserDefaultsPrefix stringByAppendingString:@"brightness"]];
-    [defaults setFloat:self.flashSettings.flashColorTemperature forKey:[kLastFlashSettingsUserDefaultsPrefix stringByAppendingString:@"colorTemperature"]];
+    [defaults setFloat:self.flashSettings.warmBrightness forKey:[kLastFlashSettingsUserDefaultsPrefix stringByAppendingString:@"warmBrightness"]];
+    [defaults setFloat:self.flashSettings.coolBrightness forKey:[kLastFlashSettingsUserDefaultsPrefix stringByAppendingString:@"coolBrightness"]];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         [defaults synchronize];
     });
     DDLogVerbose(@"Wrote flash settings to user defaults");
-    DDLogVerbose(@"color temp: %g", _flashSettings.flashColorTemperature);
+    DDLogVerbose(@"warm: %g cool: %g", _flashSettings.warmBrightness, _flashSettings.coolBrightness);
 }
 
 - (void)restoreFromUserDefaults {
@@ -271,10 +258,10 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
     if ([defaults objectForKey:[kLastFlashSettingsUserDefaultsPrefix stringByAppendingString:@"mode"]] != nil) {
         // Update flash settings from user defaults
         _flashSettings.flashMode = (SSFlashMode)[defaults integerForKey:[kLastFlashSettingsUserDefaultsPrefix stringByAppendingString:@"mode"]];
-        _flashSettings.flashBrightness = [defaults floatForKey:[kLastFlashSettingsUserDefaultsPrefix stringByAppendingString:@"brightness"]];
-        _flashSettings.flashColorTemperature = [defaults floatForKey:[kLastFlashSettingsUserDefaultsPrefix stringByAppendingString:@"colorTemperature"]];
+        _flashSettings.warmBrightness = [defaults floatForKey:[kLastFlashSettingsUserDefaultsPrefix stringByAppendingString:@"warmBrightness"]];
+        _flashSettings.coolBrightness = [defaults floatForKey:[kLastFlashSettingsUserDefaultsPrefix stringByAppendingString:@"coolBrightness"]];
         DDLogVerbose(@"Read flash settings from user defaults");
-        DDLogVerbose(@"color temp: %g", _flashSettings.flashColorTemperature);
+        DDLogVerbose(@"warm: %g cool: %g", _flashSettings.warmBrightness, _flashSettings.coolBrightness);
     }
     if (!self.allowCustomFlashMode && _flashSettings.flashMode == SSFlashModeCustom) {
         DDLogError(@"Setting flash mode to off because mode in user defaults was custom and we are disabling custom flash mode");
