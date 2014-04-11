@@ -552,35 +552,35 @@
                                         <rect key="frame" x="0.0" y="93" width="320" height="75"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
-                                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="keC-bT-JDd" userLabel="Color temp slider">
+                                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="keC-bT-JDd" userLabel="Warm brightness slider">
                                                 <rect key="frame" x="138" y="12" width="116" height="34"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <color key="minimumTrackTintColor" red="0.76078438758850098" green="0.76078438758850098" blue="0.76078438758850098" alpha="1" colorSpace="deviceRGB"/>
                                                 <color key="maximumTrackTintColor" red="0.7607843876" green="0.7607843876" blue="0.7607843876" alpha="1" colorSpace="deviceRGB"/>
                                                 <color key="thumbTintColor" red="0.90588241815567017" green="0.40000003576278687" blue="0.29019609093666077" alpha="1" colorSpace="deviceRGB"/>
                                                 <connections>
-                                                    <action selector="flashColorTempChanged:" destination="i9U-49-zHT" eventType="valueChanged" id="gar-dM-D3b"/>
+                                                    <action selector="warmBrightnessChanged:" destination="i9U-49-zHT" eventType="valueChanged" id="y5O-Dv-d3P"/>
                                                 </connections>
                                             </slider>
-                                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="V0v-Un-PnB" userLabel="Brightness slider">
+                                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="V0v-Un-PnB" userLabel="Cool brightness slider">
                                                 <rect key="frame" x="138" y="45" width="116" height="34"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <color key="minimumTrackTintColor" red="0.7607843876" green="0.7607843876" blue="0.7607843876" alpha="1" colorSpace="deviceRGB"/>
                                                 <color key="maximumTrackTintColor" red="0.7607843876" green="0.7607843876" blue="0.7607843876" alpha="1" colorSpace="deviceRGB"/>
                                                 <color key="thumbTintColor" red="0.90588241820000004" green="0.40000003579999999" blue="0.29019609089999998" alpha="1" colorSpace="deviceRGB"/>
                                                 <connections>
-                                                    <action selector="flashBrightnessChanged:" destination="i9U-49-zHT" eventType="valueChanged" id="2ui-3e-asZ"/>
+                                                    <action selector="coolBrightnessChanged:" destination="i9U-49-zHT" eventType="valueChanged" id="Jgi-Zf-y83"/>
                                                 </connections>
                                             </slider>
-                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Color Temp" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rC8-e6-cJ5">
-                                                <rect key="frame" x="66" y="18" width="80" height="21"/>
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Warm brightness" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rC8-e6-cJ5">
+                                                <rect key="frame" x="37" y="18" width="95" height="21"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Brightness" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Kf-Kr-xBy">
-                                                <rect key="frame" x="66" y="51" width="73" height="21"/>
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Cool brightness" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Kf-Kr-xBy">
+                                                <rect key="frame" x="37" y="51" width="88" height="21"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -681,8 +681,7 @@
                     </view>
                     <toolbarItems/>
                     <connections>
-                        <outlet property="brightnessSlider" destination="V0v-Un-PnB" id="V1B-3k-Nl4"/>
-                        <outlet property="colorTempSlider" destination="keC-bT-JDd" id="tJA-LO-xc0"/>
+                        <outlet property="coolBrightnessSlider" destination="V0v-Un-PnB" id="5bB-wW-gjg"/>
                         <outlet property="flashBrightButton" destination="DZB-ag-wsO" id="mIH-cd-iGh"/>
                         <outlet property="flashCustomButton" destination="7N0-tm-YG3" id="mi4-uA-khK"/>
                         <outlet property="flashCustomSettingsHeightConstraint" destination="Jf1-ju-tiV" id="Z4Y-Y7-RLF"/>
@@ -696,6 +695,7 @@
                         <outlet property="flashStrengthLabel" destination="2DZ-8e-5wB" id="ZUW-GE-GMo"/>
                         <outlet property="flashTestButton" destination="4h3-WR-JL4" id="FuK-ih-GPr"/>
                         <outlet property="flashWarmButton" destination="xdZ-cX-thL" id="qxD-Zw-nQe"/>
+                        <outlet property="warmBrightnessSlider" destination="keC-bT-JDd" id="XyW-K7-0y2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WKX-qY-XlS" userLabel="First Responder" sceneMemberID="firstResponder"/>

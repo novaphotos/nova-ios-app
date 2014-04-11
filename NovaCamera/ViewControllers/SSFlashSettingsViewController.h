@@ -68,8 +68,8 @@
 
 // Custom settings
 @property (nonatomic, strong) IBOutlet UIView *flashCustomSettingsView;
-@property (nonatomic, strong) IBOutlet UISlider *colorTempSlider;
-@property (nonatomic, strong) IBOutlet UISlider *brightnessSlider;
+@property (nonatomic, strong) IBOutlet UISlider *warmBrightnessSlider;
+@property (nonatomic, strong) IBOutlet UISlider *coolBrightnessSlider;
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *flashCustomSettingsHeightConstraint;
 
 // Flash status
