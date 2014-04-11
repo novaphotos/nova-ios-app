@@ -24,17 +24,24 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 static void * NovaFlashServiceStatus = &NovaFlashServiceStatus;
 
 static const NSTimeInterval kFlashSettingsAnimationDuration = 0.25;
+static const CFTimeInterval kTransformAnimationDuration = 0.025;
 static const CFTimeInterval kMinimumTimeBeforeVolumeButtonCapture = 0.1;
+static const CGFloat kZoomMaxScale = 2.5;
 
 @interface SSCameraViewController () {
     NSURL *_showPhotoURL;
     BOOL _editPhoto;
     BOOL _sharePhoto;
     CFTimeInterval _audioSessionTimestamp; // Ugly workaround for premature volume notification
+    
+    // Track zoom scale
+    CGFloat _effectiveScale;
+    CGFloat _beginGestureScale;
 }
 @property (nonatomic, strong) SSCaptureSessionManager *captureSessionManager;
 @property (nonatomic, strong) AVAudioPlayer *captureButtonAudioPlayer;
 @property (nonatomic, strong) MPVolumeView *volumeView;
+- (void)updateZoomTransform;
 - (void)runStillImageCaptureAnimation;
 - (void)showFlashSettingsAnimated:(BOOL)animated;
 - (void)hideFlashSettingsAnimated:(BOOL)animated;
@@ -80,10 +87,18 @@ static const CFTimeInterval kMinimumTimeBeforeVolumeButtonCapture = 0.1;
     // Add stats service
     self.statsService = [SSStatsService sharedService];
     
-    // Add gesture recognizer
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(focusAndExposeTap:)];
+    // Add tap gesture recognizer for focus/expose
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapFrom:)];
     tapGesture.numberOfTapsRequired = 1;
     [self.previewView addGestureRecognizer:tapGesture];
+    
+    // Add pinch gesture recognizer for zoom
+    UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinchFrom:)];
+    pinchGesture.delegate = self;
+    [self.previewView addGestureRecognizer:pinchGesture];
+    
+    // Set effective zoom scale to 1.0 (default value)
+    _effectiveScale = 1.0;
     
     // Set up flash settings
     self.flashSettingsViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"flashSettings"];
@@ -94,6 +109,10 @@ static const CFTimeInterval kMinimumTimeBeforeVolumeButtonCapture = 0.1;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    // Start capture session with current zoom
+    self.captureSessionManager.videoScaleAndCropFactor = _effectiveScale;
     [self.captureSessionManager startSession];
     
     // Add observers
@@ -108,9 +127,20 @@ static const CFTimeInterval kMinimumTimeBeforeVolumeButtonCapture = 0.1;
     
     // Setup capture button
     [self setupCaptureButtonAudioPlayer];
+   
+    // Reset zoom
+    [self resetZoom];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    DDLogVerbose(@"viewDidAppear; effective scale: %g", _effectiveScale);
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
     [self.captureSessionManager stopSession];
     
     // Remove observers
@@ -233,15 +263,33 @@ static const CFTimeInterval kMinimumTimeBeforeVolumeButtonCapture = 0.1;
     [self.captureSessionManager toggleCamera];
 }
 
-- (IBAction)focusAndExposeTap:(id)sender {
-    DDLogVerbose(@"focusAndExposeTap");
-    if ([sender isKindOfClass:[UIGestureRecognizer class]]) {
-        UIGestureRecognizer *gestureRecognizer = (UIGestureRecognizer *)sender;
-        AVCaptureVideoPreviewLayer *previewLayer = (AVCaptureVideoPreviewLayer *)self.previewView.layer;
-        CGPoint viewPoint = [gestureRecognizer locationInView:gestureRecognizer.view];
-        CGPoint devicePoint = [previewLayer captureDevicePointOfInterestForPoint:viewPoint];
-        [self.captureSessionManager focusWithMode:AVCaptureFocusModeAutoFocus exposeWithMode:AVCaptureExposureModeContinuousAutoExposure atDevicePoint:devicePoint];
+- (void)handleTapFrom:(UITapGestureRecognizer *)recognizer {
+    DDLogVerbose(@"handleTapFrom:%@", recognizer);
+    AVCaptureVideoPreviewLayer *previewLayer = (AVCaptureVideoPreviewLayer *)self.previewView.layer;
+    CGPoint viewPoint = [recognizer locationInView:recognizer.view];
+    CGPoint devicePoint = [previewLayer captureDevicePointOfInterestForPoint:viewPoint];
+    [self.captureSessionManager focusWithMode:AVCaptureFocusModeAutoFocus exposeWithMode:AVCaptureExposureModeContinuousAutoExposure atDevicePoint:devicePoint];
+}
+
+- (void)handlePinchFrom:(UIPinchGestureRecognizer *)recognizer {
+    DDLogVerbose(@"handlePinchFrom:%@", recognizer);
+    CGFloat scale = _beginGestureScale * recognizer.scale;
+    if (scale < 1.0) {
+        scale = 1.0;
+    } else if (scale > kZoomMaxScale) {
+        scale = kZoomMaxScale;
     }
+    _effectiveScale = scale;
+    [self updateZoomTransform];
+    self.captureSessionManager.videoScaleAndCropFactor = scale;
+}
+
+- (void)resetZoom {
+    _effectiveScale = 1.0;
+    self.captureSessionManager.videoScaleAndCropFactor = 1.0;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self updateZoomTransform];
+    });
 }
 
 #pragma mark - Properties
@@ -254,6 +302,17 @@ static const CFTimeInterval kMinimumTimeBeforeVolumeButtonCapture = 0.1;
 }
 
 #pragma mark - Private methods
+
+- (void)updateZoomTransform {
+    DDLogVerbose(@"updateZoomTransform; effectiveScale: %g", _effectiveScale);
+    CGAffineTransform transform = CGAffineTransformMakeScale(_effectiveScale, _effectiveScale);
+    CGAffineTransform currTransform = self.previewView.layer.affineTransform;
+    DDLogVerbose(@"Current transform: %@ new transform: %@", NSStringFromCGAffineTransform(currTransform), NSStringFromCGAffineTransform(transform));
+    [CATransaction begin];
+    [CATransaction setAnimationDuration:kTransformAnimationDuration];
+    self.previewView.layer.affineTransform = transform;
+    [CATransaction commit];
+}
 
 - (void)runStillImageCaptureAnimation {
 	dispatch_async(dispatch_get_main_queue(), ^{
@@ -380,6 +439,16 @@ static const CFTimeInterval kMinimumTimeBeforeVolumeButtonCapture = 0.1;
 
 - (void)flashSettingsViewController:(SSFlashSettingsViewController *)flashSettingsViewController didConfirmSettings:(SSFlashSettings)flashSettings {
     [self hideFlashSettingsAnimated:YES];
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
+    if ([gestureRecognizer isKindOfClass:[UIPinchGestureRecognizer class]]) {
+        _beginGestureScale = _effectiveScale;
+        DDLogVerbose(@"pinch gesture beginning with scale %g", _effectiveScale);
+    }
+    return YES;
 }
 
 @end

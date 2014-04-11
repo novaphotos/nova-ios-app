@@ -18,7 +18,7 @@
  * Camera capture view; handles preview, camera capture, displaying of
  * various settings, and transitions to library view
  */
-@interface SSCameraViewController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate, SSFlashSettingsViewControllerDelegate>
+@interface SSCameraViewController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIGestureRecognizerDelegate, SSFlashSettingsViewControllerDelegate>
 
 @property (nonatomic, strong) IBOutlet SSCameraPreviewView *previewView;
 @property (nonatomic, strong) IBOutlet UIButton *captureButton;
@@ -39,6 +39,8 @@
 - (IBAction)showFlashSettings:(id)sender;
 - (IBAction)showLibrary:(id)sender;
 - (IBAction)toggleCamera:(id)sender;
-- (IBAction)focusAndExposeTap:(id)sender;
+- (void)handleTapFrom:(UITapGestureRecognizer *)recognizer;
+- (void)handlePinchFrom:(UIPinchGestureRecognizer *)recognizer;
+- (void)resetZoom;
 
 @end
