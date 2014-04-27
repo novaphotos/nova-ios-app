@@ -10,6 +10,7 @@
 
 const NSString *kSettingsServiceEditAfterCaptureKey = @"SettingsServiceEditAfterCaptureKey";
 const NSString *kSettingsServiceShareAfterCaptureKey = @"SettingsServiceShareAfterCaptureKey";
+const NSString *kSettingsServiceContinuousShootingKey = @"SettingsServiceContinuousShootingKey";
 const NSString *kSettingsServiceShowGridLinesKey = @"SettingsServiceShowGridLinesKey";
 const NSString *kSettingsServiceSquarePhotosKey = @"SettingsServiceSquarePhotosKey";
 const NSString *kSettingsServiceMultipleNovasKey = @"SettingsServiceMultipleNovasKey";
@@ -38,6 +39,7 @@ const NSString *kSettingsServiceMultipleNovasKey = @"SettingsServiceMultipleNova
     NSArray *defaults = @[
                           @NO,      // kSettingsServiceEditAfterCaptureKey
                           @NO,      // kSettingsServiceShareAfterCaptureKey
+                          @NO,      // kSettingsServiceContinuousShootingKey
                           /*
                            * TODO: Re-enable after 0.1.0 release
                            *
@@ -63,6 +65,7 @@ const NSString *kSettingsServiceMultipleNovasKey = @"SettingsServiceMultipleNova
     return @[
              kSettingsServiceEditAfterCaptureKey,
              kSettingsServiceShareAfterCaptureKey,
+             kSettingsServiceContinuousShootingKey,
              /*
               * TODO: Re-enable after 0.1.0 release
               *
@@ -77,6 +80,7 @@ const NSString *kSettingsServiceMultipleNovasKey = @"SettingsServiceMultipleNova
     return @[
              @"Ask to edit after taking",
              @"Ask to share after taking",
+             @"Continuous shooting (skip photo view)",
              /*
               * TODO: Re-enable after 0.1.0 release
               *
