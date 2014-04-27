@@ -225,22 +225,27 @@ static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
                 DDLogVerbose(@"Saving to asset library");
                 __block typeof(self) bSelf = self;
                 [[[ALAssetsLibrary alloc] init] writeImageToSavedPhotosAlbum:[image CGImage] orientation:(ALAssetOrientation)[image imageOrientation] completionBlock:^(NSURL *assetURL, NSError *error) {
-
-                    if ([self.settingsService boolForKey:kSettingsServiceEditAfterCaptureKey]) {
-                        _editPhoto = YES;
+                    
+                    if (![self.settingsService boolForKey:kSettingsServiceContinuousShootingKey]) {
+                        
+                        if ([self.settingsService boolForKey:kSettingsServiceEditAfterCaptureKey]) {
+                            _editPhoto = YES;
+                        } else {
+                            _editPhoto = NO;
+                        }
+                        
+                        if ([self.settingsService boolForKey:kSettingsServiceShareAfterCaptureKey]) {
+                            _sharePhoto = YES;
+                        } else {
+                            _sharePhoto = NO;
+                        }
+                        
+                        _showPhotoURL = assetURL;
+                        
+                        [bSelf performSegueWithIdentifier:@"showPhoto" sender:self];
                     } else {
-                        _editPhoto = NO;
+                        DDLogVerbose(@"Continuous shooting; skipping view screen");
                     }
-                    
-                    if ([self.settingsService boolForKey:kSettingsServiceShareAfterCaptureKey]) {
-                        _sharePhoto = YES;
-                    } else {
-                        _sharePhoto = NO;
-                    }
-                    
-                    _showPhotoURL = assetURL;
-                    
-                    [bSelf performSegueWithIdentifier:@"showPhoto" sender:self];
                 }];
             }
         } shutterHandler:^(int shutterCurtain) {
