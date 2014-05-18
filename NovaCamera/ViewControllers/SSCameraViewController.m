@@ -111,7 +111,10 @@ static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
     // Add pinch gesture recognizer for zoom
     UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinchFrom:)];
     pinchGesture.delegate = self;
-    [self.previewView addGestureRecognizer:pinchGesture];
+    
+    // Temporarily disabled until zoom bugs are resolved. -Joe 2014/05/18
+    // TODO: Fix this
+    // [self.previewView addGestureRecognizer:pinchGesture];
     
     // Set effective zoom scale to 1.0 (default value)
     _scaleAndCropFactor = 1.0;
