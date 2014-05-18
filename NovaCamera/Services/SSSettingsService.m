@@ -8,9 +8,9 @@
 
 #import "SSSettingsService.h"
 
+const NSString *kSettingsServicePreviewAfterCaptureKey = @"SettingsServicePreviewAfterCaptureKey";
 const NSString *kSettingsServiceEditAfterCaptureKey = @"SettingsServiceEditAfterCaptureKey";
 const NSString *kSettingsServiceShareAfterCaptureKey = @"SettingsServiceShareAfterCaptureKey";
-const NSString *kSettingsServiceContinuousShootingKey = @"SettingsServiceContinuousShootingKey";
 const NSString *kSettingsServiceShowGridLinesKey = @"SettingsServiceShowGridLinesKey";
 const NSString *kSettingsServiceSquarePhotosKey = @"SettingsServiceSquarePhotosKey";
 const NSString *kSettingsServiceMultipleNovasKey = @"SettingsServiceMultipleNovasKey";
@@ -37,9 +37,9 @@ const NSString *kSettingsServiceMultipleNovasKey = @"SettingsServiceMultipleNova
 
 - (void)initializeUserDefaults {
     NSArray *defaults = @[
+                          @NO,      // kSettingsServicePreviewAfterCaptureKey
                           @NO,      // kSettingsServiceEditAfterCaptureKey
                           @NO,      // kSettingsServiceShareAfterCaptureKey
-                          @NO,      // kSettingsServiceContinuousShootingKey
                           /*
                            * TODO: Re-enable after 0.1.0 release
                            *
@@ -63,9 +63,9 @@ const NSString *kSettingsServiceMultipleNovasKey = @"SettingsServiceMultipleNova
 
 - (NSArray *)generalSettingsKeys {
     return @[
+             kSettingsServicePreviewAfterCaptureKey,
              kSettingsServiceEditAfterCaptureKey,
              kSettingsServiceShareAfterCaptureKey,
-             kSettingsServiceContinuousShootingKey,
              /*
               * TODO: Re-enable after 0.1.0 release
               *
@@ -78,9 +78,9 @@ const NSString *kSettingsServiceMultipleNovasKey = @"SettingsServiceMultipleNova
 
 - (NSArray *)generalSettingsLocalizedTitles {
     return @[
-             @"Ask to edit after taking",
-             @"Ask to share after taking",
-             @"Continuous shooting (skip photo view)",
+             @"After photo: Preview",
+             @"After photo: Edit",
+             @"After photo: Share",
              /*
               * TODO: Re-enable after 0.1.0 release
               *

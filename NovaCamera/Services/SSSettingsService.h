@@ -8,9 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+extern NSString *kSettingsServicePreviewAfterCaptureKey;
 extern NSString *kSettingsServiceEditAfterCaptureKey;
 extern NSString *kSettingsServiceShareAfterCaptureKey;
-extern NSString *kSettingsServiceContinuousShootingKey;
 extern NSString *kSettingsServiceShowGridLinesKey;
 extern NSString *kSettingsServiceSquarePhotosKey;
 extern NSString *kSettingsServiceMultipleNovasKey;
