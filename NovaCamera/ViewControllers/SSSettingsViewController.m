@@ -79,7 +79,7 @@ static const CGFloat kTableViewHeaderSpacing = 6;
 - (NSArray *)linkTitles {
     return @[
              @"About Nova",
-             @"Help and support",
+             @"Help, support, feedback",
              @"Terms, conditions, privacy"
              ];
 }
