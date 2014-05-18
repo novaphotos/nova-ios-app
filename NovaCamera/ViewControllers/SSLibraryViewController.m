@@ -129,6 +129,7 @@
                                                kAFBlemish,
                                                kAFRedeye,
                                                // Fun things
+                                               kAFSplash,
                                                kAFStickers,
                                                kAFFrames,
                                                kAFDraw,

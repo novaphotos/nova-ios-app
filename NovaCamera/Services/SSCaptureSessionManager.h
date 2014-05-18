@@ -41,6 +41,12 @@
 @property (nonatomic, assign) AVCaptureFlashMode flashMode;
 
 /**
+ * Scale and crop factor
+ * Sets videoScaleAndCropFactor on AVCaptureConnection
+ */
+@property (nonatomic, assign) CGFloat videoScaleAndCropFactor;
+
+/**
  * Specify whether the device should autofocus and autoexpose when the device detects a subject area change (default YES)
  */
 @property (nonatomic, assign) BOOL shouldAutoFocusAndAutoExposeOnDeviceAreaChange;

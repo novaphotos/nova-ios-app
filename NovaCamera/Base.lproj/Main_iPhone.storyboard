@@ -31,7 +31,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Si-W3-Mqg" customClass="SSCameraPreviewView">
+                            <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gOP-u3-1pE" userLabel="Preview Holder">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6ig-CU-Xix" customClass="SSCameraPreviewView">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
+                            <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Si-W3-Mqg" customClass="SSPassThroughView">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
@@ -123,18 +135,29 @@
                                         <rect key="frame" x="277" y="496" width="27" height="27"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
+                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Isx-vn-YYg">
+                                        <rect key="frame" x="48" y="447" width="224" height="34"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <connections>
+                                            <action selector="zoomSliderValueChanged:" destination="vXZ-lx-hvc" eventType="valueChanged" id="dcM-qf-4lq"/>
+                                        </connections>
+                                    </slider>
                                 </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstItem="Ubh-N4-5IW" firstAttribute="top" secondItem="Isx-vn-YYg" secondAttribute="bottom" constant="8" id="5Ef-NM-2eT"/>
                                     <constraint firstItem="GSs-ex-cjL" firstAttribute="top" secondItem="2Si-W3-Mqg" secondAttribute="top" constant="11" id="9fO-IR-LS8"/>
                                     <constraint firstAttribute="trailing" secondItem="gFl-vq-I0h" secondAttribute="trailing" id="C7U-lL-D50"/>
                                     <constraint firstItem="13Y-yO-HUw" firstAttribute="top" secondItem="2Si-W3-Mqg" secondAttribute="top" constant="11" id="DH1-oo-YjZ"/>
                                     <constraint firstItem="gFl-vq-I0h" firstAttribute="leading" secondItem="2Si-W3-Mqg" secondAttribute="leading" id="KmO-0g-iWT"/>
                                     <constraint firstAttribute="bottom" secondItem="nb7-cS-TF2" secondAttribute="bottom" constant="19" id="N0o-su-kXd"/>
+                                    <constraint firstItem="Isx-vn-YYg" firstAttribute="leading" secondItem="2Si-W3-Mqg" secondAttribute="leading" constant="50" id="PUN-3P-746"/>
                                     <constraint firstAttribute="bottom" secondItem="Ubh-N4-5IW" secondAttribute="bottom" constant="8" id="Rsk-sC-b4H"/>
                                     <constraint firstItem="GSs-ex-cjL" firstAttribute="leading" secondItem="2Si-W3-Mqg" secondAttribute="leading" constant="8" id="SS7-ZV-lH8"/>
                                     <constraint firstAttribute="trailing" secondItem="nb7-cS-TF2" secondAttribute="trailing" constant="20" id="Uiy-CB-a42"/>
+                                    <constraint firstAttribute="trailing" secondItem="Isx-vn-YYg" secondAttribute="trailing" constant="50" id="XIk-q1-1oN"/>
                                     <constraint firstItem="lwO-ON-Kzh" firstAttribute="leading" secondItem="2Si-W3-Mqg" secondAttribute="leading" constant="20" id="aC5-4h-xEM"/>
+                                    <constraint firstAttribute="centerX" secondItem="Isx-vn-YYg" secondAttribute="centerX" id="gGa-Ga-8ZS"/>
                                     <constraint firstAttribute="bottom" secondItem="lwO-ON-Kzh" secondAttribute="bottom" constant="19" id="iPN-2m-veb"/>
                                     <constraint firstAttribute="trailing" secondItem="13Y-yO-HUw" secondAttribute="trailing" constant="10" id="ilj-1m-M5A"/>
                                     <constraint firstAttribute="bottom" secondItem="gFl-vq-I0h" secondAttribute="bottom" id="okZ-lc-GM9"/>
@@ -142,12 +165,19 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstAttribute="trailing" secondItem="gOP-u3-1pE" secondAttribute="trailing" id="7e5-U5-cLR"/>
                             <constraint firstItem="2Si-W3-Mqg" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="9om-8H-VTA"/>
+                            <constraint firstItem="gOP-u3-1pE" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="AZW-gh-rnO"/>
+                            <constraint firstItem="gOP-u3-1pE" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="NU0-PW-d5m"/>
+                            <constraint firstAttribute="bottom" secondItem="gOP-u3-1pE" secondAttribute="bottom" id="NgL-vs-kR9"/>
                             <constraint firstAttribute="bottom" secondItem="2Si-W3-Mqg" secondAttribute="bottom" id="URU-JJ-iFY"/>
+                            <constraint firstAttribute="trailing" secondItem="gOP-u3-1pE" secondAttribute="trailing" id="bnD-s8-j5g"/>
                             <constraint firstItem="2Si-W3-Mqg" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="top" id="jcX-ZS-AnB"/>
+                            <constraint firstItem="R1q-RJ-5fu" firstAttribute="top" secondItem="gOP-u3-1pE" secondAttribute="bottom" id="ltg-ww-C3L"/>
                             <constraint firstAttribute="trailing" secondItem="2Si-W3-Mqg" secondAttribute="trailing" id="s9L-iu-SDl"/>
+                            <constraint firstItem="gOP-u3-1pE" firstAttribute="top" secondItem="jDK-1B-82m" secondAttribute="bottom" id="wNx-4E-c3g"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="wUf-kX-Qgc"/>
@@ -157,7 +187,8 @@
                         <outlet property="flashIconImage" destination="FDg-gd-Sz8" id="xYt-gP-1LE"/>
                         <outlet property="flashSettingsButton" destination="nb7-cS-TF2" id="5Fa-fs-NcP"/>
                         <outlet property="generalSettingsButton" destination="GSs-ex-cjL" id="AMh-dc-kr0"/>
-                        <outlet property="previewView" destination="2Si-W3-Mqg" id="aUr-MC-q6I"/>
+                        <outlet property="previewView" destination="6ig-CU-Xix" id="ZU8-aq-ZBd"/>
+                        <outlet property="zoomSlider" destination="Isx-vn-YYg" id="gkM-oK-ZZD"/>
                         <segue destination="4Kg-nv-94b" kind="modal" identifier="showPhoto" modalTransitionStyle="flipHorizontal" id="YwU-7w-q0s"/>
                         <segue destination="EMK-44-5OK" kind="push" identifier="showSettings" id="4ne-YE-5My"/>
                     </connections>
@@ -487,7 +518,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RvU-H5-dth" userLabel="Flash-Off">
-                                                <rect key="frame" x="46" y="10" width="55" height="82"/>
+                                                <rect key="frame" x="23" y="10" width="55" height="82"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                 <state key="normal" image="btn-flash-off">
@@ -498,7 +529,7 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hWX-V3-L6U" userLabel="Flash-Gentle">
-                                                <rect key="frame" x="101" y="10" width="55" height="82"/>
+                                                <rect key="frame" x="78" y="10" width="55" height="82"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                 <state key="normal" image="btn-flash-gentle">
@@ -509,7 +540,7 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xdZ-cX-thL" userLabel="Flash-Warm">
-                                                <rect key="frame" x="156" y="10" width="55" height="82"/>
+                                                <rect key="frame" x="133" y="10" width="55" height="82"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                 <state key="normal" image="btn-flash-warm">
@@ -520,7 +551,7 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DZB-ag-wsO" userLabel="Flash-Bright">
-                                                <rect key="frame" x="211" y="10" width="55" height="82"/>
+                                                <rect key="frame" x="188" y="10" width="55" height="82"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                 <state key="normal" image="btn-flash-bright">
@@ -531,7 +562,7 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7N0-tm-YG3" userLabel="Flash-Custom">
-                                                <rect key="frame" x="266" y="10" width="55" height="82"/>
+                                                <rect key="frame" x="243" y="10" width="55" height="82"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                 <state key="normal" image="btn-flash-custom-selected">
@@ -552,35 +583,35 @@
                                         <rect key="frame" x="0.0" y="93" width="320" height="75"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
-                                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="keC-bT-JDd" userLabel="Color temp slider">
+                                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="keC-bT-JDd" userLabel="Warm brightness slider">
                                                 <rect key="frame" x="138" y="12" width="116" height="34"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <color key="minimumTrackTintColor" red="0.76078438758850098" green="0.76078438758850098" blue="0.76078438758850098" alpha="1" colorSpace="deviceRGB"/>
                                                 <color key="maximumTrackTintColor" red="0.7607843876" green="0.7607843876" blue="0.7607843876" alpha="1" colorSpace="deviceRGB"/>
                                                 <color key="thumbTintColor" red="0.90588241815567017" green="0.40000003576278687" blue="0.29019609093666077" alpha="1" colorSpace="deviceRGB"/>
                                                 <connections>
-                                                    <action selector="flashColorTempChanged:" destination="i9U-49-zHT" eventType="valueChanged" id="gar-dM-D3b"/>
+                                                    <action selector="warmBrightnessChanged:" destination="i9U-49-zHT" eventType="valueChanged" id="y5O-Dv-d3P"/>
                                                 </connections>
                                             </slider>
-                                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="V0v-Un-PnB" userLabel="Brightness slider">
+                                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="V0v-Un-PnB" userLabel="Cool brightness slider">
                                                 <rect key="frame" x="138" y="45" width="116" height="34"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <color key="minimumTrackTintColor" red="0.7607843876" green="0.7607843876" blue="0.7607843876" alpha="1" colorSpace="deviceRGB"/>
                                                 <color key="maximumTrackTintColor" red="0.7607843876" green="0.7607843876" blue="0.7607843876" alpha="1" colorSpace="deviceRGB"/>
                                                 <color key="thumbTintColor" red="0.90588241820000004" green="0.40000003579999999" blue="0.29019609089999998" alpha="1" colorSpace="deviceRGB"/>
                                                 <connections>
-                                                    <action selector="flashBrightnessChanged:" destination="i9U-49-zHT" eventType="valueChanged" id="2ui-3e-asZ"/>
+                                                    <action selector="coolBrightnessChanged:" destination="i9U-49-zHT" eventType="valueChanged" id="Jgi-Zf-y83"/>
                                                 </connections>
                                             </slider>
-                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Color Temp" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rC8-e6-cJ5">
-                                                <rect key="frame" x="66" y="18" width="80" height="21"/>
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Warm brightness" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rC8-e6-cJ5">
+                                                <rect key="frame" x="37" y="18" width="95" height="21"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Brightness" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Kf-Kr-xBy">
-                                                <rect key="frame" x="66" y="51" width="73" height="21"/>
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Cool brightness" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Kf-Kr-xBy">
+                                                <rect key="frame" x="37" y="51" width="88" height="21"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -681,8 +712,7 @@
                     </view>
                     <toolbarItems/>
                     <connections>
-                        <outlet property="brightnessSlider" destination="V0v-Un-PnB" id="V1B-3k-Nl4"/>
-                        <outlet property="colorTempSlider" destination="keC-bT-JDd" id="tJA-LO-xc0"/>
+                        <outlet property="coolBrightnessSlider" destination="V0v-Un-PnB" id="5bB-wW-gjg"/>
                         <outlet property="flashBrightButton" destination="DZB-ag-wsO" id="mIH-cd-iGh"/>
                         <outlet property="flashCustomButton" destination="7N0-tm-YG3" id="mi4-uA-khK"/>
                         <outlet property="flashCustomSettingsHeightConstraint" destination="Jf1-ju-tiV" id="Z4Y-Y7-RLF"/>
@@ -696,6 +726,7 @@
                         <outlet property="flashStrengthLabel" destination="2DZ-8e-5wB" id="ZUW-GE-GMo"/>
                         <outlet property="flashTestButton" destination="4h3-WR-JL4" id="FuK-ih-GPr"/>
                         <outlet property="flashWarmButton" destination="xdZ-cX-thL" id="qxD-Zw-nQe"/>
+                        <outlet property="warmBrightnessSlider" destination="keC-bT-JDd" id="XyW-K7-0y2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WKX-qY-XlS" userLabel="First Responder" sceneMemberID="firstResponder"/>

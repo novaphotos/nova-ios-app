@@ -8,6 +8,7 @@
 
 #import "SSSettingsService.h"
 
+const NSString *kSettingsServicePreviewAfterCaptureKey = @"SettingsServicePreviewAfterCaptureKey";
 const NSString *kSettingsServiceEditAfterCaptureKey = @"SettingsServiceEditAfterCaptureKey";
 const NSString *kSettingsServiceShareAfterCaptureKey = @"SettingsServiceShareAfterCaptureKey";
 const NSString *kSettingsServiceShowGridLinesKey = @"SettingsServiceShowGridLinesKey";
@@ -36,6 +37,7 @@ const NSString *kSettingsServiceMultipleNovasKey = @"SettingsServiceMultipleNova
 
 - (void)initializeUserDefaults {
     NSArray *defaults = @[
+                          @NO,      // kSettingsServicePreviewAfterCaptureKey
                           @NO,      // kSettingsServiceEditAfterCaptureKey
                           @NO,      // kSettingsServiceShareAfterCaptureKey
                           /*
@@ -61,6 +63,7 @@ const NSString *kSettingsServiceMultipleNovasKey = @"SettingsServiceMultipleNova
 
 - (NSArray *)generalSettingsKeys {
     return @[
+             kSettingsServicePreviewAfterCaptureKey,
              kSettingsServiceEditAfterCaptureKey,
              kSettingsServiceShareAfterCaptureKey,
              /*
@@ -75,8 +78,9 @@ const NSString *kSettingsServiceMultipleNovasKey = @"SettingsServiceMultipleNova
 
 - (NSArray *)generalSettingsLocalizedTitles {
     return @[
-             @"Ask to edit after taking",
-             @"Ask to share after taking",
+             @"After photo: Preview",
+             @"After photo: Edit",
+             @"After photo: Share",
              /*
               * TODO: Re-enable after 0.1.0 release
               *

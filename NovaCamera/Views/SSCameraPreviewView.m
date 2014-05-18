@@ -46,6 +46,11 @@
     return [AVCaptureVideoPreviewLayer class];
 }
 
+// Don't use autolayout
+- (BOOL)translatesAutoresizingMaskIntoConstraints {
+    return YES;
+}
+
 - (AVCaptureSession *)session {
     AVCaptureVideoPreviewLayer *layer = (AVCaptureVideoPreviewLayer *)self.layer;
     return layer.session;

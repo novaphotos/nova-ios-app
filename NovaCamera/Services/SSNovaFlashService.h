@@ -25,8 +25,8 @@ typedef enum {
  */
 typedef struct {
     SSFlashMode flashMode;
-    double flashColorTemperature;
-    double flashBrightness;
+    double warmBrightness;
+    double coolBrightness;
 } SSFlashSettings;
 
 NSString * SSFlashSettingsDescribe(SSFlashSettings settings);
@@ -34,9 +34,9 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings);
 /**
  * Predefined flash settings
  */
-static const SSFlashSettings SSFlashSettingsGentle = { SSFlashModeGentle, 0.5, 0.25 };
-static const SSFlashSettings SSFlashSettingsWarm = { SSFlashModeWarm, 1.0, 0.75 };
-static const SSFlashSettings SSFlashSettingsBright = { SSFlashModeBright, 0.5, 1.0 };
+static const SSFlashSettings SSFlashSettingsGentle = { SSFlashModeGentle, 0.25, 0.25 };
+static const SSFlashSettings SSFlashSettingsWarm = { SSFlashModeWarm, 0.75, 0.0 };
+static const SSFlashSettings SSFlashSettingsBright = { SSFlashModeBright, 1.0, 1.0 };
 static const SSFlashSettings SSFlashSettingsCustomDefault = { SSFlashModeCustom, 0.5, 0.5 };
 
 /**

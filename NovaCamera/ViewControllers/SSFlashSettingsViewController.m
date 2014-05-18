@@ -55,12 +55,12 @@ static void * NovaFlashServiceStatus = &NovaFlashServiceStatus;
 /**
  * Persist changes to color temp to flashSettings
  */
-- (IBAction)flashColorTempChanged:(id)sender;
+- (IBAction)warmBrightnessChanged:(id)sender;
 
 /**
  * Persist changes to brightness to flashSettings
  */
-- (IBAction)flashBrightnessChanged:(id)sender;
+- (IBAction)coolBrightnessChanged:(id)sender;
 
 /**
  * Capture background view taps; hide the flash view
@@ -119,8 +119,8 @@ static void * NovaFlashServiceStatus = &NovaFlashServiceStatus;
     
     [[SSTheme currentTheme] updateFontsInView:self.view includeSubviews:YES];
     
-    [[SSTheme currentTheme] styleSlider:self.brightnessSlider];
-    [[SSTheme currentTheme] styleSlider:self.colorTempSlider];
+    [[SSTheme currentTheme] styleSlider:self.coolBrightnessSlider];
+    [[SSTheme currentTheme] styleSlider:self.warmBrightnessSlider];
     
     // Set up the background view to respond to tap events, so that the view can
     // be dismissed when tapped.
@@ -189,8 +189,8 @@ static void * NovaFlashServiceStatus = &NovaFlashServiceStatus;
             settings = SSFlashSettingsWarm;
             break;
         default:
-            settings.flashBrightness = 0.5;
-            settings.flashColorTemperature = 0.5;
+            settings.warmBrightness = 0.5;
+            settings.coolBrightness = 0.5;
             settings.flashMode = mode;
             break;
     }
@@ -218,8 +218,8 @@ static void * NovaFlashServiceStatus = &NovaFlashServiceStatus;
     SSFlashSettings oldSettings = _flashSettings;
     _flashSettings = flashSettings;
     
-    self.colorTempSlider.value = flashSettings.flashColorTemperature;
-    self.brightnessSlider.value = flashSettings.flashBrightness;
+    self.warmBrightnessSlider.value = flashSettings.warmBrightness;
+    self.coolBrightnessSlider.value = flashSettings.coolBrightness;
     
     if (flashSettings.flashMode == SSFlashModeCustom && oldSettings.flashMode != SSFlashModeCustom) {
         // Show custom settings
@@ -336,15 +336,15 @@ static void * NovaFlashServiceStatus = &NovaFlashServiceStatus;
     self.flashStrengthLabel.text = strengthStr;
 }
 
-- (IBAction)flashColorTempChanged:(id)sender {
+- (IBAction)warmBrightnessChanged:(id)sender {
     SSFlashSettings settings = self.flashSettings;
-    settings.flashColorTemperature = self.colorTempSlider.value;
+    settings.warmBrightness = self.warmBrightnessSlider.value;
     self.flashSettings = settings;
 }
 
-- (IBAction)flashBrightnessChanged:(id)sender {
+- (IBAction)coolBrightnessChanged:(id)sender {
     SSFlashSettings settings = self.flashSettings;
-    settings.flashBrightness = self.brightnessSlider.value;
+    settings.coolBrightness = self.coolBrightnessSlider.value;
     self.flashSettings = settings;
 }
 

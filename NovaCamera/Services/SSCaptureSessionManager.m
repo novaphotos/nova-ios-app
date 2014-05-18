@@ -41,6 +41,7 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
 @synthesize focusMode=_focusMode;
 @synthesize exposureMode=_exposureMode;
 @synthesize flashMode=_flashMode;
+@synthesize videoScaleAndCropFactor=_videoScaleAndCropFactor;
 
 @synthesize sessionQueue=_sessionQueue;
 @synthesize device=_device;
@@ -54,6 +55,7 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
         self.focusMode = AVCaptureFocusModeContinuousAutoFocus;
         self.exposureMode = AVCaptureExposureModeContinuousAutoExposure;
         self.flashMode = AVCaptureFlashModeOff;
+        self.videoScaleAndCropFactor = 1.0;
         self.shouldAutoFocusAndAutoExposeOnDeviceAreaChange = YES;
         self.shouldAutoFocusAndExposeOnDeviceChange = YES;
         self.videoGravity = AVLayerVideoGravityResizeAspectFill;
@@ -214,6 +216,11 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
     dispatch_async(self.sessionQueue, ^{
         // Set up capture connection
         AVCaptureConnection *connection = [self.stillImageOutput connectionWithMediaType:AVMediaTypeVideo];
+        if (self.videoScaleAndCropFactor <= connection.videoMaxScaleAndCropFactor) {
+            connection.videoScaleAndCropFactor = self.videoScaleAndCropFactor;
+        } else {
+            DDLogError(@"Unable to set videoScaleAndCropFactor %g as it is beyond the current AVCaptureConnection's maximum of %g", self.videoScaleAndCropFactor, connection.videoMaxScaleAndCropFactor);
+        }
         
         // Attempt to set orientation
         if ([connection isVideoOrientationSupported]) {
@@ -347,6 +354,30 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
             }
         }
     });
+}
+
+- (void)setVideoScaleAndCropFactor:(CGFloat)videoScaleAndCropFactor {
+    DDLogVerbose(@"setVideoScaleAndCropFactor:%g", videoScaleAndCropFactor);
+    if (_videoScaleAndCropFactor != videoScaleAndCropFactor) {
+        [self willChangeValueForKey:@"videoScaleAndCropFactor"];
+        _videoScaleAndCropFactor = videoScaleAndCropFactor;
+        [self didChangeValueForKey:@"videoScaleAndCropFactor"];
+        
+        // Attempt to set in the running session
+        if (self.sessionRunningAndDeviceAuthorized) {
+            dispatch_async(self.sessionQueue, ^{
+                AVCaptureConnection *connection = [self.stillImageOutput connectionWithMediaType:AVMediaTypeVideo];
+                if (connection) {
+                    if (self.videoScaleAndCropFactor <= connection.videoMaxScaleAndCropFactor) {
+                        DDLogVerbose(@"Setting videoScaleAndCropFactor to %g on currently running session", videoScaleAndCropFactor);
+                        connection.videoScaleAndCropFactor = videoScaleAndCropFactor;
+                    } else {
+                        DDLogError(@"Unable to set videoScaleAndCropFactor %g as it is beyond the current AVCaptureConnection's maximum of %g", videoScaleAndCropFactor, connection.videoMaxScaleAndCropFactor);
+                    }
+                }
+            });
+        }
+    }
 }
 
 - (BOOL)isSessionRunningAndDeviceAuthorized {

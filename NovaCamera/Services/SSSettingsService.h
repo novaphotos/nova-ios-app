@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+extern NSString *kSettingsServicePreviewAfterCaptureKey;
 extern NSString *kSettingsServiceEditAfterCaptureKey;
 extern NSString *kSettingsServiceShareAfterCaptureKey;
 extern NSString *kSettingsServiceShowGridLinesKey;
