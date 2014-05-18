@@ -221,6 +221,14 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
             uint8_t warm = (uint8_t)(pctWarm * 255.0);
             uint8_t cool = (uint8_t)(pctCool * 255.0);
             
+            // Protect current: TODO, move this into NovaSDK when more stable
+            if (warm > 0 && warm < 64) {
+                warm = 64;
+            }
+            if (cool > 0 && cool < 64) {
+                cool = 64;
+            }
+            
             nvFlashSettings = [NVFlashSettings customWarm:warm cool:cool];
             break;
         }
