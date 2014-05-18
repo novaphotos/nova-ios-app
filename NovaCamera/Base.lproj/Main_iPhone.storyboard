@@ -31,10 +31,17 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6ig-CU-Xix" customClass="SSCameraPreviewView">
+                            <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gOP-u3-1pE" userLabel="Preview Holder">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6ig-CU-Xix" customClass="SSCameraPreviewView">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
                             <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Si-W3-Mqg" customClass="SSPassThroughView">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
@@ -158,16 +165,19 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="6ig-CU-Xix" firstAttribute="top" secondItem="jDK-1B-82m" secondAttribute="bottom" id="2z9-ZF-fvn"/>
-                            <constraint firstItem="R1q-RJ-5fu" firstAttribute="top" secondItem="6ig-CU-Xix" secondAttribute="bottom" id="5Wh-pg-hcl"/>
+                            <constraint firstAttribute="trailing" secondItem="gOP-u3-1pE" secondAttribute="trailing" id="7e5-U5-cLR"/>
                             <constraint firstItem="2Si-W3-Mqg" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="9om-8H-VTA"/>
+                            <constraint firstItem="gOP-u3-1pE" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="AZW-gh-rnO"/>
+                            <constraint firstItem="gOP-u3-1pE" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="NU0-PW-d5m"/>
+                            <constraint firstAttribute="bottom" secondItem="gOP-u3-1pE" secondAttribute="bottom" id="NgL-vs-kR9"/>
                             <constraint firstAttribute="bottom" secondItem="2Si-W3-Mqg" secondAttribute="bottom" id="URU-JJ-iFY"/>
-                            <constraint firstItem="6ig-CU-Xix" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="idS-gh-ofS"/>
-                            <constraint firstAttribute="trailing" secondItem="6ig-CU-Xix" secondAttribute="trailing" id="ikp-aH-wEc"/>
+                            <constraint firstAttribute="trailing" secondItem="gOP-u3-1pE" secondAttribute="trailing" id="bnD-s8-j5g"/>
                             <constraint firstItem="2Si-W3-Mqg" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="top" id="jcX-ZS-AnB"/>
+                            <constraint firstItem="R1q-RJ-5fu" firstAttribute="top" secondItem="gOP-u3-1pE" secondAttribute="bottom" id="ltg-ww-C3L"/>
                             <constraint firstAttribute="trailing" secondItem="2Si-W3-Mqg" secondAttribute="trailing" id="s9L-iu-SDl"/>
+                            <constraint firstItem="gOP-u3-1pE" firstAttribute="top" secondItem="jDK-1B-82m" secondAttribute="bottom" id="wNx-4E-c3g"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="wUf-kX-Qgc"/>

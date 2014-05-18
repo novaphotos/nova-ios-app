@@ -42,6 +42,10 @@ static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
     // Zoom slider state
     BOOL _zoomSliderVisible;
     CFTimeInterval _zoomActiveTimestamp;
+    
+    // Temporary storage for zoom data
+    CGFloat _previousScaleAndCropFactor;
+    CGFloat _previousZoomSliderValue;
 }
 @property (nonatomic, strong) SSCaptureSessionManager *captureSessionManager;
 @property (nonatomic, strong) AVAudioPlayer *captureButtonAudioPlayer;
@@ -56,6 +60,8 @@ static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
 - (void)setupZoomSlider;
 - (void)zoomActive;
 - (void)zoomCheckActivityAndClose;
+- (void)saveAndResetZoom;
+- (void)restoreOrResetZoom;
 @end
 
 @implementation SSCameraViewController
@@ -88,6 +94,8 @@ static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
     
     // Setup preview layer
     self.previewView.session = self.captureSessionManager.session;
+    //self.previewView.layer.anchorPoint = CGPointMake(self.previewView.bounds.size.width / 2, self.previewView.bounds.size.height / 2);
+    self.previewView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
     // Add flash service
     self.flashService = [SSNovaFlashService sharedService];
@@ -138,7 +146,10 @@ static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
     [self setupCaptureButtonAudioPlayer];
    
     // Reset zoom
-    [self resetZoom];
+    [self restoreOrResetZoom];
+    
+    // Manually ensure preview view is full-screen
+    self.previewView.frame = self.view.bounds;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -154,6 +165,13 @@ static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
     [self.captureSessionManager removeObserver:self forKeyPath:@"sessionRunningAndDeviceAuthorized" context:SessionRunningAndDeviceAuthorizedContext];
     [self.flashService removeObserver:self forKeyPath:@"status"];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"AVSystemController_SystemVolumeDidChangeNotification" object:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    // Store zoom information and reset before disappearing
+    [self saveAndResetZoom];
 }
 
 - (void)didReceiveMemoryWarning
@@ -182,6 +200,18 @@ static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
     } else {
         DDLogVerbose(@"Got unknown segue %@", segue.identifier);
     }
+}
+
+
+// Rotation; reset preview layer prior to rotation and restore after
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    [self saveAndResetZoom];
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    [self restoreOrResetZoom];
 }
 
 #pragma mark - KVO
@@ -519,6 +549,23 @@ static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
             });
         }
     }
+}
+
+- (void)saveAndResetZoom {
+    _previousScaleAndCropFactor = self.scaleAndCropFactor;
+    _previousZoomSliderValue = self.zoomSlider.value;
+    [self resetZoom];
+    self.previewView.center = self.view.center;
+}
+
+- (void)restoreOrResetZoom {
+    if (_previousScaleAndCropFactor > 0.01) {
+        self.scaleAndCropFactor = _previousScaleAndCropFactor;
+        self.zoomSlider.value = _previousZoomSliderValue;
+    } else {
+        [self resetZoom];
+    }
+    self.previewView.center = self.view.center;
 }
 
 #pragma mark - SSFlashSettingsViewControllerDelegate
