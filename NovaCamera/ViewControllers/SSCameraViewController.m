@@ -132,7 +132,10 @@ static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
+
+    // Hide nav bar
+    [self.navigationController setNavigationBarHidden:YES animated:animated];
+
     [self.captureSessionManager startSession];
     
     // Add observers
@@ -153,6 +156,7 @@ static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
     
     // Manually ensure preview view is full-screen
     self.previewView.frame = self.view.bounds;
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -175,6 +179,9 @@ static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
     
     // Store zoom information and reset before disappearing
     [self saveAndResetZoom];
+
+    // Show nav bar
+    [self.navigationController setNavigationBarHidden:NO animated:animated];
 }
 
 - (void)didReceiveMemoryWarning

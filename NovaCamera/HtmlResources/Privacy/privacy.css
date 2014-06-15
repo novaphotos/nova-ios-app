@@ -1,0 +1,93 @@
+
+body {
+    font-family: "Helvetica Neue", helvetica, arial, sans-serif;
+    background-color: #333;
+    margin: 0;
+}
+
+.policies {
+    padding: 0;
+    margin: 0;
+}
+
+.policies > section {
+}
+
+.policies > section > header {
+    position: relative;
+    display: block;
+    outline: 1px solid #999;
+    height: 40px;
+    color: #333;
+    background: url(icon_22174.svg) center right no-repeat;
+    background-size: 40px;
+}
+
+.policies > section.warn > header {
+    background-color: #ffffcc;
+}
+
+.policies > section.good > header {
+    background-color: #ccffcc;
+}
+
+.policies > section > header img {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 30px;
+    height: 30px;
+    border: 0;
+}
+
+.policies > section > header * {
+    cursor: pointer;
+}
+
+.policies > section > header h1 {
+    display: none;
+}
+
+.policies > section > header h2 {
+    display: block;
+    position: absolute;
+    left: 40px;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    font-weight: 500;
+    padding-right: 10px;
+    line-height: 40px;
+    margin: 0;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    font-size: 11px;
+}
+
+.policies > section > article {
+    max-height: 0;
+    color: #fff;
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: 12px;
+    overflow-y: hidden;
+    margin: 0;
+    -webkit-transition: all 0.5s linear;
+}
+
+.policies > section > article a {
+    color: #ffa;
+}
+
+.policies > section.expanded > article {
+    max-height: 1000px;
+}
+
+.policies > section > article p {
+}
+
+.policies > section > header h3 {
+}

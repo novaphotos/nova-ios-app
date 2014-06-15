@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		122810D818CE50B10052255C /* SSStatsService.m in Sources */ = {isa = PBXBuildFile; fileRef = 122810D718CE50B10052255C /* SSStatsService.m */; };
 		1235487718DDFBF50027EB9C /* SSAviaryWhiteLabel.avyPermission in Resources */ = {isa = PBXBuildFile; fileRef = 1235487618DDFBF50027EB9C /* SSAviaryWhiteLabel.avyPermission */; };
+		129E0024194DB7C100DE1723 /* HtmlResources in Resources */ = {isa = PBXBuildFile; fileRef = 129E0023194DB7C100DE1723 /* HtmlResources */; };
+		129E0027194DB9BA00DE1723 /* SSPrivacyPolicyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 129E0026194DB9BA00DE1723 /* SSPrivacyPolicyViewController.m */; };
 		2719089E187EC5E500996A2D /* SSPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2719089D187EC5E500996A2D /* SSPhotoViewController.m */; };
 		2724C98018639EEB00A68E0D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2724C97F18639EEB00A68E0D /* Foundation.framework */; };
 		2724C98218639EEB00A68E0D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2724C98118639EEB00A68E0D /* CoreGraphics.framework */; };
@@ -62,6 +64,9 @@
 		122810D618CE50B10052255C /* SSStatsService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSStatsService.h; sourceTree = "<group>"; };
 		122810D718CE50B10052255C /* SSStatsService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSStatsService.m; sourceTree = "<group>"; };
 		1235487618DDFBF50027EB9C /* SSAviaryWhiteLabel.avyPermission */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SSAviaryWhiteLabel.avyPermission; sourceTree = "<group>"; };
+		129E0023194DB7C100DE1723 /* HtmlResources */ = {isa = PBXFileReference; lastKnownFileType = folder; name = HtmlResources; path = NovaCamera/HtmlResources; sourceTree = "<group>"; };
+		129E0025194DB9BA00DE1723 /* SSPrivacyPolicyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSPrivacyPolicyViewController.h; sourceTree = "<group>"; };
+		129E0026194DB9BA00DE1723 /* SSPrivacyPolicyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSPrivacyPolicyViewController.m; sourceTree = "<group>"; };
 		2719089C187EC5E500996A2D /* SSPhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSPhotoViewController.h; sourceTree = "<group>"; };
 		2719089D187EC5E500996A2D /* SSPhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSPhotoViewController.m; sourceTree = "<group>"; };
 		2724C97C18639EEB00A68E0D /* NovaCamera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NovaCamera.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -152,6 +157,7 @@
 		2724C97318639EEB00A68E0D = {
 			isa = PBXGroup;
 			children = (
+				129E0023194DB7C100DE1723 /* HtmlResources */,
 				2724C98518639EEB00A68E0D /* NovaCamera */,
 				2724C9A718639EEB00A68E0D /* NovaCameraTests */,
 				2724C97E18639EEB00A68E0D /* Frameworks */,
@@ -293,6 +299,8 @@
 				27F266C11892710F00B47C7B /* SSFlashSettingsViewController.m */,
 				27AE1C08189910A300C27C38 /* SSSettingsViewController.h */,
 				27AE1C09189910A300C27C38 /* SSSettingsViewController.m */,
+				129E0025194DB9BA00DE1723 /* SSPrivacyPolicyViewController.h */,
+				129E0026194DB9BA00DE1723 /* SSPrivacyPolicyViewController.m */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -403,6 +411,7 @@
 				2724C99B18639EEB00A68E0D /* Images.xcassets in Resources */,
 				2724C99318639EEB00A68E0D /* Main_iPhone.storyboard in Resources */,
 				2724C98A18639EEB00A68E0D /* InfoPlist.strings in Resources */,
+				129E0024194DB7C100DE1723 /* HtmlResources in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -518,6 +527,7 @@
 				2724C99018639EEB00A68E0D /* SSAppDelegate.m in Sources */,
 				27BB94331863AB3300A31BCF /* SSCameraPreviewView.m in Sources */,
 				2752B3A21884BC0F00E0C870 /* SSCenteredScrollView.m in Sources */,
+				129E0027194DB9BA00DE1723 /* SSPrivacyPolicyViewController.m in Sources */,
 				27AE1C10189918D000C27C38 /* SSSettingsCell.m in Sources */,
 				272F87C518752DE90005BA58 /* SSCaptureSessionManager.m in Sources */,
 				27AE1C071897700B00C27C38 /* SSTheme.m in Sources */,
