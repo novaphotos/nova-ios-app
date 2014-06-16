@@ -1,6 +1,8 @@
 Nova Camera for iOS
 ===================
 
+[![Bountysource](https://www.bountysource.com/badge/tracker?tracker_id=545481)](https://www.bountysource.com/trackers/545481-nova-ios-app?utm_source=545481&utm_medium=shield&utm_campaign=TRACKER_BADGE)
+
 This is the Nova camera application. See https://wantnova.com/ or http://kck.st/1dOtham
 
 Requirements
