@@ -7,6 +7,7 @@
 //
 
 #import "SSStatsService.h"
+#import "SSSettingsService.h"
 #import <Mixpanel/Mixpanel.h>
 
 @implementation SSStatsService
@@ -26,6 +27,10 @@
 }
 
 - (void)report: (NSString *)eventName {
+    if ([[SSSettingsService sharedService] boolForKey:kSettingsServiceOptOutStatsKey]) {
+        return;
+    }
+    
     DDLogVerbose(@"Stat reported: %@", eventName);
     dispatch_async(dispatch_get_main_queue(), ^{
         Mixpanel *mixpanel = [Mixpanel sharedInstance];
@@ -35,6 +40,10 @@
 }
 
 - (void)report: (NSString *)eventName properties:(NSDictionary *)properties {
+    if ([[SSSettingsService sharedService] boolForKey:kSettingsServiceOptOutStatsKey]) {
+        return;
+    }
+    
     DDLogVerbose(@"Stat reported: %@ %@", eventName, properties);
     dispatch_async(dispatch_get_main_queue(), ^{
         Mixpanel *mixpanel = [Mixpanel sharedInstance];

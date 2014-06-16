@@ -14,6 +14,7 @@ const NSString *kSettingsServiceShareAfterCaptureKey = @"SettingsServiceShareAft
 const NSString *kSettingsServiceShowGridLinesKey = @"SettingsServiceShowGridLinesKey";
 const NSString *kSettingsServiceSquarePhotosKey = @"SettingsServiceSquarePhotosKey";
 const NSString *kSettingsServiceMultipleNovasKey = @"SettingsServiceMultipleNovasKey";
+const NSString *kSettingsServiceOptOutStatsKey = @"SettingsServiceOptOutStats";
 
 @implementation SSSettingsService
 
@@ -40,6 +41,7 @@ const NSString *kSettingsServiceMultipleNovasKey = @"SettingsServiceMultipleNova
                           @NO,      // kSettingsServicePreviewAfterCaptureKey
                           @NO,      // kSettingsServiceEditAfterCaptureKey
                           @NO,      // kSettingsServiceShareAfterCaptureKey
+                          @NO,      // kSettingsServiceOptOutStatsKey
                           /*
                            * TODO: Re-enable after 0.1.0 release
                            *
@@ -66,6 +68,7 @@ const NSString *kSettingsServiceMultipleNovasKey = @"SettingsServiceMultipleNova
              kSettingsServicePreviewAfterCaptureKey,
              kSettingsServiceEditAfterCaptureKey,
              kSettingsServiceShareAfterCaptureKey,
+             kSettingsServiceOptOutStatsKey,
              /*
               * TODO: Re-enable after 0.1.0 release
               *
@@ -81,6 +84,7 @@ const NSString *kSettingsServiceMultipleNovasKey = @"SettingsServiceMultipleNova
              @"After photo: Preview",
              @"After photo: Edit",
              @"After photo: Share",
+             @"Opt-out of usage stats",
              /*
               * TODO: Re-enable after 0.1.0 release
               *

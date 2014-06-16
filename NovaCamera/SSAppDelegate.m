@@ -14,7 +14,6 @@
 #import <CocoaLumberjack/DDTTYLogger.h>
 #import <Crashlytics/Crashlytics.h>
 #import <CrashlyticsLumberjack/CrashlyticsLogger.h>
-#import <Mixpanel/Mixpanel.h>
 
 @implementation SSAppDelegate {
     SSSettingsService *_settingsService;
@@ -34,7 +33,10 @@
     // CocoaLumberjack logging setup
     // Xcode console logging
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
-    if (crashlyticsAPIKey && crashlyticsAPIKey.length > 0) {
+    
+    bool optOutStats = [[SSSettingsService sharedService] boolForKey:kSettingsServiceOptOutStatsKey];
+    
+    if (!optOutStats && crashlyticsAPIKey && crashlyticsAPIKey.length > 0) {
         // Log warnings to Crashlytics
         [DDLog addLogger:[CrashlyticsLogger sharedInstance] withLogLevel:LOG_LEVEL_WARN];
     }
@@ -55,7 +57,7 @@
     // Anonymous stats service
     _statsService = [SSStatsService sharedService];
 
-    if (crashlyticsAPIKey && crashlyticsAPIKey.length > 0) {
+    if (!optOutStats && crashlyticsAPIKey && crashlyticsAPIKey.length > 0) {
         // Crashlytics crash reporting service. This should be the last thing in this method.
         [Crashlytics startWithAPIKey:crashlyticsAPIKey];
     }
