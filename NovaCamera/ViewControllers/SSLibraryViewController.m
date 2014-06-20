@@ -351,6 +351,14 @@
 
         [hud hide:YES];
 
+        if (image == nil) {
+            [self.statsService report:@"Aviary Fail"];
+            NSString *msg = @"Error loading photo.";
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:msg delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+            [alert show];
+            return;
+        }
+
         // Create editor
         bSelf.photoEditorController = [[AFPhotoEditorController alloc] initWithImage:image];
         [bSelf.photoEditorController setDelegate:bSelf];
