@@ -275,6 +275,15 @@
         assetURL = [self.libraryService assetURLAtIndex:self.selectedIndex];
     }
     [self.libraryService fullResolutionImageForAssetWithURL:assetURL withCompletion:^(UIImage *image) {
+
+        if (image == nil) {
+            [self.statsService report:@"Share Fail"];
+            NSString *msg = @"Error sharing photo.";
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:msg delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+            [alert show];
+            return;
+        }
+
         NSArray *activityItems = @[
                                    image,
                                    ];
