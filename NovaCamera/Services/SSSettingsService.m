@@ -15,6 +15,7 @@ const NSString *kSettingsServiceShowGridLinesKey = @"SettingsServiceShowGridLine
 const NSString *kSettingsServiceSquarePhotosKey = @"SettingsServiceSquarePhotosKey";
 const NSString *kSettingsServiceMultipleNovasKey = @"SettingsServiceMultipleNovasKey";
 const NSString *kSettingsServiceOptOutStatsKey = @"SettingsServiceOptOutStats";
+const NSString *kSettingsServiceEnableVolumeButtonTriggerKey = @"SettingsServiceEnableVolumeButtonTrigger";
 
 @implementation SSSettingsService
 
@@ -42,6 +43,7 @@ const NSString *kSettingsServiceOptOutStatsKey = @"SettingsServiceOptOutStats";
                           @NO,      // kSettingsServiceEditAfterCaptureKey
                           @NO,      // kSettingsServiceShareAfterCaptureKey
                           @NO,      // kSettingsServiceOptOutStatsKey
+                          @YES,     // kSettingsServiceEnableVolumeButtonTriggerKey
                           /*
                            * TODO: Re-enable after 0.1.0 release
                            *
@@ -69,6 +71,7 @@ const NSString *kSettingsServiceOptOutStatsKey = @"SettingsServiceOptOutStats";
              kSettingsServiceEditAfterCaptureKey,
              kSettingsServiceShareAfterCaptureKey,
              kSettingsServiceOptOutStatsKey,
+             kSettingsServiceEnableVolumeButtonTriggerKey,
              /*
               * TODO: Re-enable after 0.1.0 release
               *
@@ -85,6 +88,7 @@ const NSString *kSettingsServiceOptOutStatsKey = @"SettingsServiceOptOutStats";
              @"After photo: Edit",
              @"After photo: Share",
              @"Opt-out of usage stats",
+             @"Volume keys trigger shutter",
              /*
               * TODO: Re-enable after 0.1.0 release
               *

@@ -491,6 +491,12 @@ static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
 }
 
 - (void)volumeChanged:(id)sender {
+    bool enabled = [[SSSettingsService sharedService] boolForKey:kSettingsServiceEnableVolumeButtonTriggerKey];
+
+    if (!enabled) {
+        return;
+    }
+
     DDLogVerbose(@"Volume button pressed");
     CFTimeInterval timeSinceSessionSetup = CACurrentMediaTime() - _audioSessionTimestamp;
     if (timeSinceSessionSetup > kMinimumTimeBeforeVolumeButtonCapture) {

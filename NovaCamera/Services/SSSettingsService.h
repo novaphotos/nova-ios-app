@@ -15,6 +15,7 @@ extern NSString *kSettingsServiceShowGridLinesKey;
 extern NSString *kSettingsServiceSquarePhotosKey;
 extern NSString *kSettingsServiceMultipleNovasKey;
 extern NSString *kSettingsServiceOptOutStatsKey;
+extern NSString *kSettingsServiceEnableVolumeButtonTriggerKey;
 
 /**
  * Simple class managing general Nova settings.
