@@ -17,6 +17,9 @@ const NSString *kSettingsServiceMultipleNovasKey = @"SettingsServiceMultipleNova
 const NSString *kSettingsServiceOptOutStatsKey = @"SettingsServiceOptOutStats";
 const NSString *kSettingsServiceEnableVolumeButtonTriggerKey = @"SettingsServiceEnableVolumeButtonTrigger";
 
+// Private settings that are never shown to user
+const NSString *kSettingsServiceOneTimeAskedOptOutQuestion = @"SettingsServiceOneTimeAskedOptOutQuestion";
+
 @implementation SSSettingsService
 
 - (id)init {
@@ -42,7 +45,7 @@ const NSString *kSettingsServiceEnableVolumeButtonTriggerKey = @"SettingsService
                           @NO,      // kSettingsServicePreviewAfterCaptureKey
                           @NO,      // kSettingsServiceEditAfterCaptureKey
                           @NO,      // kSettingsServiceShareAfterCaptureKey
-                          @NO,      // kSettingsServiceOptOutStatsKey
+                          @YES,     // kSettingsServiceOptOutStatsKey
                           @YES,     // kSettingsServiceEnableVolumeButtonTriggerKey
                           /*
                            * TODO: Re-enable after 0.1.0 release
@@ -106,6 +109,14 @@ const NSString *kSettingsServiceEnableVolumeButtonTriggerKey = @"SettingsService
         title = [[self generalSettingsLocalizedTitles] objectAtIndex:idx];
     }
     return title;
+}
+
+- (BOOL)isKeySet:(NSString *)key {
+    return [[NSUserDefaults standardUserDefaults] objectForKey:key] != nil;
+}
+
+- (void)clearKey:(NSString *)key {
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
 }
 
 - (BOOL)boolForKey:(NSString *)key {
