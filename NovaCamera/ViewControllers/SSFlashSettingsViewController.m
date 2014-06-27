@@ -329,7 +329,7 @@ static void * NovaFlashServiceStatus = &NovaFlashServiceStatus;
             break;
         case SSNovaFlashStatusUnknown:
         default:
-            statusStr = @"Unknown";
+            statusStr = @"";
             break;
     }
     self.flashStatusLabel.text = statusStr;
