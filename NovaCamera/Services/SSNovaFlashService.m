@@ -283,7 +283,6 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
     if ([keyPath isEqualToString:@"status"]) {
         [self willChangeValueForKey:@"status"];
         _status = [[self class] novaFlashStatusForNVFlashServiceStatus:self.nvFlashService.status];
-        DDLogVerbose(@"Nova flash status changed to %d", _status);
         [self didChangeValueForKey:@"status"];
     }
 }

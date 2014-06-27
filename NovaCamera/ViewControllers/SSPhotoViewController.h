@@ -44,7 +44,7 @@
 @property (nonatomic, strong) IBOutlet UIScrollView *scrollView;
 
 /**
- * Image width contraint; modified when image is changed
+ * Image width constraint; modified when image is changed
  */
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *imageWidthConstraint;
 

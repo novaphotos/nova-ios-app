@@ -187,10 +187,13 @@
                     <nil key="simulatedStatusBarMetrics"/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
                     <connections>
+                        <outlet property="captureButton" destination="Ubh-N4-5IW" id="y5G-xE-5zE"/>
                         <outlet property="flashIconImage" destination="FDg-gd-Sz8" id="xYt-gP-1LE"/>
                         <outlet property="flashSettingsButton" destination="nb7-cS-TF2" id="5Fa-fs-NcP"/>
                         <outlet property="generalSettingsButton" destination="GSs-ex-cjL" id="AMh-dc-kr0"/>
+                        <outlet property="libraryButton" destination="lwO-ON-Kzh" id="f44-Tf-HhR"/>
                         <outlet property="previewView" destination="6ig-CU-Xix" id="ZU8-aq-ZBd"/>
+                        <outlet property="toggleCameraButton" destination="13Y-yO-HUw" id="ojP-jx-Yjv"/>
                         <outlet property="zoomSlider" destination="Isx-vn-YYg" id="gkM-oK-ZZD"/>
                         <segue destination="4Kg-nv-94b" kind="modal" identifier="showPhoto" modalTransitionStyle="flipHorizontal" id="YwU-7w-q0s"/>
                         <segue destination="EMK-44-5OK" kind="push" identifier="showSettings" id="4ne-YE-5My"/>
@@ -465,8 +468,13 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="cameraButton" destination="BpJ-fu-zWp" id="MKB-sI-OpT"/>
                         <outlet property="containerView" destination="WNG-HA-Cax" id="ZFW-2q-zz8"/>
                         <outlet property="controlsView" destination="bsT-0N-wxV" id="OmZ-xe-KL5"/>
+                        <outlet property="deleteButton" destination="qgL-kW-Gdl" id="UqI-D9-qOK"/>
+                        <outlet property="editButton" destination="vgG-uF-iHW" id="xAq-QW-C8r"/>
+                        <outlet property="libraryButton" destination="vum-fI-jgv" id="V7O-CX-pZi"/>
+                        <outlet property="shareButton" destination="sm1-Y4-UPD" id="HO8-y9-ysO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1jY-B5-4C8" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -486,7 +494,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.25" maximumZoomScale="5" translatesAutoresizingMaskIntoConstraints="NO" id="jqL-dh-Hit" customClass="SSCenteredScrollView">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <rect key="frame" x="0.0" y="20" width="320" height="548"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Dhk-8w-Qba" userLabel="Photo">
@@ -516,7 +524,7 @@
                             <constraint firstItem="byy-w7-KKn" firstAttribute="top" secondItem="jqL-dh-Hit" secondAttribute="bottom" id="40r-RB-Xbo"/>
                             <constraint firstAttribute="trailing" secondItem="jqL-dh-Hit" secondAttribute="trailing" id="5di-V9-r3M"/>
                             <constraint firstItem="jqL-dh-Hit" firstAttribute="leading" secondItem="JbO-pJ-a7i" secondAttribute="leading" id="a8u-Tc-VeY"/>
-                            <constraint firstItem="jqL-dh-Hit" firstAttribute="top" secondItem="dO4-Dz-L9v" secondAttribute="bottom" constant="-20" id="aXf-DZ-hqn"/>
+                            <constraint firstItem="jqL-dh-Hit" firstAttribute="top" secondItem="dO4-Dz-L9v" secondAttribute="bottom" id="aXf-DZ-hqn"/>
                         </constraints>
                     </view>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>

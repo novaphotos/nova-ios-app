@@ -160,7 +160,7 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
 }
 
 - (void)focusWithMode:(AVCaptureFocusMode)focusMode exposeWithMode:(AVCaptureExposureMode)exposureMode atDevicePoint:(CGPoint)point {
-    DDLogVerbose(@"focusWithMode:%d exposeWithMode:%d atDevicePoint:%@", focusMode, exposureMode, NSStringFromCGPoint(point));
+    // DDLogVerbose(@"focusWithMode:%d exposeWithMode:%d atDevicePoint:%@", focusMode, exposureMode, NSStringFromCGPoint(point));
     dispatch_async(self.sessionQueue, ^{
         NSError *error = nil;
         if ([self.device lockForConfiguration:&error]) {
@@ -225,9 +225,9 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
         
         // Attempt to set orientation
         if ([connection isVideoOrientationSupported]) {
-            [connection setVideoOrientation:_orientation];
+            connection.videoOrientation = _orientation;
         }
-        
+
         [self.stillImageOutput captureStillImageAsynchronouslyFromConnection:connection completionHandler:^(CMSampleBufferRef imageDataSampleBuffer, NSError *error) {
             // Save to asset library
             if (imageDataSampleBuffer) {
@@ -508,7 +508,6 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
 }
 
 - (void)subjectAreaDidChange:(NSNotification *)notification {
-    DDLogVerbose(@"subjectAreaDidChange");
     if (self.shouldAutoFocusAndAutoExposeOnDeviceAreaChange) {
         [self continuousAutoFocusAndExposeAtCenterPoint];
     }

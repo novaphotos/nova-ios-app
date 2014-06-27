@@ -10,20 +10,16 @@
 #import "SSCameraPreviewView.h"
 #import "SSCaptureSessionManager.h"
 #import "SSLibraryViewController.h"
-#import "SSNovaFlashService.h"
-#import "SSFlashSettingsViewController.h"
 #import "SSSettingsService.h"
 #import "SSStatsService.h"
-#import <AVFoundation/AVFoundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <MediaPlayer/MediaPlayer.h>
-#import <QuartzCore/QuartzCore.h>
-#import <CocoaLumberjack/DDLog.h>
 
 static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDeviceAuthorizedContext;
 static void * NovaFlashServiceStatus = &NovaFlashServiceStatus;
 
 static const NSTimeInterval kFlashSettingsAnimationDuration = 0.25;
+static const NSTimeInterval kOrientationChangeAnimationDuration = 0.25;
 static const CFTimeInterval kTransformAnimationDuration = 0.025;
 static const CFTimeInterval kMinimumTimeBeforeVolumeButtonCapture = 0.1;
 static const CGFloat kZoomMaxScale = 2.5;
@@ -38,7 +34,10 @@ static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
     
     // Track zoom scale
     CGFloat _beginGestureScale;
-    
+
+    // Track rotation angle
+    CGFloat _rotationAngle;
+
     // Zoom slider state
     BOOL _zoomSliderVisible;
     CFTimeInterval _zoomActiveTimestamp;
@@ -70,9 +69,24 @@ static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        [self commonInit];
     }
     return self;
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        [self commonInit];
+    }
+    return self;
+}
+
+- (void)commonInit {
+    _rotationAngle = [self rotationAngle];
+
+    // Listen to device orientation notifications
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didRotate:) name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 
 - (void)viewDidLoad
@@ -128,6 +142,8 @@ static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
     
     // Remove "Back" text from navigation item
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+
+    [self didRotate:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -212,18 +228,6 @@ static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
     }
 }
 
-
-// Rotation; reset preview layer prior to rotation and restore after
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-    [self saveAndResetZoom];
-}
-
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
-    [self restoreOrResetZoom];
-}
-
 #pragma mark - KVO
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
@@ -264,20 +268,12 @@ static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
             } else {
                 DDLogVerbose(@"Saving to asset library");
                 __block typeof(self) bSelf = self;
-                [[[ALAssetsLibrary alloc] init] writeImageToSavedPhotosAlbum:[image CGImage] orientation:(ALAssetOrientation)[image imageOrientation] completionBlock:^(NSURL *assetURL, NSError *error) {
-                    
-                    if ([self.settingsService boolForKey:kSettingsServiceEditAfterCaptureKey]) {
-                        _editPhoto = YES;
-                    } else {
-                        _editPhoto = NO;
-                    }
-                    
-                    if ([self.settingsService boolForKey:kSettingsServiceShareAfterCaptureKey]) {
-                        _sharePhoto = YES;
-                    } else {
-                        _sharePhoto = NO;
-                    }
-                    
+                [[[ALAssetsLibrary alloc] init] writeImageToSavedPhotosAlbum:[image CGImage]
+                                                                 orientation:(ALAssetOrientation)[image imageOrientation]
+                                                             completionBlock:^(NSURL *assetURL, NSError *error) {
+
+                    _editPhoto = [self.settingsService boolForKey:kSettingsServiceEditAfterCaptureKey];
+                    _sharePhoto = [self.settingsService boolForKey:kSettingsServiceShareAfterCaptureKey];
                     
                     if (_editPhoto || _sharePhoto || [self.settingsService boolForKey:kSettingsServicePreviewAfterCaptureKey]) {
                         _showPhotoURL = assetURL;
@@ -394,12 +390,12 @@ static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
     
     // Load settings from flash service
     self.flashSettingsViewController.flashSettings = self.flashService.flashSettings;
-    
+
     if (animated) {
         CGRect flashSettingsFrame = self.view.frame;
         flashSettingsFrame.origin.y += flashSettingsFrame.size.height;
         self.flashSettingsViewController.view.frame = flashSettingsFrame;
-        
+
         [UIView animateWithDuration:kFlashSettingsAnimationDuration delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
             self.flashSettingsViewController.view.frame = self.view.frame;
         } completion:^(BOOL finished) {
@@ -598,6 +594,58 @@ static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
         DDLogVerbose(@"pinch gesture beginning with scale %g", self.scaleAndCropFactor);
     }
     return YES;
+}
+
+#pragma mark - Handle device rotation
+
+- (void)didRotate:(NSNotification *)notification {
+    // Rotate icons
+
+    CGFloat newRotationAngle = [self closestAngleFrom:_rotationAngle to:[self rotationAngle]];
+
+    [UIView animateWithDuration:kOrientationChangeAnimationDuration animations:^{
+        CGAffineTransform rotationTransform = CGAffineTransformMakeRotation(newRotationAngle);
+        self.libraryButton.transform = rotationTransform;
+        self.flashSettingsButton.transform = rotationTransform;
+        self.generalSettingsButton.transform = rotationTransform;
+        self.toggleCameraButton.transform = rotationTransform;
+        self.captureButton.transform = rotationTransform;
+        self.flashIconImage.transform = rotationTransform;
+
+        self.flashSettingsViewController.view.transform = rotationTransform;
+    } completion:nil];
+
+    _rotationAngle = newRotationAngle;
+}
+
+- (CGFloat)rotationAngle {
+    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+
+    switch (orientation) {
+        case UIDeviceOrientationPortraitUpsideDown:
+            return (CGFloat)M_PI;
+        case UIDeviceOrientationLandscapeLeft:
+            return (CGFloat)M_PI * 0.5f;
+        case UIDeviceOrientationLandscapeRight:
+            return (CGFloat)M_PI * 1.5f;
+        default:
+            return 0;
+    }
+}
+
+- (CGFloat)closestAngleFrom:(CGFloat)oldAngle to:(CGFloat)newAngle {
+    // When rotating from one angle to another, adjust to the shortest location.
+    // e.g. going from 270deg to 0deg, don't rotate 3 quarters in the opposite direction,
+    // but instead head to 360 deg instead which is only 1 quarter turn.
+    if (ABS(oldAngle - newAngle) > M_PI) {
+        if (oldAngle > newAngle) {
+            return newAngle + (CGFloat)M_PI * 2.0f;
+        } else {
+            return newAngle - (CGFloat)M_PI * 2.0f;
+        }
+    } else {
+        return newAngle;
+    }
 }
 
 @end

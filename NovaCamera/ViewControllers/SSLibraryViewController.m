@@ -10,9 +10,10 @@
 #import "SSChronologicalAssetsLibraryService.h"
 #import "SSPhotoViewController.h"
 #import "SSStatsService.h"
-#import <AssetsLibrary/AssetsLibrary.h>
 #import <AviarySDK/AFPhotoEditorController.h>
 #import <MBProgressHUD/MBProgressHUD.h>
+
+static const NSTimeInterval kOrientationChangeAnimationDuration = 0.25;
 
 @interface SSLibraryViewController () <AFPhotoEditorControllerDelegate, UIPageViewControllerDataSource, UIPageViewControllerDelegate> {
     
@@ -26,6 +27,8 @@
     ALAsset *_assetToDelete;
     
     NSURL *_lastAssetURL;
+
+    CGFloat _rotationAngle;
 }
 
 /**
@@ -82,6 +85,14 @@
     _assetsLoaded = NO;
     _viewWillAppear = NO;
     _imagePickerCanceled = NO;
+
+    _rotationAngle = [self rotationAngle];
+
+    // Listen to device orientation notifications
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didRotate:)
+                                                 name:UIDeviceOrientationDidChangeNotification
+                                               object:nil];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -143,6 +154,7 @@
         bSelf->_assetsLoaded = YES;
     }];
 
+    [self didRotate:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -207,16 +219,6 @@
         self.pageViewController.delegate = self;
         self.pageViewController.dataSource = self;
     }
-}
-
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-    [self.pageViewController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-}
-
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
-    [self.pageViewController didRotateFromInterfaceOrientation:fromInterfaceOrientation];
 }
 
 #pragma mark - Public methods
@@ -524,6 +526,9 @@
 #pragma mark - UIPageViewControllerDelegate
 
 - (void)pageViewController:(UIPageViewController *)pageViewController willTransitionToViewControllers:(NSArray *)pendingViewControllers {
+    for (SSPhotoViewController *photoViewController in pendingViewControllers) {
+        [photoViewController resetZoom];
+    }
     // Don't update selected index here; instead do it after animation has finished.
 }
 
@@ -533,14 +538,12 @@
         SSPhotoViewController *vc = [pageViewController.viewControllers firstObject];
         self.selectedIndex = [self.libraryService indexOfAssetWithURL:vc.assetURL];
         _lastAssetURL = vc.assetURL;
-        DDLogVerbose(@"pageViewController: didFinishAnimating: previousViewControllers: transitionComplete: updating selectedIndex to %d for asset URL %@", self.selectedIndex, _lastAssetURL);
     });
 }
 
 #pragma mark - AFPhotoEditorControllerDelegate
 
 - (void)photoEditor:(AFPhotoEditorController *)editor finishedWithImage:(UIImage *)image {
-    DDLogVerbose(@"photoEditor:%@ finishedWithImage:%@", editor, image);
     _didEditPhoto = YES;
     
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -552,7 +555,6 @@
 }
 
 - (void)photoEditorCanceled:(AFPhotoEditorController *)editor {
-    DDLogVerbose(@"photoEditorCanceled:%@", editor);
     [self dismissViewControllerAnimated:YES completion:nil];
     self.photoEditorController = nil;
 }
@@ -560,7 +562,6 @@
 #pragma mark - UIImagePickerControllerDelegate
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-    DDLogVerbose(@"Picked media with info: %@", info);
     dispatch_async(dispatch_get_main_queue(), ^{
         NSURL *mediaURL = info[UIImagePickerControllerReferenceURL];
         [self showAssetWithURL:mediaURL animated:YES];
@@ -608,4 +609,61 @@
     }
 }
 
+#pragma mark - Handle device rotation
+
+- (void)didRotate:(NSNotification *)notification {
+
+    CGFloat newRotationAngle = [self closestAngleFrom:_rotationAngle to:[self rotationAngle]];
+    CGAffineTransform rotationTransform = CGAffineTransformMakeRotation(newRotationAngle);
+    _rotationAngle = newRotationAngle;
+
+    // Rotate icons (with animation)
+    [UIView animateWithDuration:kOrientationChangeAnimationDuration animations:^{
+        self.libraryButton.transform = rotationTransform;
+        self.editButton.transform = rotationTransform;
+        self.shareButton.transform = rotationTransform;
+        self.cameraButton.transform = rotationTransform;
+        self.deleteButton.transform = rotationTransform;
+    }];
+
+    // Rotate photo (without animation)
+    self.pageViewController.view.transform = rotationTransform;
+    self.pageViewController.view.frame = self.view.frame;
+    [UIView animateWithDuration:0 animations:^{
+    } completion:^(BOOL finished) {
+        for (SSPhotoViewController *photoViewController in self.pageViewController.viewControllers) {
+            [photoViewController resetZoom];
+        }
+    }];
+}
+
+- (CGFloat)rotationAngle {
+    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+
+    switch (orientation) {
+        case UIDeviceOrientationPortraitUpsideDown:
+            return (CGFloat)M_PI;
+        case UIDeviceOrientationLandscapeLeft:
+            return (CGFloat)M_PI * 0.5f;
+        case UIDeviceOrientationLandscapeRight:
+            return (CGFloat)M_PI * 1.5f;
+        default:
+            return 0;
+    }
+}
+
+- (CGFloat)closestAngleFrom:(CGFloat)oldAngle to:(CGFloat)newAngle {
+    // When rotating from one angle to another, adjust to the shortest location.
+    // e.g. going from 270deg to 0deg, don't rotate 3 quarters in the opposite direction,
+    // but instead head to 360 deg instead which is only 1 quarter turn.
+    if (ABS(oldAngle - newAngle) > M_PI) {
+        if (oldAngle > newAngle) {
+            return newAngle + (CGFloat)M_PI * 2.0f;
+        } else {
+            return newAngle - (CGFloat)M_PI * 2.0f;
+        }
+    } else {
+        return newAngle;
+    }
+}
 @end
