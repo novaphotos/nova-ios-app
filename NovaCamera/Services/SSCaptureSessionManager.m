@@ -13,6 +13,12 @@
 
 
 static void * CapturingStillImageContext = &CapturingStillImageContext;
+static void * AdjustingFocusContext = &AdjustingFocusContext;
+static void * AdjustingExposureContext = &AdjustingExposureContext;
+static void * AdjustingWhiteBalanceContext = &AdjustingWhiteBalanceContext;
+static void * LowLightBoostEnabledContext = &LowLightBoostEnabledContext;
+static void * TorchActiveContext = &TorchActiveContext;
+static void * TorchLevelContext = &TorchLevelContext;
 
 @interface SSCaptureSessionManager () {
     BOOL _sessionHasBeenConfigured;
@@ -85,7 +91,7 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
         if (_sessionHasBeenConfigured) {
             // Add observer for image capture (shutter indication)
             [self addObserver:self forKeyPath:@"stillImageOutput.capturingStillImage" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:CapturingStillImageContext];
-            
+
             // Add error notification observer
             __block typeof(self) bSelf = self;
             self.runtimeErrorObserver = [[NSNotificationCenter defaultCenter] addObserverForName:AVCaptureSessionRuntimeErrorNotification object:self.session queue:nil usingBlock:^(NSNotification *note) {
@@ -101,10 +107,9 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange) name:UIDeviceOrientationDidChangeNotification object:nil];
             // Setup initial orientation
             [self deviceOrientationDidChange];
-            
-            // Add subject area change notification
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(subjectAreaDidChange:) name:AVCaptureDeviceSubjectAreaDidChangeNotification object:self.device];
-            
+
+            [self addDeviceObservers:self.device];
+
             // Start the capture session
             [self.session startRunning];
         }
@@ -116,13 +121,11 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
         if (_sessionHasBeenConfigured) {
             
             [self removeObserver:self forKeyPath:@"stillImageOutput.capturingStillImage" context:CapturingStillImageContext];
-            
             [[NSNotificationCenter defaultCenter] removeObserver:self.runtimeErrorObserver];
-            
-            [[NSNotificationCenter defaultCenter] removeObserver:self name:AVCaptureDeviceSubjectAreaDidChangeNotification object:self.device];
-            
             [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
-            
+
+            [self removeDeviceObservers:self.device];
+
             [self.session stopRunning];
         }
     });
@@ -392,6 +395,26 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
 
 #pragma mark - Private methods & properties
 
+- (void)addDeviceObservers:(AVCaptureDevice *)device {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(subjectAreaDidChange:) name:AVCaptureDeviceSubjectAreaDidChangeNotification object:device];
+    [device addObserver:self forKeyPath:@"adjustingFocus" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:AdjustingFocusContext];
+    [device addObserver:self forKeyPath:@"adjustingExposure" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:AdjustingExposureContext];
+    [device addObserver:self forKeyPath:@"adjustingWhiteBalance" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:AdjustingWhiteBalanceContext];
+    [device addObserver:self forKeyPath:@"lowLightBoostEnabled" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:LowLightBoostEnabledContext];
+    [device addObserver:self forKeyPath:@"torchActive" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:TorchActiveContext];
+    [device addObserver:self forKeyPath:@"torchLevel" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:TorchLevelContext];
+}
+
+- (void)removeDeviceObservers:(AVCaptureDevice *)device {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVCaptureDeviceSubjectAreaDidChangeNotification object:device];
+    [device removeObserver:self forKeyPath:@"adjustingFocus" context:AdjustingFocusContext];
+    [device removeObserver:self forKeyPath:@"adjustingExposure" context:AdjustingExposureContext];
+    [device removeObserver:self forKeyPath:@"adjustingWhiteBalance" context:AdjustingWhiteBalanceContext];
+    [device removeObserver:self forKeyPath:@"lowLightBoostEnabled" context:LowLightBoostEnabledContext];
+    [device removeObserver:self forKeyPath:@"torchActive" context:TorchActiveContext];
+    [device removeObserver:self forKeyPath:@"torchLevel" context:TorchLevelContext];
+}
+
 - (BOOL)setDevice:(AVCaptureDevice *)device withError:(NSError **)outError {
     NSError *error = nil;
     AVCaptureDevice *prevDevice = _device;
@@ -457,14 +480,15 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
             DDLogError(@"Error locking device %@ for configuration (attempting to enable subject area change monitoring): %@", _device, error);
         }
     }
-    
+
+
     // Attempt to persist current flash mode
     [self setFlashMode:[self flashMode]];
     
     if (prevDevice) {
-        // Re-subscribe to subject area change notifications
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:AVCaptureDeviceSubjectAreaDidChangeNotification object:prevDevice];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(subjectAreaDidChange:) name:AVCaptureDeviceSubjectAreaDidChangeNotification object:_device];
+        // Re-subscribe observer
+        [self removeDeviceObservers:prevDevice];
+        [self addDeviceObservers:_device];
     }
     
     return YES;
@@ -564,6 +588,24 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
             });
         }
 	}
+    if (context == AdjustingFocusContext) {
+        // ...
+    }
+    if (context == AdjustingExposureContext) {
+        // ...
+    }
+    if (context == AdjustingWhiteBalanceContext) {
+        // ...
+    }
+    if (context == LowLightBoostEnabledContext) {
+        // ...
+    }
+    if (context == TorchActiveContext) {
+        // ...
+    }
+    if (context == TorchLevelContext) {
+        // ...
+    }
 }
 
 
