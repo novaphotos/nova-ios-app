@@ -3,8 +3,6 @@ language: objective-c
 before_install:
     - gem update cocoapods --no-document
     - pod --version
-    - brew update
-    - brew upgrade xctool || true
 
 env:
   matrix:
