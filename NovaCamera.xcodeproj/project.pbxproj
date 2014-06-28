@@ -48,6 +48,7 @@
 		27F266C21892710F00B47C7B /* SSFlashSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F266C11892710F00B47C7B /* SSFlashSettingsViewController.m */; };
 		7BB4BA47770B4148B9ACE56E /* libPods-NovaCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F36E6E5AA26F401BB75B1E25 /* libPods-NovaCamera.a */; };
 		954EF8A0E4E14A3B9AC0B73B /* libPods-NovaCameraTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AE5633BD813140FE8017A321 /* libPods-NovaCameraTests.a */; };
+		B7EEE0F0E5E01DED60D3E297 /* .travis.yml in Resources */ = {isa = PBXBuildFile; fileRef = B7EEE7532834119070879C7E /* .travis.yml */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -122,6 +123,7 @@
 		27F266C01892710F00B47C7B /* SSFlashSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSFlashSettingsViewController.h; sourceTree = "<group>"; };
 		27F266C11892710F00B47C7B /* SSFlashSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSFlashSettingsViewController.m; sourceTree = "<group>"; };
 		AE5633BD813140FE8017A321 /* libPods-NovaCameraTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NovaCameraTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B7EEE7532834119070879C7E /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = file.yml; path = .travis.yml; sourceTree = SOURCE_ROOT; };
 		E08928AB66454C1ABFCD086F /* Pods-NovaCamera.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NovaCamera.xcconfig"; path = "Pods/Pods-NovaCamera.xcconfig"; sourceTree = "<group>"; };
 		E8DE111FD9574F8F8392A750 /* Pods-NovaCameraTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NovaCameraTests.xcconfig"; path = "Pods/Pods-NovaCameraTests.xcconfig"; sourceTree = "<group>"; };
 		F36E6E5AA26F401BB75B1E25 /* libPods-NovaCamera.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NovaCamera.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -256,6 +258,7 @@
 				27AE1BF91896FEB500C27C38 /* SSNovaFlashService.m */,
 				27AE1C0B1899116900C27C38 /* SSSettingsService.h */,
 				27AE1C0C1899116900C27C38 /* SSSettingsService.m */,
+				B7EEE7532834119070879C7E /* .travis.yml */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -412,6 +415,7 @@
 				2724C99318639EEB00A68E0D /* Main_iPhone.storyboard in Resources */,
 				2724C98A18639EEB00A68E0D /* InfoPlist.strings in Resources */,
 				129E0024194DB7C100DE1723 /* HtmlResources in Resources */,
+				B7EEE0F0E5E01DED60D3E297 /* .travis.yml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -680,6 +684,7 @@
 				INFOPLIST_FILE = "NovaCamera/NovaCamera-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
+				USER_HEADER_SEARCH_PATHS = "\"${PROJECT_DIR}/Pods\"/**";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -696,6 +701,7 @@
 				INFOPLIST_FILE = "NovaCamera/NovaCamera-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
+				USER_HEADER_SEARCH_PATHS = "\"${PROJECT_DIR}/Pods\"/**";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
