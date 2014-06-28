@@ -1,1 +1,4 @@
 language: objective-c
+
+before_script:
+    - gem update cocoapods
