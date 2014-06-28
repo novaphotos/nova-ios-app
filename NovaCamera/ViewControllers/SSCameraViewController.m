@@ -94,7 +94,7 @@ static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
     [super viewDidLoad];
     
     // Setup capture session
-    self.captureSessionManager = [[SSCaptureSessionManager alloc] init];
+    self.captureSessionManager = [SSCaptureSessionManager sharedService];
     self.captureSessionManager.shouldAutoFocusAndExposeOnDeviceChange = YES;
     self.captureSessionManager.shouldAutoFocusAndAutoExposeOnDeviceAreaChange = YES;
     

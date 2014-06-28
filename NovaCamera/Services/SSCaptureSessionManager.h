@@ -16,6 +16,16 @@
 @interface SSCaptureSessionManager : NSObject
 
 /**
+ * Singleton accessor
+ */
++ (id)sharedService;
+
+/**
+ * Flag determining whether light boost will be enabled in the dark
+ */
+@property (nonatomic, assign) BOOL lightBoostEnabled;
+
+/**
  * Capture session, instantiated when SSCaptureSessionManager is instantiated
  */
 @property (nonatomic, readonly) AVCaptureSession *session;

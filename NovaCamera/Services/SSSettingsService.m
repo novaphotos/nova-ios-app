@@ -16,6 +16,8 @@ const NSString *kSettingsServiceSquarePhotosKey = @"SettingsServiceSquarePhotosK
 const NSString *kSettingsServiceMultipleNovasKey = @"SettingsServiceMultipleNovasKey";
 const NSString *kSettingsServiceOptOutStatsKey = @"SettingsServiceOptOutStats";
 const NSString *kSettingsServiceEnableVolumeButtonTriggerKey = @"SettingsServiceEnableVolumeButtonTrigger";
+const NSString *kSettingsServiceLightBoostKey = @"SettingsServiceLightBoostKey";
+
 
 // Private settings that are never shown to user
 const NSString *kSettingsServiceOneTimeAskedOptOutQuestion = @"SettingsServiceOneTimeAskedOptOutQuestion";
@@ -47,13 +49,7 @@ const NSString *kSettingsServiceOneTimeAskedOptOutQuestion = @"SettingsServiceOn
                           @NO,      // kSettingsServiceShareAfterCaptureKey
                           @YES,     // kSettingsServiceOptOutStatsKey
                           @YES,     // kSettingsServiceEnableVolumeButtonTriggerKey
-                          /*
-                           * TODO: Re-enable after 0.1.0 release
-                           *
-                          @NO,      // kSettingsServiceShowGridLinesKey
-                          @NO,      // kSettingsServiceSquarePhotosKey
-                          @NO,      // kSettingsServiceMultipleNovasKey
-                           */
+                          @YES,     // kSettingsServiceLightBoostKey
                           ];
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSArray *keys = [self generalSettingsKeys];
@@ -75,13 +71,7 @@ const NSString *kSettingsServiceOneTimeAskedOptOutQuestion = @"SettingsServiceOn
              kSettingsServiceShareAfterCaptureKey,
              kSettingsServiceOptOutStatsKey,
              kSettingsServiceEnableVolumeButtonTriggerKey,
-             /*
-              * TODO: Re-enable after 0.1.0 release
-              *
-             kSettingsServiceShowGridLinesKey,
-             kSettingsServiceSquarePhotosKey,
-             kSettingsServiceMultipleNovasKey,
-              */
+             kSettingsServiceLightBoostKey,
              ];
 }
 
@@ -92,13 +82,7 @@ const NSString *kSettingsServiceOneTimeAskedOptOutQuestion = @"SettingsServiceOn
              @"After photo: Share",
              @"Opt-out of usage stats",
              @"Volume keys trigger shutter",
-             /*
-              * TODO: Re-enable after 0.1.0 release
-              *
-             @"Show grid lines",
-             @"Square shaped photos",
-             @"Use multiple Novas",
-              */
+             @"Night vision in low light",
              ];
 }
 

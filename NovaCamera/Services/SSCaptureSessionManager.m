@@ -72,6 +72,17 @@ static void * TorchLevelContext = &TorchLevelContext;
     return self;
 }
 
++ (id)sharedService {
+    static id _sharedService;
+    static dispatch_once_t once;
+
+    dispatch_once(&once, ^{
+        _sharedService = [[self alloc] init];
+    });
+
+    return _sharedService;
+}
+
 #pragma mark - Public methods
 #pragma mark Session lifecycle
 
@@ -146,10 +157,6 @@ static void * TorchLevelContext = &TorchLevelContext;
 
 #pragma mark Camera interaction
 
-- (void)autoFocusAndExposeAtCenterPoint {
-    return [self autoFocusAndExposeAtDevicePoint:CGPointMake(0.5, 0.5)];
-}
-
 - (void)continuousAutoFocusAndExposeAtCenterPoint {
     return [self continuousAutoFocusAndExposeAtDevicePoint:CGPointMake(0.5, 0.5)];
 }
@@ -163,7 +170,6 @@ static void * TorchLevelContext = &TorchLevelContext;
 }
 
 - (void)focusWithMode:(AVCaptureFocusMode)focusMode exposeWithMode:(AVCaptureExposureMode)exposureMode atDevicePoint:(CGPoint)point {
-    // DDLogVerbose(@"focusWithMode:%d exposeWithMode:%d atDevicePoint:%@", focusMode, exposureMode, NSStringFromCGPoint(point));
     dispatch_async(self.sessionQueue, ^{
         NSError *error = nil;
         if ([self.device lockForConfiguration:&error]) {
@@ -254,6 +260,24 @@ static void * TorchLevelContext = &TorchLevelContext;
 }
 
 #pragma mark - Properties
+
+- (void)setLightBoostEnabled:(BOOL)lightBoostEnabled {
+    [self willChangeValueForKey:@"lightBoostEnabled"];
+    _lightBoostEnabled = lightBoostEnabled;
+    [self didChangeValueForKey:@"lightBoostEnabled"];
+
+    dispatch_async(self.sessionQueue, ^{
+        NSError *error = nil;
+        if ([_device lockForConfiguration:&error]) {
+            if (_device.lowLightBoostSupported) {
+                _device.automaticallyEnablesLowLightBoostWhenAvailable = lightBoostEnabled;
+            }
+            [_device unlockForConfiguration];
+        } else {
+            DDLogError(@"Error locking device %@ for configuration: %@", _device, error);
+        }
+    });
+}
 
 - (AVCaptureSession *)session {
     return _session;
@@ -470,15 +494,27 @@ static void * TorchLevelContext = &TorchLevelContext;
             [self didChangeValueForKey:@"focusMode"];
         }
     }
-    
-    // Ensure subject area change notifications are enabled
-    if (!_device.subjectAreaChangeMonitoringEnabled) {
-        if ([_device lockForConfiguration:&error]) {
+
+    if ([_device lockForConfiguration:&error]) {
+
+        // Ensure subject area change notifications are enabled
+        if (!_device.subjectAreaChangeMonitoringEnabled) {
             _device.subjectAreaChangeMonitoringEnabled = YES;
-            [_device unlockForConfiguration];
-        } else {
-            DDLogError(@"Error locking device %@ for configuration (attempting to enable subject area change monitoring): %@", _device, error);
         }
+
+        // Attempt to boost low light scenese
+        if (_device.lowLightBoostSupported) {
+            _device.automaticallyEnablesLowLightBoostWhenAvailable = self.lightBoostEnabled;
+        }
+
+        // If necessary, use torch to help focus
+        //if (_device.hasTorch && _device.torchAvailable) {
+        //    _device.torchMode = AVCaptureTorchModeAuto;
+        //}
+
+        [_device unlockForConfiguration];
+    } else {
+        DDLogError(@"Error locking device %@ for configuration: %@", _device, error);
     }
 
 

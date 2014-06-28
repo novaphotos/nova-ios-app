@@ -11,12 +11,17 @@
 #import "SSSettingsService.h"
 #import "SSNovaFlashService.h"
 #import "SSStatsService.h"
+#import "SSCaptureSessionManager.h"
 #import <CocoaLumberjack/DDTTYLogger.h>
 #import <Crashlytics/Crashlytics.h>
 #import <CrashlyticsLumberjack/CrashlyticsLogger.h>
 
+static void * SettingsServiceUseMultipleNovasChangedContext = &SettingsServiceUseMultipleNovasChangedContext;
+static void * SettingsServiceLightBoostChangedContext = &SettingsServiceLightBoostChangedContext;
+
 @implementation SSAppDelegate {
     SSSettingsService *_settingsService;
+    SSCaptureSessionManager *_captureSessionManager;
     SSNovaFlashService *_flashService;
     SSStatsService *_statsService;
 }
@@ -30,11 +35,15 @@
     _settingsService = [SSSettingsService sharedService];
     [_settingsService initializeUserDefaults];
 
+    // Setup camera capture
+    _captureSessionManager = [SSCaptureSessionManager sharedService];
+
     // Setup theme
     [[SSTheme currentTheme] styleAppearanceProxies];
 
     // Subscribe to KVO notifications for multiple novas flag changes
-    [_settingsService addObserver:self forKeyPath:kSettingsServiceMultipleNovasKey options:0 context:nil];
+    [_settingsService addObserver:self forKeyPath:kSettingsServiceMultipleNovasKey options:0 context:SettingsServiceUseMultipleNovasChangedContext];
+    [_settingsService addObserver:self forKeyPath:kSettingsServiceLightBoostKey options:0 context:SettingsServiceLightBoostChangedContext];
 
     // Setup flash service
     _flashService = [SSNovaFlashService sharedService];
@@ -137,9 +146,12 @@
 #pragma mark - KVO
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    if (object == _settingsService && [keyPath isEqualToString:kSettingsServiceMultipleNovasKey]) {
-        DDLogVerbose(@"App delegate forwarding useMultipleNovas setting from settings to flash service");
+    if (context == SettingsServiceUseMultipleNovasChangedContext) {
         _flashService.useMultipleNovas = [_settingsService boolForKey:kSettingsServiceMultipleNovasKey];
+    }
+    if (context == SettingsServiceLightBoostChangedContext) {
+        DDLogVerbose(@"Auto night mode setting: %d", [_settingsService boolForKey:kSettingsServiceLightBoostKey]);
+        _captureSessionManager.lightBoostEnabled = [_settingsService boolForKey:kSettingsServiceLightBoostKey];
     }
 }
 

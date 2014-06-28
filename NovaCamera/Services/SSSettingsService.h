@@ -18,6 +18,7 @@ extern NSString *kSettingsServiceSquarePhotosKey;
 extern NSString *kSettingsServiceMultipleNovasKey;
 extern NSString *kSettingsServiceOptOutStatsKey;
 extern NSString *kSettingsServiceEnableVolumeButtonTriggerKey;
+extern NSString *kSettingsServiceLightBoostKey;
 
 // Private settings that are never shown to user
 extern NSString *kSettingsServiceOneTimeAskedOptOutQuestion;
