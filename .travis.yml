@@ -5,10 +5,11 @@ before_install:
     - gem update cocoapods --no-document
     - pod --version
 
-xcode_workspace: NovaCamera.xcworkspace
-xcode_scheme: NovaCamera
+env:
+  matrix:
+    - SDK=iphonesimulator7.0
+    - SDK=iphonesimulator7.1
+    #- SDK=iphonesimulator8.0
 
-xcode_sdk:
-    - 7.0
-    - 7.1
-    # - 8.0
+script:
+    - xctool -workspace NovaCamera.xcworkspace -sdk $SDK -scheme NovaCamera build
