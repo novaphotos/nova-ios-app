@@ -109,11 +109,6 @@
 ///-------------------------
 
 /**
- * Autofocus and autoexpose at center point
- */
-- (void)autoFocusAndExposeAtCenterPoint;
-
-/**
  * Continuously autofocus and autoexpose at center point
  */
 - (void)continuousAutoFocusAndExposeAtCenterPoint;
