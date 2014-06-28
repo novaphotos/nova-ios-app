@@ -1,6 +1,13 @@
 language: objective-c
 
+# Travis default cocoapods install often lags behind what's necessary to access the specs repo. Update it first.
 before_install:
-    - gem update cocoapods
+    - gem update cocoapods --no-document
 
 xcode_workspace: NovaCamera.xcworkspace
+xcode_scheme: NovaCamera
+
+xcode_sdk:
+    - 7.0
+    - 7.1
+    # - 8.0
