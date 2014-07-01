@@ -42,8 +42,6 @@
 - (IBAction)showLibrary:(id)sender;
 - (IBAction)toggleCamera:(id)sender;
 - (IBAction)zoomSliderValueChanged:(id)sender;
-- (void)handleTapFrom:(UITapGestureRecognizer *)recognizer;
-- (void)handlePinchFrom:(UIPinchGestureRecognizer *)recognizer;
 - (void)resetZoom;
 
 @end

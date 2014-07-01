@@ -17,6 +17,7 @@ const NSString *kSettingsServiceMultipleNovasKey = @"SettingsServiceMultipleNova
 const NSString *kSettingsServiceOptOutStatsKey = @"SettingsServiceOptOutStats";
 const NSString *kSettingsServiceEnableVolumeButtonTriggerKey = @"SettingsServiceEnableVolumeButtonTrigger";
 const NSString *kSettingsServiceLightBoostKey = @"SettingsServiceLightBoostKey";
+const NSString *kSettingsServiceResetFocusOnSceneChangeKey = @"SettingsServiceResetFocusOnSceneChangeKey";
 
 
 // Private settings that are never shown to user
@@ -50,6 +51,7 @@ const NSString *kSettingsServiceOneTimeAskedOptOutQuestion = @"SettingsServiceOn
                           @YES,     // kSettingsServiceOptOutStatsKey
                           @YES,     // kSettingsServiceEnableVolumeButtonTriggerKey
                           @YES,     // kSettingsServiceLightBoostKey
+                          @YES,     // kSettingsServiceResetFocusOnSceneChangeKey
                           ];
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSArray *keys = [self generalSettingsKeys];
@@ -72,6 +74,7 @@ const NSString *kSettingsServiceOneTimeAskedOptOutQuestion = @"SettingsServiceOn
              kSettingsServiceOptOutStatsKey,
              kSettingsServiceEnableVolumeButtonTriggerKey,
              kSettingsServiceLightBoostKey,
+             kSettingsServiceResetFocusOnSceneChangeKey,
              ];
 }
 
@@ -83,6 +86,7 @@ const NSString *kSettingsServiceOneTimeAskedOptOutQuestion = @"SettingsServiceOn
              @"Opt-out of usage stats",
              @"Volume keys trigger shutter",
              @"Night vision in low light",
+             @"Scene change resets focus",
              ];
 }
 

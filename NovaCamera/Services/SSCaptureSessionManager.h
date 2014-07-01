@@ -36,21 +36,6 @@
 @property (nonatomic, readonly) AVCaptureVideoPreviewLayer *previewLayer;
 
 /**
- * Focus mode
- */
-@property (nonatomic, assign) AVCaptureFocusMode focusMode;
-
-/**
- * Exposure mode
- */
-@property (nonatomic, assign) AVCaptureExposureMode exposureMode;
-
-/**
- * Flash mode
- */
-@property (nonatomic, assign) AVCaptureFlashMode flashMode;
-
-/**
  * Scale and crop factor
  * Sets videoScaleAndCropFactor on AVCaptureConnection
  */
@@ -60,11 +45,6 @@
  * Specify whether the device should autofocus and autoexpose when the device detects a subject area change (default YES)
  */
 @property (nonatomic, assign) BOOL shouldAutoFocusAndAutoExposeOnDeviceAreaChange;
-
-/**
- * Specify whether we should reset autofocus and autoexposure when device is changed (default YES)
- */
-@property (nonatomic, assign) BOOL shouldAutoFocusAndExposeOnDeviceChange;
 
 /**
  * Video gravity; default is `AVLayerVideoGravityResizeAspectFill`
@@ -86,6 +66,47 @@
  * Boolean describing whether multiple cameras are available
  */
 @property (nonatomic, readonly) BOOL canToggleCamera;
+
+/**
+ * Whether it's possible to acquire a focus lock on the current camera.
+ */
+@property (nonatomic, readonly) BOOL focusLockAvailable;
+
+/**
+* Whether the focus is currently locked on a position. If so, the coordinates are avalailable from focusLockPosition
+*/
+@property (nonatomic, readonly) BOOL focusLockActive;
+
+/**
+ * The current focus lock position (in device coordinates). Only valid if focusLockActive == YES
+ */
+@property (nonatomic, readonly) CGPoint focusLockDevicePoint;
+
+/**
+ * Whether the focus is currently working on adjusting itself
+ */
+@property (nonatomic, readonly) BOOL focusLockAdjusting;
+
+/**
+ * Whether it's possible to acquire a exposure lock on the current camera.
+ */
+@property (nonatomic, readonly) BOOL exposureLockAvailable;
+
+/**
+ * Whether the exposure is currently locked on a position. If so, the coordinates are available from exposureLockPosition
+ */
+@property (nonatomic, readonly) BOOL exposureLockActive;
+
+/**
+ * The current exposure lock position (in device coordinates). Only valid if exposureLockActive == YES
+ */
+@property (nonatomic, readonly) CGPoint exposureLockDevicePoint;
+
+/**
+ * Whether the exposure is currently adjusting itself.
+ */
+@property (nonatomic, readonly) BOOL exposureLockAdjusting;
+
 
 ///------------------------
 /// @name Session lifecycle
@@ -119,24 +140,24 @@
 ///-------------------------
 
 /**
- * Continuously autofocus and autoexpose at center point
+ * Focus at specified point
  */
-- (void)continuousAutoFocusAndExposeAtCenterPoint;
+- (void)focusOnDevicePoint:(CGPoint)devicePoint;
 
 /**
- * Autofocus and autoexpose at the specified point, in device coordinates
+ * Expose at specified point
  */
-- (void)autoFocusAndExposeAtDevicePoint:(CGPoint)point;
+- (void)exposeOnDevicePoint:(CGPoint)devicePoint;
 
 /**
- * Continuously autofocus and autoexpose at specified point in device coordinates
+ * Stop focusing on a specific point and return to continuous focus in the center.
  */
-- (void)continuousAutoFocusAndExposeAtDevicePoint:(CGPoint)point;
+- (void)focusReset;
 
 /**
- * Specify focus and exposure mode at the specified point, in device coordinates.
+ * Stop exposing on a specific point and return to continuous focus in the center.
  */
-- (void)focusWithMode:(AVCaptureFocusMode)focusMode exposeWithMode:(AVCaptureExposureMode)exposureMode atDevicePoint:(CGPoint)point;
+- (void)exposeReset;
 
 /**
  * Toggle between front and back camera (if available).

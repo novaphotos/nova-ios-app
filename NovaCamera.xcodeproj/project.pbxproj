@@ -49,6 +49,7 @@
 		7BB4BA47770B4148B9ACE56E /* libPods-NovaCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F36E6E5AA26F401BB75B1E25 /* libPods-NovaCamera.a */; };
 		954EF8A0E4E14A3B9AC0B73B /* libPods-NovaCameraTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AE5633BD813140FE8017A321 /* libPods-NovaCameraTests.a */; };
 		B7EEE0F0E5E01DED60D3E297 /* .travis.yml in Resources */ = {isa = PBXBuildFile; fileRef = B7EEE7532834119070879C7E /* .travis.yml */; };
+		B7EEEA4C97D542FD0772E74A /* SSCameraLockView.m in Sources */ = {isa = PBXBuildFile; fileRef = B7EEE2015376B3D5AE5405E9 /* SSCameraLockView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -123,6 +124,8 @@
 		27F266C01892710F00B47C7B /* SSFlashSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSFlashSettingsViewController.h; sourceTree = "<group>"; };
 		27F266C11892710F00B47C7B /* SSFlashSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSFlashSettingsViewController.m; sourceTree = "<group>"; };
 		AE5633BD813140FE8017A321 /* libPods-NovaCameraTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NovaCameraTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B7EEE2015376B3D5AE5405E9 /* SSCameraLockView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSCameraLockView.m; sourceTree = "<group>"; };
+		B7EEE4D2EE858BEB67F3884D /* SSCameraLockView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSCameraLockView.h; sourceTree = "<group>"; };
 		B7EEE7532834119070879C7E /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = file.yml; path = .travis.yml; sourceTree = SOURCE_ROOT; };
 		E08928AB66454C1ABFCD086F /* Pods-NovaCamera.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NovaCamera.xcconfig"; path = "Pods/Pods-NovaCamera.xcconfig"; sourceTree = "<group>"; };
 		E8DE111FD9574F8F8392A750 /* Pods-NovaCameraTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NovaCameraTests.xcconfig"; path = "Pods/Pods-NovaCameraTests.xcconfig"; sourceTree = "<group>"; };
@@ -319,6 +322,8 @@
 				27554D03188E9A68008E4C32 /* SSPassThroughView.m */,
 				27AE1C0E189918D000C27C38 /* SSSettingsCell.h */,
 				27AE1C0F189918D000C27C38 /* SSSettingsCell.m */,
+				B7EEE2015376B3D5AE5405E9 /* SSCameraLockView.m */,
+				B7EEE4D2EE858BEB67F3884D /* SSCameraLockView.h */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -542,6 +547,7 @@
 				27EF5B091886ACAD00AFBD0E /* SSLibraryViewController.m in Sources */,
 				27728B48188F5757004D67A4 /* SSChronologicalAssetsLibraryService.m in Sources */,
 				2724C98C18639EEB00A68E0D /* main.m in Sources */,
+				B7EEEA4C97D542FD0772E74A /* SSCameraLockView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

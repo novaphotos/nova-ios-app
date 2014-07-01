@@ -18,6 +18,7 @@
 
 static void * SettingsServiceUseMultipleNovasChangedContext = &SettingsServiceUseMultipleNovasChangedContext;
 static void * SettingsServiceLightBoostChangedContext = &SettingsServiceLightBoostChangedContext;
+static void * SettingsServiceResetFocusOnSceneChangeContext = &SettingsServiceResetFocusOnSceneChangeContext;
 
 @implementation SSAppDelegate {
     SSSettingsService *_settingsService;
@@ -37,6 +38,7 @@ static void * SettingsServiceLightBoostChangedContext = &SettingsServiceLightBoo
 
     // Setup camera capture
     _captureSessionManager = [SSCaptureSessionManager sharedService];
+    _captureSessionManager.shouldAutoFocusAndAutoExposeOnDeviceAreaChange = [_settingsService boolForKey:kSettingsServiceResetFocusOnSceneChangeKey];
 
     // Setup theme
     [[SSTheme currentTheme] styleAppearanceProxies];
@@ -44,6 +46,7 @@ static void * SettingsServiceLightBoostChangedContext = &SettingsServiceLightBoo
     // Subscribe to KVO notifications for multiple novas flag changes
     [_settingsService addObserver:self forKeyPath:kSettingsServiceMultipleNovasKey options:0 context:SettingsServiceUseMultipleNovasChangedContext];
     [_settingsService addObserver:self forKeyPath:kSettingsServiceLightBoostKey options:0 context:SettingsServiceLightBoostChangedContext];
+    [_settingsService addObserver:self forKeyPath:kSettingsServiceResetFocusOnSceneChangeKey options:0 context:SettingsServiceResetFocusOnSceneChangeContext];
 
     // Setup flash service
     _flashService = [SSNovaFlashService sharedService];
@@ -150,8 +153,10 @@ static void * SettingsServiceLightBoostChangedContext = &SettingsServiceLightBoo
         _flashService.useMultipleNovas = [_settingsService boolForKey:kSettingsServiceMultipleNovasKey];
     }
     if (context == SettingsServiceLightBoostChangedContext) {
-        DDLogVerbose(@"Auto night mode setting: %d", [_settingsService boolForKey:kSettingsServiceLightBoostKey]);
         _captureSessionManager.lightBoostEnabled = [_settingsService boolForKey:kSettingsServiceLightBoostKey];
+    }
+    if (context == SettingsServiceResetFocusOnSceneChangeContext) {
+        _captureSessionManager.shouldAutoFocusAndAutoExposeOnDeviceAreaChange = [_settingsService boolForKey:kSettingsServiceResetFocusOnSceneChangeKey];
     }
 }
 
