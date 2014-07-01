@@ -178,7 +178,6 @@
                             <constraint firstAttribute="bottom" secondItem="2Si-W3-Mqg" secondAttribute="bottom" id="URU-JJ-iFY"/>
                             <constraint firstAttribute="trailing" secondItem="gOP-u3-1pE" secondAttribute="trailing" id="bnD-s8-j5g"/>
                             <constraint firstItem="2Si-W3-Mqg" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="top" id="jcX-ZS-AnB"/>
-                            <constraint firstItem="R1q-RJ-5fu" firstAttribute="top" secondItem="gOP-u3-1pE" secondAttribute="bottom" id="ltg-ww-C3L"/>
                             <constraint firstAttribute="trailing" secondItem="2Si-W3-Mqg" secondAttribute="trailing" id="s9L-iu-SDl"/>
                             <constraint firstItem="gOP-u3-1pE" firstAttribute="top" secondItem="jDK-1B-82m" secondAttribute="bottom" id="wNx-4E-c3g"/>
                         </constraints>
