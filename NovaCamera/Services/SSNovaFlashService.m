@@ -14,6 +14,8 @@ static const NSString *SSNovaFlashServiceStatusChanged = @"SSNovaFlashServiceSta
 
 static const NSString *kLastFlashSettingsUserDefaultsPrefix = @"lastFlashSettings_";
 
+static const uint16_t kFlashTimeout = 2500;
+
 NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
     switch (settings.flashMode) {
         case SSFlashModeOff:
@@ -230,7 +232,7 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
             break;
         }
     }
-    return nvFlashSettings;
+    return [nvFlashSettings flashSettingsWithTimeout:kFlashTimeout];
 }
 
 - (void)setupFlash {
