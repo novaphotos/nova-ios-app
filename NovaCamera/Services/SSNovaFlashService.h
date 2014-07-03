@@ -88,12 +88,6 @@ static const NSString *SSNovaFlashServiceStatusChanged;
 @property (nonatomic, assign) BOOL useMultipleNovas;
 
 /**
- * Flag determining whether custom flash mode is enabled; set to NO
- * for release 0.1.0 per issue #37.
- */
-@property (nonatomic, readonly) BOOL allowCustomFlashMode;
-
-/**
  * Singleton accessor
  */
 + (id)sharedService;

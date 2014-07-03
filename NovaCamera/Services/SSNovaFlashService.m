@@ -48,8 +48,7 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
     self = [super init];
     if (self) {
         _temporarilyEnabled = NO;
-        _allowCustomFlashMode = YES;
-        
+
         // Load previous values from NSUserDefaults
         [self restoreFromUserDefaults];
         
@@ -151,13 +150,11 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
 
 - (void)setFlashSettings:(SSFlashSettings)flashSettings {
     // Don't allow setting custom flash mode
-    if (self.allowCustomFlashMode || (flashSettings.flashMode != SSFlashModeCustom)) {
-        [self willChangeValueForKey:@"flashSettings"];
-        _flashSettings = flashSettings;
-        [self configureFlash];
-        [self saveToUserDefaults];
-        [self didChangeValueForKey:@"flashSettings"];
-    }
+    [self willChangeValueForKey:@"flashSettings"];
+    _flashSettings = flashSettings;
+    [self configureFlash];
+    [self saveToUserDefaults];
+    [self didChangeValueForKey:@"flashSettings"];
 }
 
 - (void)setUseMultipleNovas:(BOOL)useMultipleNovas {
@@ -270,10 +267,6 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
         _flashSettings.coolBrightness = [defaults floatForKey:[kLastFlashSettingsUserDefaultsPrefix stringByAppendingString:@"coolBrightness"]];
         DDLogVerbose(@"Read flash settings from user defaults");
         DDLogVerbose(@"warm: %g cool: %g", _flashSettings.warmBrightness, _flashSettings.coolBrightness);
-    }
-    if (!self.allowCustomFlashMode && _flashSettings.flashMode == SSFlashModeCustom) {
-        DDLogError(@"Setting flash mode to off because mode in user defaults was custom and we are disabling custom flash mode");
-        _flashSettings.flashMode = SSFlashModeOff;
     }
 }
 

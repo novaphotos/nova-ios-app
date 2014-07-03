@@ -303,10 +303,6 @@ static void * NovaFlashServiceStatus = &NovaFlashServiceStatus;
         UIImage *image = [UIImage imageNamed:imgName];
         [flashButton setImage:image forState:UIControlStateNormal];
     }
-    if (!self.flashService.allowCustomFlashMode) {
-        DDLogVerbose(@"Hiding custom flash mode button");
-        self.flashCustomButton.hidden = YES;
-    }
 }
 
 - (void)updateFlashStatus {
