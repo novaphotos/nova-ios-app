@@ -12,6 +12,18 @@
 #import <AVFoundation/AVCaptureSession.h>
 
 
+// These constants are used to determine how long to pause before taking a photo to ensure focus/exposure/whitebalance are correct:
+
+// How long to pause when photo is first requested, allowing the camera hardware to determine it needs to adjust focus/exposure/whitebalance.
+const double kPauseToAllowCameraToDetermineItNeedsAdjustment = 0.2;
+// The checks are performed in a loop until the all succeed. Time to sleep between checks.
+const double kPauseBetweenEachAdjustmentCheck = 0.01;
+// How long to attempt the adjustments, before giving up and taking the photo anyway.
+const double kCameraAdjustmentTimeout = 1.5;
+// Once all adjustments are complete, ensure they remain stable for this time period before proceeding. Prevents jitter.
+const double kDurationCameraAdjustmentsNeedToSettle = 0.05;
+
+
 static void * CapturingStillImageContext = &CapturingStillImageContext;
 static void * AdjustingFocusContext = &AdjustingFocusContext;
 static void * AdjustingExposureContext = &AdjustingExposureContext;
@@ -262,6 +274,47 @@ static void * TorchLevelContext = &TorchLevelContext;
     self.shutterHandler = shutter;
     dispatch_async(self.sessionQueue, ^{
         // Set up capture connection
+
+        
+        // Before we take the photo, let's give the focus/exposure/whitebalance a chance to adapt to the new light.
+        // Focus now
+
+        // Focus/expose/whitebalance now
+        NSError *error;
+        if ([self.device lockForConfiguration:&error]) {
+            if ([self.device isFocusModeSupported:AVCaptureFocusModeContinuousAutoFocus]) {
+                self.device.focusMode = AVCaptureFocusModeContinuousAutoFocus;
+            }
+            if ([self.device isExposureModeSupported:AVCaptureExposureModeContinuousAutoExposure]) {
+                self.device.exposureMode = AVCaptureExposureModeContinuousAutoExposure;
+            }
+            if ([self.device isWhiteBalanceModeSupported:AVCaptureWhiteBalanceModeContinuousAutoWhiteBalance]) {
+                self.device.whiteBalanceMode = AVCaptureWhiteBalanceModeContinuousAutoWhiteBalance;
+            }
+            [self.device unlockForConfiguration];
+        }
+
+        // Pause a little, to allow the camera to determine if it needs to adjust itself.
+        // Because we're on a background thread we can block without locking up the UI.
+        [NSThread sleepForTimeInterval:kPauseToAllowCameraToDetermineItNeedsAdjustment];
+
+        // Go into a loop, checking if the camera focus/exposure/whitebalance is still adjusting.
+        // When all have stopped adjusting, keep going for a little longer to confirm they've settled.
+        // If they have settled for kDurationCameraAdjustmentsNeedToSettle seconds, we're ready to take the photo.
+        // If they never settle, this will eventually timeout.
+        int successCount = 0;
+        for (int i = 0; i < kCameraAdjustmentTimeout / kPauseBetweenEachAdjustmentCheck; i++) {
+            if (!self.device.isAdjustingFocus && !self.device.isAdjustingExposure && !self.device.isAdjustingWhiteBalance) {
+                successCount++;
+                if (successCount > kDurationCameraAdjustmentsNeedToSettle / kPauseBetweenEachAdjustmentCheck) {
+                    break;
+                }
+            } else {
+                successCount = 0;
+            }
+            [NSThread sleepForTimeInterval:kPauseBetweenEachAdjustmentCheck];
+        }
+
         AVCaptureConnection *connection = [self.stillImageOutput connectionWithMediaType:AVMediaTypeVideo];
         if (self.videoScaleAndCropFactor <= connection.videoMaxScaleAndCropFactor) {
             connection.videoScaleAndCropFactor = self.videoScaleAndCropFactor;
