@@ -24,6 +24,8 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
             return @"Gentle";
         case SSFlashModeWarm:
             return @"Warm";
+        case SSFlashModeNeutral:
+            return @"Neutral";
         case SSFlashModeBright:
             return @"Bright";
         case SSFlashModeCustom:
@@ -202,13 +204,16 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
             nvFlashSettings = [NVFlashSettings off];
             break;
         case SSFlashModeBright:
-            nvFlashSettings = [NVFlashSettings bright];
+            nvFlashSettings = [NVFlashSettings customWarm:255 cool:255];
             break;
         case SSFlashModeGentle:
-            nvFlashSettings = [NVFlashSettings gentle];
+            nvFlashSettings = [NVFlashSettings customWarm:31 cool:31];
             break;
         case SSFlashModeWarm:
-            nvFlashSettings = [NVFlashSettings warm];
+            nvFlashSettings = [NVFlashSettings customWarm:255 cool:127];
+            break;
+        case SSFlashModeNeutral:
+            nvFlashSettings = [NVFlashSettings customWarm:0 cool:255];
             break;
         case SSFlashModeCustom:
         {

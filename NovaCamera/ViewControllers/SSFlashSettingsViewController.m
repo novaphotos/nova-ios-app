@@ -99,6 +99,7 @@ static void * NovaFlashServiceStatus = &NovaFlashServiceStatus;
                     @(SSFlashModeOff),
                     @(SSFlashModeGentle),
                     @(SSFlashModeWarm),
+                    @(SSFlashModeNeutral),
                     @(SSFlashModeBright),
                     @(SSFlashModeCustom),
                     ];
@@ -106,6 +107,7 @@ static void * NovaFlashServiceStatus = &NovaFlashServiceStatus;
                           self.flashOffButton,
                           self.flashGentleButton,
                           self.flashWarmButton,
+                          self.flashNeutralButton,
                           self.flashBrightButton,
                           self.flashCustomButton,
                           ];
@@ -113,6 +115,7 @@ static void * NovaFlashServiceStatus = &NovaFlashServiceStatus;
                              @"btn-flash-off",
                              @"btn-flash-gentle",
                              @"btn-flash-warm",
+                             @"btn-flash-neutral",
                              @"btn-flash-bright",
                              @"btn-flash-custom",
                              ];
@@ -188,9 +191,12 @@ static void * NovaFlashServiceStatus = &NovaFlashServiceStatus;
         case SSFlashModeWarm:
             settings = SSFlashSettingsWarm;
             break;
+        case SSFlashModeNeutral:
+            settings = SSFlashSettingsNeutral;
+            break;
         default:
-            settings.warmBrightness = 0.5;
-            settings.coolBrightness = 0.5;
+            settings.warmBrightness = 1.0;
+            settings.coolBrightness = 1.0;
             settings.flashMode = mode;
             break;
     }

@@ -63,6 +63,7 @@
 @property (nonatomic, strong) IBOutlet UIButton *flashOffButton;
 @property (nonatomic, strong) IBOutlet UIButton *flashGentleButton;
 @property (nonatomic, strong) IBOutlet UIButton *flashWarmButton;
+@property (nonatomic, strong) IBOutlet UIButton *flashNeutralButton;
 @property (nonatomic, strong) IBOutlet UIButton *flashBrightButton;
 @property (nonatomic, strong) IBOutlet UIButton *flashCustomButton;
 
