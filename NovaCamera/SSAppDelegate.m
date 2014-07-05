@@ -58,7 +58,7 @@ static void * SettingsServiceResetFocusOnSceneChangeContext = &SettingsServiceRe
     if (![_settingsService isKeySet:kSettingsServiceOneTimeAskedOptOutQuestion]) {
         // One time: Ask user stats opt-out question.
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Help improve Nova"
-                                                        message:@"Would you like to help improve Nova by reporting anonymous statistics to us?"
+                                                        message:@"Would you like to help improve Nova by reporting anonymous statistics?"
                                                        delegate:self
                                               cancelButtonTitle:@"Sure - I'll help!"
                                               otherButtonTitles:@"Nope", nil];
