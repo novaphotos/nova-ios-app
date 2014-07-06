@@ -38,13 +38,19 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="524"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6ig-CU-Xix" customClass="SSCameraPreviewView">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6ig-CU-Xix" customClass="SSCameraPreviewView">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="524"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     </view>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="6ig-CU-Xix" secondAttribute="trailing" id="3Kz-kF-O31"/>
+                                    <constraint firstItem="6ig-CU-Xix" firstAttribute="top" secondItem="gOP-u3-1pE" secondAttribute="top" id="fEi-tn-WMR"/>
+                                    <constraint firstItem="6ig-CU-Xix" firstAttribute="leading" secondItem="gOP-u3-1pE" secondAttribute="leading" id="ilD-g4-mJe"/>
+                                    <constraint firstAttribute="bottom" secondItem="6ig-CU-Xix" secondAttribute="bottom" id="oqX-vY-hNb"/>
+                                </constraints>
                             </view>
                             <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Si-W3-Mqg" customClass="SSPassThroughView">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="524"/>
