@@ -51,6 +51,8 @@ static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
     // Indicator of camera lock
     SSCameraLockView *_focusLockIndicator;
     SSCameraLockView *_exposureLockIndicator;
+
+    BOOL _capturingPhoto;
 }
 @property (nonatomic, strong) SSCaptureSessionManager *captureSessionManager;
 @property (nonatomic, strong) AVAudioPlayer *captureButtonAudioPlayer;
@@ -61,7 +63,7 @@ static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
 - (void)hideFlashSettingsAnimated:(BOOL)animated;
 - (void)updateFlashStatusIcon;
 - (void)setupCaptureButtonAudioPlayer;
-- (void)volumeChanged:(id)sender;
+- (void)volumeChanged:(NSNotification *)notification;
 - (void)setupZoomSlider;
 - (void)zoomActive;
 - (void)zoomCheckActivityAndClose;
@@ -90,6 +92,7 @@ static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
 
 - (void)commonInit {
     _rotationAngle = [self rotationAngle];
+    _capturingPhoto = NO;
 
     // Listen to device orientation notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didRotate:) name:UIDeviceOrientationDidChangeNotification object:nil];
@@ -311,6 +314,13 @@ static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
 #pragma mark - Public methods
 
 - (IBAction)capture:(id)sender {
+    if (_capturingPhoto) {
+        DDLogVerbose(@"Still capturing previous image. Ignore trigger.");
+        [self.statsService report:@"Photo Failed (already capturing)"
+                       properties:@{}];
+        return;
+    }
+    _capturingPhoto = YES;
     DDLogVerbose(@"Capture!");
     [self.statsService report:@"Take Photo"
                    properties:@{ @"Flash Mode": SSFlashSettingsDescribe(self.flashService.flashSettings) }];
@@ -324,6 +334,7 @@ static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
             
             if (error) {
                 DDLogError(@"Error capturing: %@", error);
+                _capturingPhoto = NO;
             } else {
                 DDLogVerbose(@"Saving to asset library");
                 __block typeof(self) bSelf = self;
@@ -331,9 +342,10 @@ static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
                                                                  orientation:(ALAssetOrientation)[image imageOrientation]
                                                              completionBlock:^(NSURL *assetURL, NSError *error) {
 
+                    _capturingPhoto = NO;
                     _editPhoto = [self.settingsService boolForKey:kSettingsServiceEditAfterCaptureKey];
                     _sharePhoto = [self.settingsService boolForKey:kSettingsServiceShareAfterCaptureKey];
-                    
+
                     if (_editPhoto || _sharePhoto || [self.settingsService boolForKey:kSettingsServicePreviewAfterCaptureKey]) {
                         _showPhotoURL = assetURL;
                         [bSelf performSegueWithIdentifier:@"showPhoto" sender:self];
@@ -591,7 +603,7 @@ static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
     [self.view addSubview:self.volumeView];
 }
 
-- (void)volumeChanged:(id)sender {
+- (void)volumeChanged:(NSNotification *)notification {
     bool enabled = [[SSSettingsService sharedService] boolForKey:kSettingsServiceEnableVolumeButtonTriggerKey];
 
     if (!enabled) {
