@@ -379,6 +379,12 @@ static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
     CGPoint viewPoint = [recognizer locationInView:recognizer.view];
     CGPoint devicePoint = [previewLayer captureDevicePointOfInterestForPoint:viewPoint];
 
+    // If tap is outside photo, ignore it - the user was mostly trying to tap a button. We don't try to fix the
+    // missed button, but we also don't potentially mess up their focus.
+    if (devicePoint.y > 1.0 || devicePoint.y < 0.0 || devicePoint.x > 1.0 || devicePoint.x < 0.0) {
+        return;
+    }
+
     [self.captureSessionManager focusOnDevicePoint:devicePoint];
     [self.captureSessionManager exposeOnDevicePoint:devicePoint];
 }
