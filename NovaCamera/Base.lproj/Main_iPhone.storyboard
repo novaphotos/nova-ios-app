@@ -50,13 +50,6 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="524"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bottom-gradient-4x134" translatesAutoresizingMaskIntoConstraints="NO" id="gFl-vq-I0h">
-                                        <rect key="frame" x="0.0" y="390" width="320" height="134"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="134" id="JFC-6z-R8i"/>
-                                        </constraints>
-                                    </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ubh-N4-5IW" userLabel="Capture">
                                         <rect key="frame" x="124" y="444" width="72" height="72"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -150,9 +143,7 @@
                                 <constraints>
                                     <constraint firstItem="Ubh-N4-5IW" firstAttribute="top" secondItem="Isx-vn-YYg" secondAttribute="bottom" constant="8" id="5Ef-NM-2eT"/>
                                     <constraint firstItem="GSs-ex-cjL" firstAttribute="top" secondItem="2Si-W3-Mqg" secondAttribute="top" constant="11" id="9fO-IR-LS8"/>
-                                    <constraint firstAttribute="trailing" secondItem="gFl-vq-I0h" secondAttribute="trailing" id="C7U-lL-D50"/>
                                     <constraint firstItem="13Y-yO-HUw" firstAttribute="top" secondItem="2Si-W3-Mqg" secondAttribute="top" constant="11" id="DH1-oo-YjZ"/>
-                                    <constraint firstItem="gFl-vq-I0h" firstAttribute="leading" secondItem="2Si-W3-Mqg" secondAttribute="leading" id="KmO-0g-iWT"/>
                                     <constraint firstAttribute="bottom" secondItem="nb7-cS-TF2" secondAttribute="bottom" constant="19" id="N0o-su-kXd"/>
                                     <constraint firstItem="Isx-vn-YYg" firstAttribute="leading" secondItem="2Si-W3-Mqg" secondAttribute="leading" constant="50" id="PUN-3P-746"/>
                                     <constraint firstAttribute="bottom" secondItem="Ubh-N4-5IW" secondAttribute="bottom" constant="8" id="Rsk-sC-b4H"/>
@@ -163,7 +154,6 @@
                                     <constraint firstAttribute="centerX" secondItem="Isx-vn-YYg" secondAttribute="centerX" id="gGa-Ga-8ZS"/>
                                     <constraint firstAttribute="bottom" secondItem="lwO-ON-Kzh" secondAttribute="bottom" constant="19" id="iPN-2m-veb"/>
                                     <constraint firstAttribute="trailing" secondItem="13Y-yO-HUw" secondAttribute="trailing" constant="10" id="ilj-1m-M5A"/>
-                                    <constraint firstAttribute="bottom" secondItem="gFl-vq-I0h" secondAttribute="bottom" id="okZ-lc-GM9"/>
                                     <constraint firstAttribute="centerX" secondItem="Ubh-N4-5IW" secondAttribute="centerX" id="tZS-8h-fUa"/>
                                 </constraints>
                             </view>
@@ -372,13 +362,6 @@
                                             <action selector="editPhoto:" destination="4Kg-nv-94b" eventType="touchUpInside" id="LHT-vn-Ulk"/>
                                         </connections>
                                     </button>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bottom-gradient-4x134" translatesAutoresizingMaskIntoConstraints="NO" id="TPS-uR-Cxf" userLabel="Gradient">
-                                        <rect key="frame" x="0.0" y="434" width="320" height="134"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="134" id="BNL-Jh-Jom"/>
-                                        </constraints>
-                                    </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sm1-Y4-UPD" userLabel="Share">
                                         <rect key="frame" x="20" y="498" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -436,19 +419,13 @@
                                     <constraint firstItem="vum-fI-jgv" firstAttribute="leading" secondItem="bsT-0N-wxV" secondAttribute="leading" constant="20" id="B0K-IK-ku1"/>
                                     <constraint firstAttribute="bottom" secondItem="BpJ-fu-zWp" secondAttribute="bottom" constant="20" id="JTq-qW-bUr"/>
                                     <constraint firstAttribute="bottom" secondItem="sm1-Y4-UPD" secondAttribute="bottom" constant="20" id="JnG-Ij-z9F"/>
-                                    <constraint firstAttribute="trailing" secondItem="TPS-uR-Cxf" secondAttribute="trailing" id="NzH-Jk-d0F"/>
                                     <constraint firstItem="vgG-uF-iHW" firstAttribute="top" secondItem="bsT-0N-wxV" secondAttribute="top" constant="20" id="Se6-iz-BiT"/>
                                     <constraint firstAttribute="centerX" secondItem="BpJ-fu-zWp" secondAttribute="centerX" id="V1g-7M-wNF"/>
-                                    <constraint firstAttribute="centerX" secondItem="TPS-uR-Cxf" secondAttribute="centerX" id="XhI-kx-0Lh"/>
                                     <constraint firstItem="sm1-Y4-UPD" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="bsT-0N-wxV" secondAttribute="leading" constant="20" id="aMm-mu-LgA"/>
                                     <constraint firstAttribute="trailing" secondItem="vgG-uF-iHW" secondAttribute="trailing" constant="20" id="cJU-wj-td4"/>
                                     <constraint firstAttribute="trailing" secondItem="qgL-kW-Gdl" secondAttribute="trailing" constant="20" id="dER-PP-wcf"/>
                                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="qgL-kW-Gdl" secondAttribute="trailing" constant="20" id="dN9-4K-3lL"/>
                                     <constraint firstItem="vum-fI-jgv" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="bsT-0N-wxV" secondAttribute="leading" constant="20" id="eMZ-dK-LVi"/>
-                                    <constraint firstItem="TPS-uR-Cxf" firstAttribute="leading" secondItem="bsT-0N-wxV" secondAttribute="leading" id="jDG-mj-MJI"/>
-                                    <constraint firstAttribute="trailing" secondItem="TPS-uR-Cxf" secondAttribute="trailing" id="lhJ-K5-KHt"/>
-                                    <constraint firstAttribute="bottom" secondItem="TPS-uR-Cxf" secondAttribute="bottom" id="pD7-7w-y3H"/>
-                                    <constraint firstItem="TPS-uR-Cxf" firstAttribute="leading" secondItem="bsT-0N-wxV" secondAttribute="leading" id="pND-IH-aoe"/>
                                     <constraint firstItem="sm1-Y4-UPD" firstAttribute="leading" secondItem="bsT-0N-wxV" secondAttribute="leading" constant="20" id="pmb-V1-YNL"/>
                                     <constraint firstAttribute="bottom" secondItem="qgL-kW-Gdl" secondAttribute="bottom" constant="20" id="q65-6h-ztm"/>
                                 </constraints>
@@ -797,7 +774,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="bottom-gradient-4x134" width="4" height="134"/>
         <image name="btn-camera" width="50" height="50"/>
         <image name="btn-capture" width="80" height="80"/>
         <image name="btn-capture-on" width="80" height="80"/>
