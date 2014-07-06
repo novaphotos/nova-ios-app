@@ -240,7 +240,7 @@ static const NSTimeInterval kOrientationChangeAnimationDuration = 0.25;
 
 - (IBAction)deletePhoto:(id)sender {
     if (!_lastAssetURL) {
-        DDLogError(@"Unable to delete asset with no _lastAsseURL");
+        DDLogError(@"Unable to delete asset with no _lastAssetURL");
         return;
     }
     [self.libraryService assetForURL:_lastAssetURL withCompletion:^(ALAsset *asset) {

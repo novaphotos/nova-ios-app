@@ -70,7 +70,7 @@
 #pragma mark - Private methods
 
 - (void)displayImage:(UIImage *)image {
-    DDLogVerbose(@"displayImage:%@ size:%@", image, NSStringFromCGSize(image.size));
+    //DDLogVerbose(@"displayImage:%@ size:%@", image, NSStringFromCGSize(image.size));
     self.imageView.image = image;
     [self resetZoom];
 }
