@@ -17,5 +17,6 @@
 @interface SSSettingsViewController : UITableViewController
 
 @property (nonatomic, strong) SSSettingsService *settingsService;
+@property (nonatomic, copy) NSArray *settingsItems;
 
 @end

@@ -12,7 +12,25 @@
 #import <AVFoundation/AVCaptureSession.h>
 
 
+// These constants are used to determine how long to pause before taking a photo to ensure focus/exposure/whitebalance are correct:
+
+// How long to pause when photo is first requested, allowing the camera hardware to determine it needs to adjust focus/exposure/whitebalance.
+const double kPauseToAllowCameraToDetermineItNeedsAdjustment = 0.2;
+// The checks are performed in a loop until the all succeed. Time to sleep between checks.
+const double kPauseBetweenEachAdjustmentCheck = 0.01;
+// How long to attempt the adjustments, before giving up and taking the photo anyway.
+const double kCameraAdjustmentTimeout = 1.5;
+// Once all adjustments are complete, ensure they remain stable for this time period before proceeding. Prevents jitter.
+const double kDurationCameraAdjustmentsNeedToSettle = 0.05;
+
+
 static void * CapturingStillImageContext = &CapturingStillImageContext;
+static void * AdjustingFocusContext = &AdjustingFocusContext;
+static void * AdjustingExposureContext = &AdjustingExposureContext;
+static void * AdjustingWhiteBalanceContext = &AdjustingWhiteBalanceContext;
+static void * LowLightBoostEnabledContext = &LowLightBoostEnabledContext;
+static void * TorchActiveContext = &TorchActiveContext;
+static void * TorchLevelContext = &TorchLevelContext;
 
 @interface SSCaptureSessionManager () {
     BOOL _sessionHasBeenConfigured;
@@ -38,9 +56,6 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
 @synthesize session=_session;
 @synthesize previewLayer=_previewLayer;
 @synthesize videoGravity=_videoGravity;
-@synthesize focusMode=_focusMode;
-@synthesize exposureMode=_exposureMode;
-@synthesize flashMode=_flashMode;
 @synthesize videoScaleAndCropFactor=_videoScaleAndCropFactor;
 
 @synthesize sessionQueue=_sessionQueue;
@@ -52,18 +67,25 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
     self = [super init];
     if (self) {
         // Defaults
-        self.focusMode = AVCaptureFocusModeContinuousAutoFocus;
-        self.exposureMode = AVCaptureExposureModeContinuousAutoExposure;
-        self.flashMode = AVCaptureFlashModeOff;
         self.videoScaleAndCropFactor = 1.0;
-        self.shouldAutoFocusAndAutoExposeOnDeviceAreaChange = YES;
-        self.shouldAutoFocusAndExposeOnDeviceChange = YES;
+        self.shouldAutoFocusAndAutoExposeOnDeviceAreaChange = NO;
         self.videoGravity = AVLayerVideoGravityResizeAspectFill;
         
         // Create session
         _session = [[AVCaptureSession alloc] init];
     }
     return self;
+}
+
++ (id)sharedService {
+    static id _sharedService;
+    static dispatch_once_t once;
+
+    dispatch_once(&once, ^{
+        _sharedService = [[self alloc] init];
+    });
+
+    return _sharedService;
 }
 
 #pragma mark - Public methods
@@ -85,7 +107,7 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
         if (_sessionHasBeenConfigured) {
             // Add observer for image capture (shutter indication)
             [self addObserver:self forKeyPath:@"stillImageOutput.capturingStillImage" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:CapturingStillImageContext];
-            
+
             // Add error notification observer
             __block typeof(self) bSelf = self;
             self.runtimeErrorObserver = [[NSNotificationCenter defaultCenter] addObserverForName:AVCaptureSessionRuntimeErrorNotification object:self.session queue:nil usingBlock:^(NSNotification *note) {
@@ -101,10 +123,9 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange) name:UIDeviceOrientationDidChangeNotification object:nil];
             // Setup initial orientation
             [self deviceOrientationDidChange];
-            
-            // Add subject area change notification
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(subjectAreaDidChange:) name:AVCaptureDeviceSubjectAreaDidChangeNotification object:self.device];
-            
+
+            [self addDeviceObservers:self.device];
+
             // Start the capture session
             [self.session startRunning];
         }
@@ -114,15 +135,14 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
 - (void)stopSession {
     dispatch_async(self.sessionQueue, ^{
         if (_sessionHasBeenConfigured) {
-            [self.session stopRunning];
             
             [self removeObserver:self forKeyPath:@"stillImageOutput.capturingStillImage" context:CapturingStillImageContext];
-            
             [[NSNotificationCenter defaultCenter] removeObserver:self.runtimeErrorObserver];
-            
-            [[NSNotificationCenter defaultCenter] removeObserver:self name:AVCaptureDeviceSubjectAreaDidChangeNotification object:self.device];
-            
             [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
+
+            [self removeDeviceObservers:self.device];
+
+            [self.session stopRunning];
         }
     });
 }
@@ -142,51 +162,90 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
 
 #pragma mark Camera interaction
 
-- (void)autoFocusAndExposeAtCenterPoint {
-    return [self autoFocusAndExposeAtDevicePoint:CGPointMake(0.5, 0.5)];
+- (void)focusOnDevicePoint:(CGPoint)devicePoint {
+    [self setFocusMode:AVCaptureFocusModeContinuousAutoFocus atDevicePoint:[self constrainBounds:devicePoint] isActive:YES];
 }
 
-- (void)continuousAutoFocusAndExposeAtCenterPoint {
-    return [self continuousAutoFocusAndExposeAtDevicePoint:CGPointMake(0.5, 0.5)];
+- (void)exposeOnDevicePoint:(CGPoint)devicePoint {
+    [self setExposureMode:AVCaptureExposureModeContinuousAutoExposure atDevicePoint:[self constrainBounds:devicePoint] isActive:YES];
 }
 
-- (void)autoFocusAndExposeAtDevicePoint:(CGPoint)point {
-    [self focusWithMode:AVCaptureFocusModeAutoFocus exposeWithMode:AVCaptureExposureModeAutoExpose atDevicePoint:point];
+- (void)focusReset {
+    [self setFocusMode:AVCaptureFocusModeContinuousAutoFocus atDevicePoint:CGPointMake(0.5f, 0.5f) isActive:NO];
 }
 
-- (void)continuousAutoFocusAndExposeAtDevicePoint:(CGPoint)point {
-    [self focusWithMode:AVCaptureFocusModeContinuousAutoFocus exposeWithMode:AVCaptureExposureModeContinuousAutoExposure atDevicePoint:point];
+- (void)exposeReset {
+    [self setExposureMode:AVCaptureExposureModeContinuousAutoExposure atDevicePoint:CGPointMake(0.5f, 0.5f) isActive:NO];
 }
 
-- (void)focusWithMode:(AVCaptureFocusMode)focusMode exposeWithMode:(AVCaptureExposureMode)exposureMode atDevicePoint:(CGPoint)point {
-    DDLogVerbose(@"focusWithMode:%d exposeWithMode:%d atDevicePoint:%@", focusMode, exposureMode, NSStringFromCGPoint(point));
+// Ensure point is never beyond (0,0) - (1,1) coords
+- (CGPoint)constrainBounds:(CGPoint) devicePoint {
+    return CGPointMake(
+            MIN(1, MAX(0, devicePoint.x)),
+            MIN(1, MAX(0, devicePoint.y)));
+}
+
+- (void)setFocusMode:(AVCaptureFocusMode)mode atDevicePoint:(CGPoint)devicePoint isActive:(BOOL)active {
     dispatch_async(self.sessionQueue, ^{
         NSError *error = nil;
+        BOOL success = NO;
+
         if ([self.device lockForConfiguration:&error]) {
-            if ([self.device isExposurePointOfInterestSupported] && [self.device isExposureModeSupported:exposureMode]) {
-                [self.device setExposureMode:exposureMode];
-                [self.device setExposurePointOfInterest:point];
-            } else {
-                if (![self.device isExposurePointOfInterestSupported]) {
-                    DDLogWarn(@"Exposure point of interest not supported");
-                } else {
-                    DDLogWarn(@"Exposure mode not supported: %d", exposureMode);
-                }
-            }
-            if ([self.device isFocusPointOfInterestSupported] && [self.device isFocusModeSupported:focusMode]) {
-                [self.device setFocusMode:focusMode];
-                [self.device setFocusPointOfInterest:point];
-            } else {
-                if (![self.device isFocusPointOfInterestSupported]) {
-                    DDLogWarn(@"Focus point of interest not supported");
-                } else {
-                    DDLogWarn(@"Focus mode not supported: %d", focusMode);
+            if ([self.device isFocusPointOfInterestSupported]) {
+                if ([self.device isFocusModeSupported:mode]) {
+                    self.device.focusPointOfInterest = devicePoint;
+                    self.device.focusMode = mode;
+                    success = YES;
                 }
             }
             [self.device unlockForConfiguration];
-        } else {
-            DDLogError(@"Error locking device %@ for configuration: %@", self.device, error);
         }
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self willChangeValueForKey:@"focusLockAvailable"];
+            _focusLockAvailable = success;
+            [self didChangeValueForKey:@"focusLockAvailable"];
+
+            [self willChangeValueForKey:@"focusLockActive"];
+            _focusLockActive = success && active;
+            [self didChangeValueForKey:@"focusLockActive"];
+
+            [self willChangeValueForKey:@"focusLockDevicePoint"];
+            _focusLockDevicePoint = devicePoint;
+            [self didChangeValueForKey:@"focusLockDevicePoint"];
+        });
+    });
+}
+
+- (void)setExposureMode:(AVCaptureExposureMode)mode atDevicePoint:(CGPoint)devicePoint isActive:(BOOL)active {
+    dispatch_async(self.sessionQueue, ^{
+        NSError *error = nil;
+        BOOL success = NO;
+
+        if ([self.device lockForConfiguration:&error]) {
+            if ([self.device isExposurePointOfInterestSupported]) {
+                if ([self.device isExposureModeSupported:mode]) {
+                    self.device.exposureMode = mode;
+                    self.device.exposurePointOfInterest = devicePoint;
+                    success = YES;
+                }
+            }
+            [self.device unlockForConfiguration];
+        }
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self willChangeValueForKey:@"exposureLockAvailable"];
+            _exposureLockAvailable = success;
+            [self didChangeValueForKey:@"exposureLockAvailable"];
+
+            [self willChangeValueForKey:@"exposureLockActive"];
+            _exposureLockActive = success && active;
+            [self didChangeValueForKey:@"exposureLockActive"];
+
+            [self willChangeValueForKey:@"exposureLockDevicePoint"];
+            _exposureLockDevicePoint = devicePoint;
+            [self didChangeValueForKey:@"exposureLockDevicePoint"];
+        });
     });
 }
 
@@ -215,6 +274,47 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
     self.shutterHandler = shutter;
     dispatch_async(self.sessionQueue, ^{
         // Set up capture connection
+
+        
+        // Before we take the photo, let's give the focus/exposure/whitebalance a chance to adapt to the new light.
+        // Focus now
+
+        // Focus/expose/whitebalance now
+        NSError *error;
+        if ([self.device lockForConfiguration:&error]) {
+            if ([self.device isFocusModeSupported:AVCaptureFocusModeContinuousAutoFocus]) {
+                self.device.focusMode = AVCaptureFocusModeContinuousAutoFocus;
+            }
+            if ([self.device isExposureModeSupported:AVCaptureExposureModeContinuousAutoExposure]) {
+                self.device.exposureMode = AVCaptureExposureModeContinuousAutoExposure;
+            }
+            if ([self.device isWhiteBalanceModeSupported:AVCaptureWhiteBalanceModeContinuousAutoWhiteBalance]) {
+                self.device.whiteBalanceMode = AVCaptureWhiteBalanceModeContinuousAutoWhiteBalance;
+            }
+            [self.device unlockForConfiguration];
+        }
+
+        // Pause a little, to allow the camera to determine if it needs to adjust itself.
+        // Because we're on a background thread we can block without locking up the UI.
+        [NSThread sleepForTimeInterval:kPauseToAllowCameraToDetermineItNeedsAdjustment];
+
+        // Go into a loop, checking if the camera focus/exposure/whitebalance is still adjusting.
+        // When all have stopped adjusting, keep going for a little longer to confirm they've settled.
+        // If they have settled for kDurationCameraAdjustmentsNeedToSettle seconds, we're ready to take the photo.
+        // If they never settle, this will eventually timeout.
+        int successCount = 0;
+        for (int i = 0; i < kCameraAdjustmentTimeout / kPauseBetweenEachAdjustmentCheck; i++) {
+            if (!self.device.isAdjustingFocus && !self.device.isAdjustingExposure && !self.device.isAdjustingWhiteBalance) {
+                successCount++;
+                if (successCount > kDurationCameraAdjustmentsNeedToSettle / kPauseBetweenEachAdjustmentCheck) {
+                    break;
+                }
+            } else {
+                successCount = 0;
+            }
+            [NSThread sleepForTimeInterval:kPauseBetweenEachAdjustmentCheck];
+        }
+
         AVCaptureConnection *connection = [self.stillImageOutput connectionWithMediaType:AVMediaTypeVideo];
         if (self.videoScaleAndCropFactor <= connection.videoMaxScaleAndCropFactor) {
             connection.videoScaleAndCropFactor = self.videoScaleAndCropFactor;
@@ -224,9 +324,9 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
         
         // Attempt to set orientation
         if ([connection isVideoOrientationSupported]) {
-            [connection setVideoOrientation:_orientation];
+            connection.videoOrientation = _orientation;
         }
-        
+
         [self.stillImageOutput captureStillImageAsynchronouslyFromConnection:connection completionHandler:^(CMSampleBufferRef imageDataSampleBuffer, NSError *error) {
             // Save to asset library
             if (imageDataSampleBuffer) {
@@ -251,6 +351,24 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
 
 #pragma mark - Properties
 
+- (void)setLightBoostEnabled:(BOOL)lightBoostEnabled {
+    [self willChangeValueForKey:@"lightBoostEnabled"];
+    _lightBoostEnabled = lightBoostEnabled;
+    [self didChangeValueForKey:@"lightBoostEnabled"];
+
+    dispatch_async(self.sessionQueue, ^{
+        NSError *error = nil;
+        if ([_device lockForConfiguration:&error]) {
+            if (_device.lowLightBoostSupported) {
+                _device.automaticallyEnablesLowLightBoostWhenAvailable = lightBoostEnabled;
+            }
+            [_device unlockForConfiguration];
+        } else {
+            DDLogError(@"Error locking device %@ for configuration: %@", _device, error);
+        }
+    });
+}
+
 - (AVCaptureSession *)session {
     return _session;
 }
@@ -272,88 +390,6 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
         self.previewLayer.videoGravity = _videoGravity;
         [self didChangeValueForKey:@"videoGravity"];
     }
-}
-
-- (void)setFocusMode:(AVCaptureFocusMode)focusMode {
-    dispatch_async(self.sessionQueue, ^{
-        // Only reconfigure device if mode does not match
-        if (self.device && self.device.focusMode != focusMode) {
-            if ([self.device isFocusModeSupported:focusMode]) {
-                NSError *error = nil;
-                if ([self.device lockForConfiguration:&error]) {
-                    [self willChangeValueForKey:@"focusMode"];
-                    self.device.focusMode = focusMode;
-                    _focusMode = focusMode;
-                    [self didChangeValueForKey:@"focusMode"];
-                } else {
-                    DDLogError(@"Error locking device %@ for configuration (attempting to change focus mode): %@", self.device, error);
-                }
-            }
-        } else {
-            // Device focus mode already matches (or device isn't set)
-            // Ensure that our ivar also matches.
-            if (_focusMode != focusMode) {
-                [self willChangeValueForKey:@"focusMode"];
-                _focusMode = focusMode;
-                [self didChangeValueForKey:@"focusMode"];
-            }
-        }
-    });
-}
-
-- (void)setExposureMode:(AVCaptureExposureMode)exposureMode {
-    dispatch_async(self.sessionQueue, ^{
-        // Only reconfigure device if mode does not match
-        if (self.device && self.device.exposureMode != exposureMode) {
-            if ([self.device isExposureModeSupported:exposureMode]) {
-                NSError *error = nil;
-                if ([self.device lockForConfiguration:&error]) {
-                    [self willChangeValueForKey:@"exposureMode"];
-                    self.device.exposureMode = exposureMode;
-                    _exposureMode = exposureMode;
-                    [self didChangeValueForKey:@"exposureMode"];
-                } else {
-                    DDLogError(@"Error locking device %@ for configuration (attempting to change exposure mode): %@", self.device, error);
-                }
-            }
-        } else {
-            // Device exposure mode already matches (or device isn't set)
-            // Ensure that our ivar also matches.
-            if (_exposureMode != exposureMode) {
-                [self willChangeValueForKey:@"exposureMode"];
-                _exposureMode = exposureMode;
-                [self didChangeValueForKey:@"exposureMode"];
-            }
-        }
-    });
-}
-
-- (void)setFlashMode:(AVCaptureFlashMode)flashMode {
-    dispatch_async(self.sessionQueue, ^{
-        // Only reconfigure device if mode does not match
-        if (self.device && self.device.flashMode != flashMode) {
-            if ([self.device isFlashModeSupported:flashMode]) {
-                NSError *error = nil;
-                if ([self.device lockForConfiguration:&error]) {
-                    [self willChangeValueForKey:@"flashMode"];
-                    self.device.flashMode = flashMode;
-                    _flashMode = flashMode;
-                    [self.device unlockForConfiguration];
-                    [self didChangeValueForKey:@"flashMode"];
-                } else {
-                    DDLogError(@"Error locking device %@ for configuration (attempting to change flash mode): %@", self.device, error);
-                }
-            }
-        } else {
-            // Device flash mode already matches (or device isn't set)
-            // Ensure that our ivar also matches.
-            if (_flashMode != flashMode) {
-                [self willChangeValueForKey:@"flashMode"];
-                _flashMode = flashMode;
-                [self didChangeValueForKey:@"flashMode"];
-            }
-        }
-    });
 }
 
 - (void)setVideoScaleAndCropFactor:(CGFloat)videoScaleAndCropFactor {
@@ -391,6 +427,26 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
 
 #pragma mark - Private methods & properties
 
+- (void)addDeviceObservers:(AVCaptureDevice *)device {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(subjectAreaDidChange:) name:AVCaptureDeviceSubjectAreaDidChangeNotification object:device];
+    [device addObserver:self forKeyPath:@"adjustingFocus" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:AdjustingFocusContext];
+    [device addObserver:self forKeyPath:@"adjustingExposure" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:AdjustingExposureContext];
+    [device addObserver:self forKeyPath:@"adjustingWhiteBalance" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:AdjustingWhiteBalanceContext];
+    [device addObserver:self forKeyPath:@"lowLightBoostEnabled" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:LowLightBoostEnabledContext];
+    [device addObserver:self forKeyPath:@"torchActive" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:TorchActiveContext];
+    [device addObserver:self forKeyPath:@"torchLevel" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:TorchLevelContext];
+}
+
+- (void)removeDeviceObservers:(AVCaptureDevice *)device {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVCaptureDeviceSubjectAreaDidChangeNotification object:device];
+    [device removeObserver:self forKeyPath:@"adjustingFocus" context:AdjustingFocusContext];
+    [device removeObserver:self forKeyPath:@"adjustingExposure" context:AdjustingExposureContext];
+    [device removeObserver:self forKeyPath:@"adjustingWhiteBalance" context:AdjustingWhiteBalanceContext];
+    [device removeObserver:self forKeyPath:@"lowLightBoostEnabled" context:LowLightBoostEnabledContext];
+    [device removeObserver:self forKeyPath:@"torchActive" context:TorchActiveContext];
+    [device removeObserver:self forKeyPath:@"torchLevel" context:TorchLevelContext];
+}
+
 - (BOOL)setDevice:(AVCaptureDevice *)device withError:(NSError **)outError {
     NSError *error = nil;
     AVCaptureDevice *prevDevice = _device;
@@ -423,47 +479,41 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
     self.deviceInput = newInput;
 
     [self.session commitConfiguration];
-    
+
     [self willChangeValueForKey:@"device"];
     _device = device;
     [self didChangeValueForKey:@"device"];
-    
-    if (self.shouldAutoFocusAndExposeOnDeviceChange) {
-        // Because this is a different device, set continuous autofocus and autoexposure on center point
-        [self continuousAutoFocusAndExposeAtCenterPoint];
-    } else {
-        // Don't reset autofocus and exposure; instead ensure our ivars match device settings
-        AVCaptureExposureMode exposureMode = self.device.exposureMode;
-        if (exposureMode != _exposureMode) {
-            [self willChangeValueForKey:@"exposureMode"];
-            _exposureMode = exposureMode;
-            [self didChangeValueForKey:@"focusMode"];
-        }
-        AVCaptureFocusMode focusMode = self.device.focusMode;
-        if (focusMode != _focusMode) {
-            [self willChangeValueForKey:@"focusMode"];
-            _focusMode = focusMode;
-            [self didChangeValueForKey:@"focusMode"];
-        }
-    }
-    
-    // Ensure subject area change notifications are enabled
-    if (!_device.subjectAreaChangeMonitoringEnabled) {
-        if ([_device lockForConfiguration:&error]) {
+
+    // Because this is a different device, set continuous autofocus and autoexposure on center point
+    [self focusReset];
+    [self exposeReset];
+
+    if ([_device lockForConfiguration:&error]) {
+
+        // Ensure subject area change notifications are enabled
+        if (!_device.subjectAreaChangeMonitoringEnabled) {
             _device.subjectAreaChangeMonitoringEnabled = YES;
-            [_device unlockForConfiguration];
-        } else {
-            DDLogError(@"Error locking device %@ for configuration (attempting to enable subject area change monitoring): %@", _device, error);
         }
+
+        // Attempt to boost low light scenese
+        if (_device.lowLightBoostSupported) {
+            _device.automaticallyEnablesLowLightBoostWhenAvailable = self.lightBoostEnabled;
+        }
+
+        // If necessary, use torch to help focus
+        //if (_device.hasTorch && _device.torchAvailable) {
+        //    _device.torchMode = AVCaptureTorchModeAuto;
+        //}
+
+        [_device unlockForConfiguration];
+    } else {
+        DDLogError(@"Error locking device %@ for configuration: %@", _device, error);
     }
-    
-    // Attempt to persist current flash mode
-    [self setFlashMode:[self flashMode]];
-    
+
     if (prevDevice) {
-        // Re-subscribe to subject area change notifications
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:AVCaptureDeviceSubjectAreaDidChangeNotification object:prevDevice];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(subjectAreaDidChange:) name:AVCaptureDeviceSubjectAreaDidChangeNotification object:_device];
+        // Re-subscribe observer
+        [self removeDeviceObservers:prevDevice];
+        [self addDeviceObservers:_device];
     }
     
     return YES;
@@ -507,9 +557,9 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
 }
 
 - (void)subjectAreaDidChange:(NSNotification *)notification {
-    DDLogVerbose(@"subjectAreaDidChange");
     if (self.shouldAutoFocusAndAutoExposeOnDeviceAreaChange) {
-        [self continuousAutoFocusAndExposeAtCenterPoint];
+        [self focusReset];
+        [self exposeReset];
     }
 }
              
@@ -548,22 +598,48 @@ static void * CapturingStillImageContext = &CapturingStillImageContext;
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-	if (context == CapturingStillImageContext) {
-		BOOL isCapturingStillImage = [change[NSKeyValueChangeNewKey] boolValue];
-        
-        int shutterCurtain;
-        if (isCapturingStillImage) {
-            shutterCurtain = 1;
-        } else {
-            shutterCurtain = 2;
+    dispatch_async(dispatch_get_main_queue(), ^{
+
+
+        if (context == CapturingStillImageContext) {
+            BOOL isCapturingStillImage = [change[NSKeyValueChangeNewKey] boolValue];
+
+            int shutterCurtain;
+            if (isCapturingStillImage) {
+                shutterCurtain = 1;
+            } else {
+                shutterCurtain = 2;
+            }
+
+            if (self.shutterHandler) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.shutterHandler(shutterCurtain);
+                });
+            }
         }
-        
-        if (self.shutterHandler) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.shutterHandler(shutterCurtain);
-            });
+        if (context == AdjustingFocusContext) {
+            [self willChangeValueForKey:@"focusLockAdjusting"];
+            _focusLockAdjusting = self.device.adjustingFocus;
+            [self didChangeValueForKey:@"focusLockAdjusting"];
         }
-	}
+        if (context == AdjustingExposureContext) {
+            [self willChangeValueForKey:@"exposureLockAdjusting"];
+            _exposureLockAdjusting = self.device.adjustingExposure;
+            [self didChangeValueForKey:@"exposureLockAdjusting"];
+        }
+        if (context == AdjustingWhiteBalanceContext) {
+            // ...
+        }
+        if (context == LowLightBoostEnabledContext) {
+            // ...
+        }
+        if (context == TorchActiveContext) {
+            // ...
+        }
+        if (context == TorchLevelContext) {
+            // ...
+        }
+    });
 }
 
 

@@ -10,44 +10,21 @@
 #import "SSChronologicalAssetsLibraryService.h"
 #import "SSStatsService.h"
 #import "SSCenteredScrollView.h"
-#import <AssetsLibrary/AssetsLibrary.h>
 
 /**
  * Private ivars, properties and methods supporting SSPhotoViewController
  */
 @interface SSPhotoViewController () {
-    /**
-     * References full resolution image when first requested after
-     * loading a new ALAsset
-     */
-    UIImage *_fullResolutionImage;
 }
-
-/**
- * Display the specified image. Called from -loadAssetForURL:
- */
-- (void)displayImage:(UIImage *)image;
-
-/**
- * Display image from specified asset
- */
-- (void)displayAssetWithURL:(NSURL *)assetURL;
-
-/**
- * Reset zoom given specific bounds
- */
-- (void)resetZoomWithBounds:(CGRect)bounds;
-
 @end
 
 
 @implementation SSPhotoViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
     if (self) {
-        // Custom initialization
+        // setup
     }
     return self;
 }
@@ -61,7 +38,8 @@
     // Use auto layout for scroll view & image view layout
     self.scrollView.translatesAutoresizingMaskIntoConstraints = NO;
     self.imageView.translatesAutoresizingMaskIntoConstraints = NO;
-    
+
+
     if (!self.libraryService) {
         self.libraryService = [SSChronologicalAssetsLibraryService sharedService];
     }
@@ -74,35 +52,8 @@
     }
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 - (BOOL)prefersStatusBarHidden {
     return YES;
-}
-
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-    DDLogVerbose(@"willRotateToInterfaceOrientation:%d duration:%g", toInterfaceOrientation, duration);
-}
-
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
-    DDLogVerbose(@"didRotateFromInterfaceOrientation:%d", fromInterfaceOrientation);
-    [self resetZoom];
-}
-
-#pragma mark - Public methods
-
-- (void)resetZoom {
-    [self resetZoomWithBounds:self.view.bounds];
 }
 
 #pragma mark - Properties
@@ -119,16 +70,9 @@
 #pragma mark - Private methods
 
 - (void)displayImage:(UIImage *)image {
-    DDLogVerbose(@"displayImage:%@ size:%@", image, NSStringFromCGSize(image.size));
+    //DDLogVerbose(@"displayImage:%@ size:%@", image, NSStringFromCGSize(image.size));
     self.imageView.image = image;
-    if (image) {
-        self.imageHeightConstraint.constant = image.size.height;
-        self.imageWidthConstraint.constant = image.size.width;
-        [self resetZoom];
-    } else {
-        self.imageHeightConstraint.constant = 0;
-        self.imageWidthConstraint.constant = 0;
-    }
+    [self resetZoom];
 }
 
 - (void)displayAssetWithURL:(NSURL *)assetURL {
@@ -137,9 +81,24 @@
     }];
 }
 
-- (void)resetZoomWithBounds:(CGRect)bounds {
-    DDLogVerbose(@"resetZoomWithBounds: %@", NSStringFromCGRect(bounds));
-    
+/**
+ * Reset zoom, fitting the current image if larger than the screen, but
+ * not zooming beyond 1x.
+ */
+- (void)resetZoom {
+    self.scrollView.frame = self.scrollView.superview.frame;
+
+    if (self.imageView.image == nil) {
+        self.imageHeightConstraint.constant = 0;
+        self.imageWidthConstraint.constant = 0;
+        return;
+    }
+
+    self.imageHeightConstraint.constant = self.imageView.image.size.height;
+    self.imageWidthConstraint.constant = self.imageView.image.size.width;
+
+    CGRect bounds = self.view.bounds;
+
     // Calculate minimum zoom that fits entire image within view bounds
     CGFloat minZoomX = bounds.size.width / self.imageView.image.size.width;
     CGFloat minZoomY = bounds.size.height / self.imageView.image.size.height;
@@ -147,17 +106,17 @@
     
     // Ensure that minimum zoom is not greater than 1.0, so that image will
     // not be forcibly stretched
-    minZoom = MIN(1.0, minZoom);
+    minZoom = MIN(1.0f, minZoom);
     
     // Set minimum and initial zoom to the calculated scale so that entire
     // image is displayed within bounds
     self.scrollView.minimumZoomScale = minZoom;
     self.scrollView.zoomScale = minZoom;
-    
+
     // Max zoom should be at least 2x, but should be sufficient to allow
     // image to stretch to fill the screen
     CGFloat maxZoom = MAX(minZoomX, minZoomY);
-    maxZoom = MAX(maxZoom, 2.0);
+    maxZoom = MAX(maxZoom, 2.0f);
     self.scrollView.maximumZoomScale = maxZoom;
     
     // Disable scrolling on scrollview
@@ -191,6 +150,5 @@
         self.scrollView.scrollEnabled = NO;
     }
 }
-
 
 @end

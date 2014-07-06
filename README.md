@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/nova-device/nova-ios-app.svg?branch=develop)](https://travis-ci.org/nova-device/nova-ios-app)
+
 Nova Camera for iOS
 ===================
 

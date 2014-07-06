@@ -219,8 +219,7 @@ NSString * const SSChronologicalAssetsLibraryDeletedAssetIndexesKey = @"SSChrono
     
     // First check whether any assets have been updated with this notification
     NSDictionary *userInfo = notification.userInfo;
-    NSSet *updatedAssets = userInfo[ALAssetLibraryUpdatedAssetsKey];
-    if (!updatedAssets.count) {
+    if (userInfo != nil && userInfo.count != 0) {
         DDLogVerbose(@"No updated assets; skipping");
         return;
     }

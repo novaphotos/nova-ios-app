@@ -5,7 +5,6 @@
 //  Created by Mike Matz on 12/20/13.
 //  Copyright (c) 2013 Sneaky Squid. All rights reserved.
 //
-
 #import <UIKit/UIKit.h>
 #import "SSFlashSettingsViewController.h"
 
@@ -43,8 +42,6 @@
 - (IBAction)showLibrary:(id)sender;
 - (IBAction)toggleCamera:(id)sender;
 - (IBAction)zoomSliderValueChanged:(id)sender;
-- (void)handleTapFrom:(UITapGestureRecognizer *)recognizer;
-- (void)handlePinchFrom:(UIPinchGestureRecognizer *)recognizer;
 - (void)resetZoom;
 
 @end

@@ -11,56 +11,101 @@
 #import "SSSettingsService.h"
 #import "SSNovaFlashService.h"
 #import "SSStatsService.h"
+#import "SSCaptureSessionManager.h"
 #import <CocoaLumberjack/DDTTYLogger.h>
 #import <Crashlytics/Crashlytics.h>
 #import <CrashlyticsLumberjack/CrashlyticsLogger.h>
-#import <Mixpanel/Mixpanel.h>
+
+static void * SettingsServiceUseMultipleNovasChangedContext = &SettingsServiceUseMultipleNovasChangedContext;
+static void * SettingsServiceLightBoostChangedContext = &SettingsServiceLightBoostChangedContext;
+static void * SettingsServiceResetFocusOnSceneChangeContext = &SettingsServiceResetFocusOnSceneChangeContext;
 
 @implementation SSAppDelegate {
     SSSettingsService *_settingsService;
+    SSCaptureSessionManager *_captureSessionManager;
     SSNovaFlashService *_flashService;
     SSStatsService *_statsService;
 }
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
-    
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    // CocoaLumberjack logging setup
+    // Xcode console logging
+    [DDLog addLogger:[DDTTYLogger sharedInstance]];
+
+    // Setup general settings
+    _settingsService = [SSSettingsService sharedService];
+    [_settingsService initializeUserDefaults];
+
+    // Setup camera capture
+    _captureSessionManager = [SSCaptureSessionManager sharedService];
+    _captureSessionManager.shouldAutoFocusAndAutoExposeOnDeviceAreaChange = [_settingsService boolForKey:kSettingsServiceResetFocusOnSceneChangeKey];
+
+    // Setup theme
+    [[SSTheme currentTheme] styleAppearanceProxies];
+
+    // Subscribe to KVO notifications for multiple novas flag changes
+    [_settingsService addObserver:self forKeyPath:kSettingsServiceMultipleNovasKey options:0 context:SettingsServiceUseMultipleNovasChangedContext];
+    [_settingsService addObserver:self forKeyPath:kSettingsServiceLightBoostKey options:0 context:SettingsServiceLightBoostChangedContext];
+    [_settingsService addObserver:self forKeyPath:kSettingsServiceResetFocusOnSceneChangeKey options:0 context:SettingsServiceResetFocusOnSceneChangeContext];
+
+    // Setup flash service
+    _flashService = [SSNovaFlashService sharedService];
+    _flashService.useMultipleNovas = [_settingsService boolForKey:kSettingsServiceMultipleNovasKey];
+
+    // Uncomment this in development to force one time question below to be asked every time.
+    // [_settingsService clearKey:kSettingsServiceOneTimeAskedOptOutQuestion];   // DON'T CHECK IN WITH THIS LINE ENABLED!
+
+    if (![_settingsService isKeySet:kSettingsServiceOneTimeAskedOptOutQuestion]) {
+        // One time: Ask user stats opt-out question.
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Help improve Nova"
+                                                        message:@"Would you like to help improve Nova by reporting anonymous statistics?"
+                                                       delegate:self
+                                              cancelButtonTitle:@"Sure - I'll help!"
+                                              otherButtonTitles:@"Nope", nil];
+        [alert show];
+    }
+
+    if (![_settingsService boolForKey:kSettingsServiceOptOutStatsKey]) {
+        [self startAnonStatsCapture];
+    }
+
+    return YES;
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+
+    BOOL optIn = (buttonIndex == 0);
+    DDLogVerbose(optIn ? @"User opted IN to anon stats" : @"User opted OUT of anon stats");
+
+    [_settingsService setBool:!optIn forKey:kSettingsServiceOptOutStatsKey];
+    [_settingsService setBool:YES forKey:kSettingsServiceOneTimeAskedOptOutQuestion];
+
+    if (optIn) {
+        [self startAnonStatsCapture];
+    }
+}
+
+- (void)startAnonStatsCapture {
+    DDLogInfo(@"Enabled anonymous stats collection");
+
+    // Anonymous stats service
+    _statsService = [SSStatsService sharedService];
+
 #ifdef CRASHLYTICS_API_KEY
     NSString *crashlyticsAPIKey = CRASHLYTICS_API_KEY;
 #else
     NSString *crashlyticsAPIKey = nil;
 #endif
+
+    //bool optOutStats = [_settingsService boolForKey:kSettingsServiceOptOutStatsKey];
     
-    // CocoaLumberjack logging setup
-    // Xcode console logging
-    [DDLog addLogger:[DDTTYLogger sharedInstance]];
     if (crashlyticsAPIKey && crashlyticsAPIKey.length > 0) {
         // Log warnings to Crashlytics
         [DDLog addLogger:[CrashlyticsLogger sharedInstance] withLogLevel:LOG_LEVEL_WARN];
-    }
-    
-    // Setup theme
-    [[SSTheme currentTheme] styleAppearanceProxies];
-    
-    // Setup general settings
-    _settingsService = [SSSettingsService sharedService];
-    [_settingsService initializeUserDefaults];
-    // Subscribe to KVO notifications for multiple novas flag changes
-    [_settingsService addObserver:self forKeyPath:kSettingsServiceMultipleNovasKey options:0 context:nil];
-    
-    // Setup flash service
-    _flashService = [SSNovaFlashService sharedService];
-    _flashService.useMultipleNovas = [_settingsService boolForKey:kSettingsServiceMultipleNovasKey];
 
-    // Anonymous stats service
-    _statsService = [SSStatsService sharedService];
-
-    if (crashlyticsAPIKey && crashlyticsAPIKey.length > 0) {
         // Crashlytics crash reporting service. This should be the last thing in this method.
         [Crashlytics startWithAPIKey:crashlyticsAPIKey];
     }
-    
-    return YES;
 }
 							
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -75,7 +120,7 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
+    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 }
 
@@ -104,9 +149,14 @@
 #pragma mark - KVO
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    if (object == _settingsService && [keyPath isEqualToString:kSettingsServiceMultipleNovasKey]) {
-        DDLogVerbose(@"App delegate forwarding useMultipleNovas setting from settings to flash service");
+    if (context == SettingsServiceUseMultipleNovasChangedContext) {
         _flashService.useMultipleNovas = [_settingsService boolForKey:kSettingsServiceMultipleNovasKey];
+    }
+    if (context == SettingsServiceLightBoostChangedContext) {
+        _captureSessionManager.lightBoostEnabled = [_settingsService boolForKey:kSettingsServiceLightBoostKey];
+    }
+    if (context == SettingsServiceResetFocusOnSceneChangeContext) {
+        _captureSessionManager.shouldAutoFocusAndAutoExposeOnDeviceAreaChange = [_settingsService boolForKey:kSettingsServiceResetFocusOnSceneChangeKey];
     }
 }
 

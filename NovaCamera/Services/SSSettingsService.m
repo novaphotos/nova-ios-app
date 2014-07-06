@@ -14,6 +14,14 @@ const NSString *kSettingsServiceShareAfterCaptureKey = @"SettingsServiceShareAft
 const NSString *kSettingsServiceShowGridLinesKey = @"SettingsServiceShowGridLinesKey";
 const NSString *kSettingsServiceSquarePhotosKey = @"SettingsServiceSquarePhotosKey";
 const NSString *kSettingsServiceMultipleNovasKey = @"SettingsServiceMultipleNovasKey";
+const NSString *kSettingsServiceOptOutStatsKey = @"SettingsServiceOptOutStats";
+const NSString *kSettingsServiceEnableVolumeButtonTriggerKey = @"SettingsServiceEnableVolumeButtonTrigger";
+const NSString *kSettingsServiceLightBoostKey = @"SettingsServiceLightBoostKey";
+const NSString *kSettingsServiceResetFocusOnSceneChangeKey = @"SettingsServiceResetFocusOnSceneChangeKey";
+
+
+// Private settings that are never shown to user
+const NSString *kSettingsServiceOneTimeAskedOptOutQuestion = @"SettingsServiceOneTimeAskedOptOutQuestion";
 
 @implementation SSSettingsService
 
@@ -40,13 +48,10 @@ const NSString *kSettingsServiceMultipleNovasKey = @"SettingsServiceMultipleNova
                           @NO,      // kSettingsServicePreviewAfterCaptureKey
                           @NO,      // kSettingsServiceEditAfterCaptureKey
                           @NO,      // kSettingsServiceShareAfterCaptureKey
-                          /*
-                           * TODO: Re-enable after 0.1.0 release
-                           *
-                          @NO,      // kSettingsServiceShowGridLinesKey
-                          @NO,      // kSettingsServiceSquarePhotosKey
-                          @NO,      // kSettingsServiceMultipleNovasKey
-                           */
+                          @YES,     // kSettingsServiceOptOutStatsKey
+                          @YES,     // kSettingsServiceEnableVolumeButtonTriggerKey
+                          @YES,     // kSettingsServiceLightBoostKey
+                          @YES,     // kSettingsServiceResetFocusOnSceneChangeKey
                           ];
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSArray *keys = [self generalSettingsKeys];
@@ -66,13 +71,10 @@ const NSString *kSettingsServiceMultipleNovasKey = @"SettingsServiceMultipleNova
              kSettingsServicePreviewAfterCaptureKey,
              kSettingsServiceEditAfterCaptureKey,
              kSettingsServiceShareAfterCaptureKey,
-             /*
-              * TODO: Re-enable after 0.1.0 release
-              *
-             kSettingsServiceShowGridLinesKey,
-             kSettingsServiceSquarePhotosKey,
-             kSettingsServiceMultipleNovasKey,
-              */
+             kSettingsServiceOptOutStatsKey,
+             kSettingsServiceEnableVolumeButtonTriggerKey,
+             kSettingsServiceLightBoostKey,
+             kSettingsServiceResetFocusOnSceneChangeKey,
              ];
 }
 
@@ -81,13 +83,10 @@ const NSString *kSettingsServiceMultipleNovasKey = @"SettingsServiceMultipleNova
              @"After photo: Preview",
              @"After photo: Edit",
              @"After photo: Share",
-             /*
-              * TODO: Re-enable after 0.1.0 release
-              *
-             @"Show grid lines",
-             @"Square shaped photos",
-             @"Use multiple Novas",
-              */
+             @"Opt-out of usage stats",
+             @"Volume keys trigger shutter",
+             @"Night vision in low light",
+             @"Scene change resets focus",
              ];
 }
 
@@ -98,6 +97,14 @@ const NSString *kSettingsServiceMultipleNovasKey = @"SettingsServiceMultipleNova
         title = [[self generalSettingsLocalizedTitles] objectAtIndex:idx];
     }
     return title;
+}
+
+- (BOOL)isKeySet:(NSString *)key {
+    return [[NSUserDefaults standardUserDefaults] objectForKey:key] != nil;
+}
+
+- (void)clearKey:(NSString *)key {
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
 }
 
 - (BOOL)boolForKey:(NSString *)key {

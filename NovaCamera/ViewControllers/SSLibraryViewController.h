@@ -12,6 +12,13 @@
 
 @interface SSLibraryViewController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIPageViewControllerDataSource, UIPageViewControllerDelegate, UIAlertViewDelegate>
 
+// Buttons
+@property (nonatomic, strong) IBOutlet UIButton *shareButton;
+@property (nonatomic, strong) IBOutlet UIButton *cameraButton;
+@property (nonatomic, strong) IBOutlet UIButton *deleteButton;
+@property (nonatomic, strong) IBOutlet UIButton *editButton;
+@property (nonatomic, strong) IBOutlet UIButton *libraryButton;
+
 /**
  * Index of current photo
  */

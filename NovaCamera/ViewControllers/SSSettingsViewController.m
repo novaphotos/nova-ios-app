@@ -13,22 +13,56 @@
 
 static const CGFloat kTableViewHeaderSpacing = 6;
 
-@interface SSSettingsViewController () {
-    BOOL _wasNavBarHidden;
+@interface SSSettingsItem : NSObject
+@property (nonatomic, strong) NSString *title;
+@property (nonatomic, copy) void (^action)();
+- (id)initWithTitle:(NSString *)title andAction:(void (^)(id sender))action;
+@end
+
+@implementation SSSettingsItem
+- (id)initWithTitle:(NSString *)title andAction:(void (^)(id sender))action {
+    self = [super init];
+    if (self) {
+        self.title = title;
+        self.action = action;
+    }
+    return self;
 }
-- (NSArray *)linkTitles;
-- (NSArray *)linkURLs;
 @end
 
 @implementation SSSettingsViewController
 
 @synthesize settingsService=_settingsService;
 
-- (id)initWithStyle:(UITableViewStyle)style
+- (id)initWithCoder:(NSCoder *)aDecoder
 {
-    self = [super initWithStyle:style];
+    self = [super initWithCoder: aDecoder];
     if (self) {
-        // Custom initialization
+        
+        // Ensures that "<" back button on the next screen does not show label.
+        self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@""
+                                                                                 style:self.navigationItem.backBarButtonItem.style
+                                                                                target:nil
+                                                                                action:nil];
+        
+        self.settingsItems = @[
+                               [[SSSettingsItem alloc] initWithTitle: @"About Nova"
+                                                           andAction: ^(id sender) {
+                                                               [self navigateToUrl: @"https://wantnova.com/?utm_campaign=app&utm_medium=ios&utm_source=app"];
+                                                           }],
+                               [[SSSettingsItem alloc] initWithTitle: @"Help, support, feedback"
+                                                           andAction: ^(id sender) {
+                                                               [self navigateToUrl: @"https://wantnova.com/help/?utm_campaign=app&utm_medium=ios&utm_source=app"];
+                                                           }],
+                               [[SSSettingsItem alloc] initWithTitle: @"Privacy policy"
+                                                           andAction: ^(id sender) {
+                                                               [self performSegueWithIdentifier:@"showPrivacyPolicy" sender:nil];
+                                                           }],
+                               [[SSSettingsItem alloc] initWithTitle: @"Terms and conditions"
+                                                           andAction: ^(id sender) {
+                                                               [self navigateToUrl: @"https://wantnova.com/tos/?utm_campaign=app&utm_medium=ios&utm_source=app"];
+                                                           }]
+                               ];
     }
     return self;
 }
@@ -52,13 +86,10 @@ static const CGFloat kTableViewHeaderSpacing = 6;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    _wasNavBarHidden = self.navigationController.navigationBarHidden;
-    [self.navigationController setNavigationBarHidden:NO animated:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [self.navigationController setNavigationBarHidden:_wasNavBarHidden animated:animated];
 }
 
 - (BOOL)prefersStatusBarHidden {
@@ -74,24 +105,6 @@ static const CGFloat kTableViewHeaderSpacing = 6;
     return _settingsService;
 }
 
-#pragma mark - Private methods
-
-- (NSArray *)linkTitles {
-    return @[
-             @"About Nova",
-             @"Help and support",
-             @"Terms, conditions, privacy"
-             ];
-}
-
-- (NSArray *)linkURLs {
-    return @[
-             @"https://wantnova.com/?utm_campaign=app&utm_medium=ios&utm_source=app",
-             @"https://wantnova.com/help/?utm_campaign=app&utm_medium=ios&utm_source=app",
-             @"https://wantnova.com/tos/?utm_campaign=app&utm_medium=ios&utm_source=app"
-             ];
-}
-
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -101,7 +114,7 @@ static const CGFloat kTableViewHeaderSpacing = 6;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[self.settingsService generalSettingsLocalizedTitles] count] + [[self linkTitles] count];
+    return [[self.settingsService generalSettingsLocalizedTitles] count] + [[self settingsItems] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -120,7 +133,9 @@ static const CGFloat kTableViewHeaderSpacing = 6;
         value = [self.settingsService boolForKey:key];
     } else {
         cellIdentifier = @"SettingsTextCell";
-        title = [[self linkTitles] objectAtIndex:(indexPath.row - [[self.settingsService generalSettingsLocalizedTitles] count])];
+        SSSettingsItem *item = [[self settingsItems] objectAtIndex:(indexPath.row - [[self.settingsService generalSettingsLocalizedTitles] count])];
+        
+        title = item.title;
     }
     
     cell = (SSSettingsCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
@@ -144,9 +159,9 @@ static const CGFloat kTableViewHeaderSpacing = 6;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSAssert(indexPath.row >= [[self.settingsService generalSettingsLocalizedTitles] count], @"Should only select URL settings");
-    NSURL *url = [NSURL URLWithString:[[self linkURLs] objectAtIndex:(indexPath.row - [[self.settingsService generalSettingsLocalizedTitles] count])]];
-    [[UIApplication sharedApplication] openURL:url];
+    NSAssert(indexPath.row >= [[self.settingsService generalSettingsLocalizedTitles] count], @"Should not select generalSettings");
+    SSSettingsItem *item = [[self settingsItems] objectAtIndex:(indexPath.row - [[self.settingsService generalSettingsLocalizedTitles] count])];
+    [item action](tableView);
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
@@ -171,4 +186,10 @@ static const CGFloat kTableViewHeaderSpacing = 6;
     return kTableViewHeaderSpacing;
 }
 
+#pragma mark - Settings actions
+
+- (void)navigateToUrl:(NSString *)url {
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
+}
+     
 @end

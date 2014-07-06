@@ -8,12 +8,21 @@
 
 #import <Foundation/Foundation.h>
 
+
+// General settings presented to user
 extern NSString *kSettingsServicePreviewAfterCaptureKey;
 extern NSString *kSettingsServiceEditAfterCaptureKey;
 extern NSString *kSettingsServiceShareAfterCaptureKey;
 extern NSString *kSettingsServiceShowGridLinesKey;
 extern NSString *kSettingsServiceSquarePhotosKey;
 extern NSString *kSettingsServiceMultipleNovasKey;
+extern NSString *kSettingsServiceOptOutStatsKey;
+extern NSString *kSettingsServiceEnableVolumeButtonTriggerKey;
+extern NSString *kSettingsServiceLightBoostKey;
+extern NSString *kSettingsServiceResetFocusOnSceneChangeKey;
+
+// Private settings that are never shown to user
+extern NSString *kSettingsServiceOneTimeAskedOptOutQuestion;
 
 /**
  * Simple class managing general Nova settings.
@@ -34,7 +43,7 @@ extern NSString *kSettingsServiceMultipleNovasKey;
 - (void)initializeUserDefaults;
 
 /**
- * Retrieve sorted list of keys used for general settings
+ * Retrieve sorted list of keys used for general settings presented to user
  */
 - (NSArray *)generalSettingsKeys;
 
@@ -47,6 +56,16 @@ extern NSString *kSettingsServiceMultipleNovasKey;
  * Look up the localized title of the given key
  */
 - (NSString *)localizedTitleForKey:(NSString *)key;
+
+/**
+ * Determine if given key has been set
+ */
+- (BOOL)isKeySet:(NSString *)key;
+
+/**
+ * Clear any previously set value for key
+ */
+- (void)clearKey:(NSString *)key;
 
 /**
  * Retrieve the value of the given key

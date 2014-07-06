@@ -12,11 +12,13 @@
  * Different modes of flash, including the three built-in modes, off and custom.
  */
 typedef enum {
+    // Always add new values to the end of the enum and don't delete old values otherwise users' saved settings will get corrupted.
     SSFlashModeOff = 0,
     SSFlashModeGentle,
     SSFlashModeWarm,
     SSFlashModeBright,
     SSFlashModeCustom,
+    SSFlashModeNeutral,
     SSFlashModeUnknown = -1,
 } SSFlashMode;
 
@@ -34,9 +36,10 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings);
 /**
  * Predefined flash settings
  */
-static const SSFlashSettings SSFlashSettingsGentle = { SSFlashModeGentle, 0.25, 0.25 };
-static const SSFlashSettings SSFlashSettingsWarm = { SSFlashModeWarm, 0.75, 0.0 };
+static const SSFlashSettings SSFlashSettingsGentle = { SSFlashModeGentle, 0.5, 0.0 };
+static const SSFlashSettings SSFlashSettingsWarm = { SSFlashModeWarm, 1.0, 0.0 };
 static const SSFlashSettings SSFlashSettingsBright = { SSFlashModeBright, 1.0, 1.0 };
+static const SSFlashSettings SSFlashSettingsNeutral = { SSFlashModeNeutral, 0.0, 1.0 };
 static const SSFlashSettings SSFlashSettingsCustomDefault = { SSFlashModeCustom, 0.5, 0.5 };
 
 /**
@@ -86,12 +89,6 @@ static const NSString *SSNovaFlashServiceStatusChanged;
  * If NO, use only the nearest Nova unit.
  */
 @property (nonatomic, assign) BOOL useMultipleNovas;
-
-/**
- * Flag determining whether custom flash mode is enabled; set to NO
- * for release 0.1.0 per issue #37.
- */
-@property (nonatomic, readonly) BOOL allowCustomFlashMode;
 
 /**
  * Singleton accessor

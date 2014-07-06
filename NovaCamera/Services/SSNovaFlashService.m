@@ -14,6 +14,8 @@ static const NSString *SSNovaFlashServiceStatusChanged = @"SSNovaFlashServiceSta
 
 static const NSString *kLastFlashSettingsUserDefaultsPrefix = @"lastFlashSettings_";
 
+static const uint16_t kFlashTimeout = 3000;
+
 NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
     switch (settings.flashMode) {
         case SSFlashModeOff:
@@ -22,6 +24,8 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
             return @"Gentle";
         case SSFlashModeWarm:
             return @"Warm";
+        case SSFlashModeNeutral:
+            return @"Neutral";
         case SSFlashModeBright:
             return @"Bright";
         case SSFlashModeCustom:
@@ -48,8 +52,7 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
     self = [super init];
     if (self) {
         _temporarilyEnabled = NO;
-        _allowCustomFlashMode = YES;
-        
+
         // Load previous values from NSUserDefaults
         [self restoreFromUserDefaults];
         
@@ -151,13 +154,11 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
 
 - (void)setFlashSettings:(SSFlashSettings)flashSettings {
     // Don't allow setting custom flash mode
-    if (self.allowCustomFlashMode || (flashSettings.flashMode != SSFlashModeCustom)) {
-        [self willChangeValueForKey:@"flashSettings"];
-        _flashSettings = flashSettings;
-        [self configureFlash];
-        [self saveToUserDefaults];
-        [self didChangeValueForKey:@"flashSettings"];
-    }
+    [self willChangeValueForKey:@"flashSettings"];
+    _flashSettings = flashSettings;
+    [self configureFlash];
+    [self saveToUserDefaults];
+    [self didChangeValueForKey:@"flashSettings"];
 }
 
 - (void)setUseMultipleNovas:(BOOL)useMultipleNovas {
@@ -203,13 +204,16 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
             nvFlashSettings = [NVFlashSettings off];
             break;
         case SSFlashModeBright:
-            nvFlashSettings = [NVFlashSettings bright];
+            nvFlashSettings = [NVFlashSettings customWarm:255 cool:255];
             break;
         case SSFlashModeGentle:
-            nvFlashSettings = [NVFlashSettings gentle];
+            nvFlashSettings = [NVFlashSettings customWarm:31 cool:31];
             break;
         case SSFlashModeWarm:
-            nvFlashSettings = [NVFlashSettings warm];
+            nvFlashSettings = [NVFlashSettings customWarm:255 cool:127];
+            break;
+        case SSFlashModeNeutral:
+            nvFlashSettings = [NVFlashSettings customWarm:0 cool:255];
             break;
         case SSFlashModeCustom:
         {
@@ -233,7 +237,7 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
             break;
         }
     }
-    return nvFlashSettings;
+    return [nvFlashSettings flashSettingsWithTimeout:kFlashTimeout];
 }
 
 - (void)setupFlash {
@@ -271,10 +275,6 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
         DDLogVerbose(@"Read flash settings from user defaults");
         DDLogVerbose(@"warm: %g cool: %g", _flashSettings.warmBrightness, _flashSettings.coolBrightness);
     }
-    if (!self.allowCustomFlashMode && _flashSettings.flashMode == SSFlashModeCustom) {
-        DDLogError(@"Setting flash mode to off because mode in user defaults was custom and we are disabling custom flash mode");
-        _flashSettings.flashMode = SSFlashModeOff;
-    }
 }
 
 #pragma mark - KVO
@@ -283,7 +283,6 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
     if ([keyPath isEqualToString:@"status"]) {
         [self willChangeValueForKey:@"status"];
         _status = [[self class] novaFlashStatusForNVFlashServiceStatus:self.nvFlashService.status];
-        DDLogVerbose(@"Nova flash status changed to %d", _status);
         [self didChangeValueForKey:@"status"];
     }
 }
