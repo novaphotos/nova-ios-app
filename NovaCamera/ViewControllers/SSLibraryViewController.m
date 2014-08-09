@@ -10,7 +10,7 @@
 #import "SSChronologicalAssetsLibraryService.h"
 #import "SSPhotoViewController.h"
 #import "SSStatsService.h"
-#import <AviarySDK/AFPhotoEditorController.h>
+#import <AviarySDK/AviarySDK.h>
 #import <MBProgressHUD/MBProgressHUD.h>
 
 static const NSTimeInterval kOrientationChangeAnimationDuration = 0.25;
@@ -123,7 +123,7 @@ static const NSTimeInterval kOrientationChangeAnimationDuration = 0.25;
     self.statsService = [SSStatsService sharedService];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(assetLibraryUpdatedWithNotification:) name:(NSString *)SSChronologicalAssetsLibraryUpdatedNotification object:self.libraryService];
-    
+
     [AFPhotoEditorCustomization setStatusBarStyle:UIStatusBarStyleDefault];
     [AFPhotoEditorCustomization setToolOrder:@[
                                                // Effects
@@ -134,6 +134,7 @@ static const NSTimeInterval kOrientationChangeAnimationDuration = 0.25;
                                                // Fixes
                                                kAFOrientation,
                                                kAFCrop,
+                                               kAFBlur,
                                                kAFSharpness,
                                                // Face improvements
                                                kAFWhiten,
@@ -313,7 +314,7 @@ static const NSTimeInterval kOrientationChangeAnimationDuration = 0.25;
         DDLogError(@"showAssetsWithURL:%@ can't find asset in our list", assetURL);
     }
     self.selectedIndex = idx;
-    DDLogVerbose(@"Updated selectedIndex to %d", idx);
+    DDLogVerbose(@"Updated selectedIndex to %lu", idx);
     
     // Never animate!
     // This fixes a UIPageViewController caching problem that was wreaking havoc when
@@ -371,7 +372,7 @@ static const NSTimeInterval kOrientationChangeAnimationDuration = 0.25;
         // Capture photo editor's session and capture a strong reference
         __block AFPhotoEditorSession *session = bSelf.photoEditorController.session;
         bSelf.photoEditorSession = session;
-        
+
         // Create a context with maximum output resolution
         AFPhotoEditorContext *context = [session createContextWithImage:image];
         
@@ -446,7 +447,7 @@ static const NSTimeInterval kOrientationChangeAnimationDuration = 0.25;
     NSIndexSet *insertedIndexes = notification.userInfo[SSChronologicalAssetsLibraryInsertedAssetIndexesKey];
     NSIndexSet *deletedIndexes = notification.userInfo[SSChronologicalAssetsLibraryDeletedAssetIndexesKey];
     
-    DDLogVerbose(@"assetLibraryUpdatedWithNotification: inserted %d deleted %d", insertedIndexes.count, deletedIndexes.count);
+    DDLogVerbose(@"assetLibraryUpdatedWithNotification: inserted %lu deleted %lu", insertedIndexes.count, deletedIndexes.count);
     
     void (^showAssetAtIndex)(NSUInteger index) = ^(NSUInteger index) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -459,13 +460,13 @@ static const NSTimeInterval kOrientationChangeAnimationDuration = 0.25;
         newIndex = [self.libraryService indexOfAssetWithURL:_lastAssetURL];
     }
     
-    DDLogVerbose(@"Before update logic; self.selectedIndex=%d newIndex=%d _lastAssetURL=%@", self.selectedIndex, newIndex, _lastAssetURL);
+    DDLogVerbose(@"Before update logic; self.selectedIndex=%lu newIndex=%lu _lastAssetURL=%@", self.selectedIndex, newIndex, _lastAssetURL);
     
     if (_waitingToDisplayInsertedAsset) {
         // Hopefully this means our asset is now displayed
-        DDLogVerbose(@"Asset library updated while waiting to display inserted asset. (Number of inserted assets in notification: %d)", insertedIndexes.count);
+        DDLogVerbose(@"Asset library updated while waiting to display inserted asset. (Number of inserted assets in notification: %lu)", insertedIndexes.count);
         if (newIndex != NSNotFound) {
-            DDLogVerbose(@"Setting new index: %d", newIndex);
+            DDLogVerbose(@"Setting new index: %lu", newIndex);
             _waitingToDisplayInsertedAsset = NO;
             self.selectedIndex = newIndex;
         } else {
@@ -477,7 +478,7 @@ static const NSTimeInterval kOrientationChangeAnimationDuration = 0.25;
         if (self.selectedIndex == NSNotFound) {
             DDLogVerbose(@"Didn't have an index before either.");
         } else if (self.selectedIndex > 0) {
-            DDLogVerbose(@"Previous index was %d. Going to display the previous one.", self.selectedIndex);
+            DDLogVerbose(@"Previous index was %lu. Going to display the previous one.", self.selectedIndex);
             showAssetAtIndex(self.selectedIndex - 1);
         } else {
             DDLogVerbose(@"Previous index was 0.");
@@ -491,10 +492,10 @@ static const NSTimeInterval kOrientationChangeAnimationDuration = 0.25;
     } else {
         // Index may need to change
         if (newIndex != self.selectedIndex) {
-            DDLogVerbose(@"Need to change selectedIndex from %d to %d", self.selectedIndex, newIndex);
+            DDLogVerbose(@"Need to change selectedIndex from %lu to %lu", self.selectedIndex, newIndex);
             self.selectedIndex = newIndex;
         } else {
-            DDLogVerbose(@"Didn't need to change selectedIndex (%d)", self.selectedIndex);
+            DDLogVerbose(@"Didn't need to change selectedIndex (%lu)", self.selectedIndex);
         }
     }
 }
