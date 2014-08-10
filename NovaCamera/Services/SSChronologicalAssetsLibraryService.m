@@ -118,7 +118,7 @@ NSString * const SSChronologicalAssetsLibraryDeletedAssetIndexesKey = @"SSChrono
                     restartEnumeration();
                 }
             }];
-            DDLogVerbose(@"Found %u assets in group", mutableURLs.count);
+            DDLogVerbose(@"Found %lu assets in group", mutableURLs.count);
         } else {
             if (!restartedEnumeration) {
                 finishedEnumerating();

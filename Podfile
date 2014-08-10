@@ -5,7 +5,7 @@ platform :ios, "7.0"
 
 target "NovaCamera" do
 	pod 'NovaSDK', '~> 1.0.0'
-	pod 'AviarySDK', '~> 3.3.11'
+	pod 'AviarySDK', :podspec => 'LocalPods/AviarySDK.podspec.json'
 	pod 'CocoaLumberjack', '~> 1.7.0'
 	pod 'CrashlyticsFramework', '~> 2.1.7'
 	pod 'CrashlyticsLumberjack', '~> 1.0.1'
