@@ -422,22 +422,22 @@ static const NSTimeInterval kOrientationChangeAnimationDuration = 0.25;
         [self.libraryService assetForURL:_lastAssetURL withCompletion:^(ALAsset *asset) {
             [asset writeModifiedImageDataToSavedPhotosAlbum:imageData metadata:metadata completionBlock:^(NSURL *assetURL, NSError *error) {
                 DDLogVerbose(@"Modified image saved to asset library: %@ (Error: %@)", assetURL, error);
+                dispatch_async(dispatch_get_main_queue(), ^{
 
-                // Remove HUD
-                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                    // Remove HUD
+                    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
 
-                if (!error) {
-                    // Load new asset
-                    _waitingToDisplayInsertedAsset = YES;
-                    dispatch_async(dispatch_get_main_queue(), ^{
+                    if (!error) {
+                        // Load new asset
+                        _waitingToDisplayInsertedAsset = YES;
                         [bSelf showAssetWithURL:assetURL animated:NO];
                         // Share photo
                         if (self.automaticallySharePhoto) {
                             self.automaticallySharePhoto = NO;
                             [self sharePhoto:nil];
                         }
-                    });
-                }
+                    }
+                });
             }];
         }];
     });
