@@ -3,7 +3,7 @@
 Nova Camera for iOS
 ===================
 
-This is the Nova camera application. See https://wantnova.com/ or http://kck.st/1dOtham
+This is the Nova camera application. See https://www.novaphotos.com/ or http://kck.st/1dOtham
 
 Requirements
 ------------
