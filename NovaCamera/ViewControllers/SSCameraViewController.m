@@ -295,16 +295,24 @@ static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
 
         if (_captureSessionManager.focusLockActive) {
             CGPoint viewPoint = [previewLayer pointForCaptureDevicePointOfInterest:_captureSessionManager.focusLockDevicePoint];
-            [_focusLockIndicator show:viewPoint];
-            _focusLockIndicator.adjusting = _captureSessionManager.focusLockAdjusting;
+            if (isnan(viewPoint.x) || isnan(viewPoint.y)) {
+                [_focusLockIndicator hide];
+            } else {
+                [_focusLockIndicator show:viewPoint];
+                _focusLockIndicator.adjusting = _captureSessionManager.focusLockAdjusting;
+            }
         } else {
             [_focusLockIndicator hide];
         }
 
         if (_captureSessionManager.exposureLockActive) {
             CGPoint viewPoint = [previewLayer pointForCaptureDevicePointOfInterest:_captureSessionManager.exposureLockDevicePoint];
-            [_exposureLockIndicator show:viewPoint];
-            _exposureLockIndicator.adjusting = _captureSessionManager.exposureLockAdjusting;
+            if (isnan(viewPoint.x) || isnan(viewPoint.y)) {
+                [_exposureLockIndicator hide];
+            } else {
+                [_exposureLockIndicator show:viewPoint];
+                _exposureLockIndicator.adjusting = _captureSessionManager.exposureLockAdjusting;
+            }
         } else {
             [_exposureLockIndicator hide];
         }
