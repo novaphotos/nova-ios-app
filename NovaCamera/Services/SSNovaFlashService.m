@@ -244,6 +244,7 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
     // Initialize NVFlashService
     self.nvFlashService = [NVFlashService new];
     [self.nvFlashService addObserver:self forKeyPath:@"status" options:0 context:nil];
+    _status = [[self class] novaFlashStatusForNVFlashServiceStatus:self.nvFlashService.status];
     [self configureFlash];
 }
 

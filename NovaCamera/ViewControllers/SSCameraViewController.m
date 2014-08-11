@@ -559,11 +559,6 @@ static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
     SSNovaFlashStatus status = self.flashService.status;
     NSString *iconImageName = nil;
     switch (status) {
-        case SSNovaFlashStatusDisabled:
-        case SSNovaFlashStatusUnknown:
-        default:
-            iconImageName = nil;
-            break;
         case SSNovaFlashStatusOK:
             [self.statsService report:@"Flash Connection OK"];
             iconImageName = @"icon-ok";
@@ -574,6 +569,11 @@ static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
             break;
         case SSNovaFlashStatusSearching:
             iconImageName = @"icon-searching";
+            break;
+        case SSNovaFlashStatusDisabled:
+        case SSNovaFlashStatusUnknown:
+        default:
+            iconImageName = nil;
             break;
     }
     if (iconImageName) {
