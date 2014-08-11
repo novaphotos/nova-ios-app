@@ -29,6 +29,7 @@ static const NSTimeInterval kOrientationChangeAnimationDuration = 0.25;
     NSURL *_lastAssetURL;
 
     CGFloat _rotationAngle;
+    CGFloat _lastAngle;
 }
 
 /**
@@ -86,6 +87,7 @@ static const NSTimeInterval kOrientationChangeAnimationDuration = 0.25;
     _viewWillAppear = NO;
     _imagePickerCanceled = NO;
 
+    _lastAngle = 0;
     _rotationAngle = [self rotationAngle];
 
     // Listen to device orientation notifications
@@ -641,17 +643,33 @@ static const NSTimeInterval kOrientationChangeAnimationDuration = 0.25;
 - (CGFloat)rotationAngle {
     UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
 
+    CGFloat angle;
+
     switch (orientation) {
+        case UIDeviceOrientationPortrait:
+            angle = 0;
+            break;
         case UIDeviceOrientationPortraitUpsideDown:
-            return (CGFloat)M_PI;
+            angle = (CGFloat)M_PI;
+            break;
         case UIDeviceOrientationLandscapeLeft:
-            return (CGFloat)M_PI * 0.5f;
+            angle = (CGFloat)M_PI * 0.5f;
+            break;
         case UIDeviceOrientationLandscapeRight:
-            return (CGFloat)M_PI * 1.5f;
+            angle = (CGFloat)M_PI * 1.5f;
+            break;
+        case UIDeviceOrientationFaceUp:
+        case UIDeviceOrientationFaceDown:
+            angle = _lastAngle;
+            break;
         default:
-            return 0;
+            angle = 0;
     }
+
+    _lastAngle = angle;
+    return angle;
 }
+
 
 - (CGFloat)closestAngleFrom:(CGFloat)oldAngle to:(CGFloat)newAngle {
     // When rotating from one angle to another, adjust to the shortest location.

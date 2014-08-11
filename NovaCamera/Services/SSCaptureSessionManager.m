@@ -588,6 +588,10 @@ static void * TorchLevelContext = &TorchLevelContext;
             // Swap right and left?
             _orientation = AVCaptureVideoOrientationLandscapeLeft;
             break;
+        case UIDeviceOrientationFaceUp:
+        case UIDeviceOrientationFaceDown:
+            // face up/down... use last known orientation (no-op)
+            break;
     }
 }
 

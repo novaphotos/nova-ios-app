@@ -48,6 +48,8 @@ static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
     CGFloat _previousScaleAndCropFactor;
     CGFloat _previousZoomSliderValue;
 
+    CGFloat _lastAngle;
+
     // Indicator of camera lock
     SSCameraLockView *_focusLockIndicator;
     SSCameraLockView *_exposureLockIndicator;
@@ -93,6 +95,7 @@ static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
 - (void)commonInit {
     _rotationAngle = [self rotationAngle];
     _capturingPhoto = NO;
+    _lastAngle = 0;
 
     // Listen to device orientation notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didRotate:) name:UIDeviceOrientationDidChangeNotification object:nil];
@@ -748,16 +751,31 @@ static const NSTimeInterval kZoomSliderAnimationDuration = 0.25;
 - (CGFloat)rotationAngle {
     UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
 
+    CGFloat angle;
+
     switch (orientation) {
+        case UIDeviceOrientationPortrait:
+            angle = 0;
+            break;
         case UIDeviceOrientationPortraitUpsideDown:
-            return (CGFloat)M_PI;
+            angle = (CGFloat)M_PI;
+            break;
         case UIDeviceOrientationLandscapeLeft:
-            return (CGFloat)M_PI * 0.5f;
+            angle = (CGFloat)M_PI * 0.5f;
+            break;
         case UIDeviceOrientationLandscapeRight:
-            return (CGFloat)M_PI * 1.5f;
+            angle = (CGFloat)M_PI * 1.5f;
+            break;
+        case UIDeviceOrientationFaceUp:
+        case UIDeviceOrientationFaceDown:
+            angle = _lastAngle;
+            break;
         default:
-            return 0;
+            angle = 0;
     }
+
+    _lastAngle = angle;
+    return angle;
 }
 
 - (CGFloat)closestAngleFrom:(CGFloat)oldAngle to:(CGFloat)newAngle {
