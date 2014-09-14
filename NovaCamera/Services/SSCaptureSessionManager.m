@@ -35,6 +35,7 @@ static void * TorchLevelContext = &TorchLevelContext;
 @interface SSCaptureSessionManager () {
     BOOL _sessionHasBeenConfigured;
     AVCaptureVideoOrientation _orientation;
+    BOOL _alreadyTogglingCamera;
 }
 
 @property (nonatomic, strong) dispatch_queue_t sessionQueue;
@@ -73,6 +74,7 @@ static void * TorchLevelContext = &TorchLevelContext;
         
         // Create session
         _session = [[AVCaptureSession alloc] init];
+        _alreadyTogglingCamera = NO;
     }
     return self;
 }
@@ -250,6 +252,10 @@ static void * TorchLevelContext = &TorchLevelContext;
 }
 
 - (void)toggleCamera {
+    if (_alreadyTogglingCamera) {
+        return;
+    }
+    _alreadyTogglingCamera = YES;
     dispatch_async(self.sessionQueue, ^{
         NSArray *devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
         if (devices.count > 1) {
@@ -267,6 +273,7 @@ static void * TorchLevelContext = &TorchLevelContext;
                 DDLogError(@"Error changing device: %@", error);
             }
         }
+        _alreadyTogglingCamera = NO;
     });
 }
 
@@ -580,6 +587,10 @@ static void * TorchLevelContext = &TorchLevelContext;
         case UIDeviceOrientationLandscapeRight:
             // Swap right and left?
             _orientation = AVCaptureVideoOrientationLandscapeLeft;
+            break;
+        case UIDeviceOrientationFaceUp:
+        case UIDeviceOrientationFaceDown:
+            // face up/down... use last known orientation (no-op)
             break;
     }
 }

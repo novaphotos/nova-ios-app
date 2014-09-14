@@ -108,7 +108,7 @@ NSString * const SSChronologicalAssetsLibraryDeletedAssetIndexesKey = @"SSChrono
         DDLogVerbose(@"Enumerating group");
         if (group) {
             [group enumerateAssetsWithOptions:NSEnumerationReverse usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
-                if (result) {
+                if (result && result.defaultURL != nil) {
                     NSURL *url = result.defaultURL;
                     [mutableURLs addObject:url];
                 }
@@ -118,7 +118,7 @@ NSString * const SSChronologicalAssetsLibraryDeletedAssetIndexesKey = @"SSChrono
                     restartEnumeration();
                 }
             }];
-            DDLogVerbose(@"Found %u assets in group", mutableURLs.count);
+            DDLogVerbose(@"Found %lu assets in group", mutableURLs.count);
         } else {
             if (!restartedEnumeration) {
                 finishedEnumerating();

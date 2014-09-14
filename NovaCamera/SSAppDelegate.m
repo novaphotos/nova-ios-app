@@ -12,6 +12,7 @@
 #import "SSNovaFlashService.h"
 #import "SSStatsService.h"
 #import "SSCaptureSessionManager.h"
+#import <AviarySDK/AviarySDK.h>
 #import <CocoaLumberjack/DDTTYLogger.h>
 #import <Crashlytics/Crashlytics.h>
 #import <CrashlyticsLumberjack/CrashlyticsLogger.h>
@@ -68,6 +69,9 @@ static void * SettingsServiceResetFocusOnSceneChangeContext = &SettingsServiceRe
     if (![_settingsService boolForKey:kSettingsServiceOptOutStatsKey]) {
         [self startAnonStatsCapture];
     }
+
+    [AFPhotoEditorController setAPIKey:AVIARY_KEY secret:AVIARY_SECRET];
+    [AFPhotoEditorController setPremiumAddOns:(AFPhotoEditorPremiumAddOnHiRes | AFPhotoEditorPremiumAddOnWhiteLabel)];
 
     return YES;
 }

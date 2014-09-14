@@ -48,11 +48,11 @@ static const CGFloat kTableViewHeaderSpacing = 6;
         self.settingsItems = @[
                                [[SSSettingsItem alloc] initWithTitle: @"About Nova"
                                                            andAction: ^(id sender) {
-                                                               [self navigateToUrl: @"https://wantnova.com/?utm_campaign=app&utm_medium=ios&utm_source=app"];
+                                                               [self navigateToUrl: @"https://www.novaphotos.com/?utm_campaign=app&utm_medium=ios&utm_source=app"];
                                                            }],
                                [[SSSettingsItem alloc] initWithTitle: @"Help, support, feedback"
                                                            andAction: ^(id sender) {
-                                                               [self navigateToUrl: @"https://wantnova.com/help/?utm_campaign=app&utm_medium=ios&utm_source=app"];
+                                                               [self navigateToUrl: @"https://www.novaphotos.com/help/?utm_campaign=app&utm_medium=ios&utm_source=app"];
                                                            }],
                                [[SSSettingsItem alloc] initWithTitle: @"Privacy policy"
                                                            andAction: ^(id sender) {
@@ -60,7 +60,7 @@ static const CGFloat kTableViewHeaderSpacing = 6;
                                                            }],
                                [[SSSettingsItem alloc] initWithTitle: @"Terms and conditions"
                                                            andAction: ^(id sender) {
-                                                               [self navigateToUrl: @"https://wantnova.com/tos/?utm_campaign=app&utm_medium=ios&utm_source=app"];
+                                                               [self navigateToUrl: @"https://www.novaphotos.com/tos/?utm_campaign=app&utm_medium=ios&utm_source=app"];
                                                            }]
                                ];
     }
