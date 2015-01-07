@@ -127,7 +127,9 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
     NVFlashSettings *nvFlashSettings = [[self class] nvFlashSettingsForNovaFlashSettings:flashSettings];
     NSArray *flashes = self.nvFlashService.connectedFlashes;
     if (flashes.count == 0) {
-        callback(NO);
+        if (callback) {
+            callback(NO);
+        }
     }
     __block BOOL firstResponseReceived = NO;
     for (id<NVFlash> flash in flashes) {
@@ -155,7 +157,9 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
 - (void)endFlashWithCallback:(void (^)(BOOL status))callback {
     NSArray *flashes = self.nvFlashService.connectedFlashes;
     if (flashes.count == 0) {
-        callback(NO);
+        if (callback) {
+            callback(NO);
+        }
     }
     __block BOOL firstResponseReceived = NO;
     for (id<NVFlash> flash in flashes) {
