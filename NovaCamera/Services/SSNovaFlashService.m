@@ -38,7 +38,7 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
 @interface SSNovaFlashService () {
     BOOL _temporarilyEnabled;
 }
-+ (SSNovaFlashStatus)novaFlashStatusForNVFlashServiceStatus:(NVFlashServiceStatus)nvFlashServiceStatus;
++ (SSNovaFlashStatus)novaFlashStatusForNVFlashServiceStatus:(NVFlashService*)nvFlashService;
 + (NVFlashSettings *)nvFlashSettingsForNovaFlashSettings:(SSFlashSettings)settings;
 - (void)setupFlash;
 - (void)teardownFlash;
@@ -76,11 +76,12 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
 
 - (void)configureFlash {
     // Flash sync mode setting
+    /* TODO
     if (self.useMultipleNovas) {
         self.nvFlashService.autoPairMode = NVAutoPairAll;
     } else {
         self.nvFlashService.autoPairMode = NVAutoPairClosest;
-    }
+    }*/
     
     if (self.flashSettings.flashMode == SSFlashModeOff) {
         [self disableFlash];
@@ -105,7 +106,7 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
 }
 
 - (void)refreshFlash {
-    [self.nvFlashService refresh];
+    [self.nvFlashService disconnectAll];
 }
 
 - (void)temporaryEnableFlashIfDisabled {
@@ -124,15 +125,27 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
 
 - (void)beginFlashWithSettings:(SSFlashSettings)flashSettings callback:(void (^)(BOOL status))callback {
     NVFlashSettings *nvFlashSettings = [[self class] nvFlashSettingsForNovaFlashSettings:flashSettings];
-    DDLogVerbose(@"Calling nvFlashService beginFlash with settings %@", nvFlashSettings);
-    [self.nvFlashService beginFlash:nvFlashSettings withCallback:^(BOOL status) {
-        DDLogVerbose(@"NVFlashService beginFlash:withCallback: callback fired with status %d", status);
-        if (callback) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                callback(status);
-            });
-        }
-    }];
+    NSArray *flashes = self.nvFlashService.connectedFlashes;
+    if (flashes.count == 0) {
+        callback(NO);
+    }
+    __block BOOL firstResponseReceived = NO;
+    for (id<NVFlash> flash in flashes) {
+        DDLogVerbose(@"Calling nvFlashService beginFlash with settings %@ on %@", nvFlashSettings, flash.identifier);
+        
+        [flash beginFlash:nvFlashSettings withCallback:^(BOOL status) {
+            DDLogVerbose(@"NVFlashService beginFlash:withCallback: callback fired with status %d on %@", status, flash.identifier);
+            if (callback) {
+                if (!firstResponseReceived) {
+                    firstResponseReceived = YES;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        callback(status);
+                    });
+                }
+            }
+        }];
+        
+    }
 }
 
 - (void)beginFlashWithCallback:(void (^)(BOOL))callback {
@@ -140,14 +153,24 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
 }
 
 - (void)endFlashWithCallback:(void (^)(BOOL status))callback {
-    [self.nvFlashService endFlashWithCallback:^(BOOL status) {
-        DDLogVerbose(@"NVFlashService endFlashWithCallback: callback fired with status %d", status);
-        if (callback) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                callback(status);
-            });
-        }
-    }];
+    NSArray *flashes = self.nvFlashService.connectedFlashes;
+    if (flashes.count == 0) {
+        callback(NO);
+    }
+    __block BOOL firstResponseReceived = NO;
+    for (id<NVFlash> flash in flashes) {
+        [flash endFlashWithCallback:^(BOOL status) {
+            DDLogVerbose(@"NVFlashService endFlashWithCallback: callback fired with status %d on %@", status, flash.identifier);
+            if (callback) {
+                if (!firstResponseReceived) {
+                    firstResponseReceived = YES;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        callback(status);
+                    });
+                }
+            }
+        }];
+    }
 }
 
 #pragma - Properties
@@ -170,29 +193,20 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
 
 #pragma mark - Private methods
 
-+ (SSNovaFlashStatus)novaFlashStatusForNVFlashServiceStatus:(NVFlashServiceStatus)nvFlashServiceStatus {
-    SSNovaFlashStatus status;
-    switch (nvFlashServiceStatus) {
-        case NVFlashServiceDisabled:
-            status = SSNovaFlashStatusDisabled;
-            break;
-        case NVFlashServiceIdle:
-            status = SSNovaFlashStatusUnknown;
-            break;
-        case NVFlashServiceConnecting:
-            status = SSNovaFlashStatusSearching;
-            break;
-        case NVFlashServiceScanning:
-            status = SSNovaFlashStatusSearching;
-            break;
-        case NVFlashServiceReady:
-            status = SSNovaFlashStatusOK;
-            break;
-        default:
-            status = SSNovaFlashStatusUnknown;
-            break;
++ (SSNovaFlashStatus)novaFlashStatusForNVFlashServiceStatus:(NVFlashService*)nvFlashService {
+    if (nvFlashService.connectedFlashes.count > 0) {
+        return SSNovaFlashStatusOK;
     }
-    return status;
+    switch (nvFlashService.status) {
+        case NVFlashServiceDisabled:
+            return SSNovaFlashStatusDisabled;
+        case NVFlashServiceIdle:
+            return SSNovaFlashStatusUnknown;
+        case NVFlashServiceScanning:
+            return SSNovaFlashStatusSearching;
+        default:
+            return SSNovaFlashStatusUnknown;
+    }
 }
 
 + (NVFlashSettings *)nvFlashSettingsForNovaFlashSettings:(SSFlashSettings)settings {
@@ -243,8 +257,10 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
 - (void)setupFlash {
     // Initialize NVFlashService
     self.nvFlashService = [NVFlashService new];
+    self.nvFlashService.autoConnect = YES;
+    self.nvFlashService.delegate = self;
     [self.nvFlashService addObserver:self forKeyPath:@"status" options:0 context:nil];
-    _status = [[self class] novaFlashStatusForNVFlashServiceStatus:self.nvFlashService.status];
+    _status = [[self class] novaFlashStatusForNVFlashServiceStatus:self.nvFlashService];
     [self configureFlash];
 }
 
@@ -283,9 +299,25 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if ([keyPath isEqualToString:@"status"]) {
         [self willChangeValueForKey:@"status"];
-        _status = [[self class] novaFlashStatusForNVFlashServiceStatus:self.nvFlashService.status];
+        _status = [[self class] novaFlashStatusForNVFlashServiceStatus:self.nvFlashService];
         [self didChangeValueForKey:@"status"];
     }
+}
+
+#pragma - NVFlashServiceDelegate
+
+- (void) flashServiceConnectedFlash:(id<NVFlash>) flash {
+    NSLog(@"Connected %@", flash.identifier);
+    [self willChangeValueForKey:@"status"];
+    _status = [[self class] novaFlashStatusForNVFlashServiceStatus:self.nvFlashService];
+    [self didChangeValueForKey:@"status"];
+}
+
+- (void) flashServiceDisconnectedFlash:(id<NVFlash>) flash {
+    NSLog(@"Disconnected %@", flash.identifier);
+    [self willChangeValueForKey:@"status"];
+    _status = [[self class] novaFlashStatusForNVFlashServiceStatus:self.nvFlashService];
+    [self didChangeValueForKey:@"status"];
 }
 
 @end
