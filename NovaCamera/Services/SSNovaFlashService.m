@@ -14,7 +14,7 @@ static const NSString *SSNovaFlashServiceStatusChanged = @"SSNovaFlashServiceSta
 
 static const NSString *kLastFlashSettingsUserDefaultsPrefix = @"lastFlashSettings_";
 
-static const uint16_t kFlashTimeout = 4000;
+static const uint16_t kFlashTimeout = 20000;
 
 static const int kMaxPairedNovas = 10;
 
@@ -128,17 +128,16 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
 - (void)beginFlashWithSettings:(SSFlashSettings)flashSettings callback:(void (^)(BOOL status))callback {
     NVFlashSettings *nvFlashSettings = [[self class] nvFlashSettingsForNovaFlashSettings:flashSettings];
     NSArray *flashes = self.nvFlashService.connectedFlashes;
-    if (flashes.count == 0) {
-        if (callback) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                callback(NO);
-            });
-        }
-    }
     __block BOOL firstResponseReceived = NO;
+    int attempted = 0;
     for (id<NVFlash> flash in flashes) {
         DDLogVerbose(@"Calling nvFlashService beginFlash with settings %@ on %@", nvFlashSettings, flash.identifier);
         
+        if (flash.lit) {
+            continue;
+        }
+        
+        attempted++;
         [flash beginFlash:nvFlashSettings withCallback:^(BOOL status) {
             DDLogVerbose(@"NVFlashService beginFlash:withCallback: callback fired with status %d on %@", status, flash.identifier);
             if (callback) {
@@ -151,6 +150,13 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
             }
         }];
         
+    }
+    if (attempted == 0) {
+        if (callback) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                callback(NO);
+            });
+        }
     }
 }
 
