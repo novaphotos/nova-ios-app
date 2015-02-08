@@ -16,6 +16,8 @@ static const NSString *kLastFlashSettingsUserDefaultsPrefix = @"lastFlashSetting
 
 static const uint16_t kFlashTimeout = 4000;
 
+static const int kMaxPairedNovas = 10;
+
 NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
     switch (settings.flashMode) {
         case SSFlashModeOff:
@@ -195,6 +197,7 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
 - (void)setUseMultipleNovas:(BOOL)useMultipleNovas {
     [self willChangeValueForKey:@"useMultipleNovas"];
     _useMultipleNovas = useMultipleNovas;
+    self.nvFlashService.autoConnectMaxFlashes = _useMultipleNovas ? kMaxPairedNovas : 1;
     [self didChangeValueForKey:@"useMultipleNovas"];
     [self configureFlash];
 }
@@ -266,6 +269,7 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
     // Initialize NVFlashService
     self.nvFlashService = [NVFlashService new];
     self.nvFlashService.autoConnect = YES;
+    self.nvFlashService.autoConnectMaxFlashes = _useMultipleNovas ? kMaxPairedNovas : 1;
     self.nvFlashService.delegate = self;
     [self.nvFlashService addObserver:self forKeyPath:@"status" options:0 context:nil];
     _status = [[self class] novaFlashStatusForNVFlashServiceStatus:self.nvFlashService];
