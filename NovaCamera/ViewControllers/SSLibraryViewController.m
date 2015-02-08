@@ -40,12 +40,12 @@ static const NSTimeInterval kOrientationChangeAnimationDuration = 0.25;
 /**
  * Aviary editor
  */
-@property (nonatomic, strong) AFPhotoEditorController *photoEditorController;
+@property (nonatomic, strong) AVYPhotoEditorController *photoEditorController;
 
 /**
  * Aviary session, used for exporting hi-res images
  */
-@property (nonatomic, strong) AFPhotoEditorSession *photoEditorSession;
+@property (nonatomic, strong) AVYPhotoEditorSession *photoEditorSession;
 
 /**
  * Reference currently displayed picker
@@ -126,29 +126,32 @@ static const NSTimeInterval kOrientationChangeAnimationDuration = 0.25;
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(assetLibraryUpdatedWithNotification:) name:(NSString *)SSChronologicalAssetsLibraryUpdatedNotification object:self.libraryService];
 
-    [AFPhotoEditorCustomization setStatusBarStyle:UIStatusBarStyleDefault];
-    [AFPhotoEditorCustomization setToolOrder:@[
+    [AVYPhotoEditorCustomization setStatusBarStyle:UIStatusBarStyleDefault];
+    [AVYPhotoEditorCustomization setToolOrder:@[
                                                // Effects
-                                               kAFEnhance,
-                                               kAFEffects,
-                                               kAFFocus,
-                                               kAFAdjustments,
+                                               kAVYEnhance,
+                                               kAVYEffects,
+                                               kAVYFocus,
+                                               kAVYColorAdjust,
+                                               kAVYLightingAdjust,
+                                               kAVYVignette,
                                                // Fixes
-                                               kAFOrientation,
-                                               kAFCrop,
-                                               kAFBlur,
-                                               kAFSharpness,
+                                               kAVYOrientation,
+                                               kAVYCrop,
+                                               kAVYBlur,
+                                               kAVYSharpness,
                                                // Face improvements
-                                               kAFWhiten,
-                                               kAFBlemish,
-                                               kAFRedeye,
+                                               kAVYWhiten,
+                                               kAVYBlemish,
+                                               kAVYRedeye,
                                                // Fun things
-                                               kAFSplash,
-                                               kAFStickers,
-                                               kAFFrames,
-                                               kAFDraw,
-                                               kAFText,
-                                               kAFMeme
+                                               kAVYSplash,
+                                               kAVYStickers,
+                                               kAVYOverlay,
+                                               kAVYFrames,
+                                               kAVYDraw,
+                                               kAVYText,
+                                               kAVYMeme
                                                ]];
 
     // Enumerate assets
@@ -365,18 +368,18 @@ static const NSTimeInterval kOrientationChangeAnimationDuration = 0.25;
         }
 
         // Create editor
-        bSelf.photoEditorController = [[AFPhotoEditorController alloc] initWithImage:image];
+        bSelf.photoEditorController = [[AVYPhotoEditorController alloc] initWithImage:image];
         [bSelf.photoEditorController setDelegate:bSelf];
         
         // Present editor
         [bSelf presentViewController:bSelf.photoEditorController animated:YES completion:nil];
         
         // Capture photo editor's session and capture a strong reference
-        __block AFPhotoEditorSession *session = bSelf.photoEditorController.session;
+        __block AVYPhotoEditorSession *session = bSelf.photoEditorController.session;
         bSelf.photoEditorSession = session;
 
         // Create a context with maximum output resolution
-        AFPhotoEditorContext *context = [session createContextWithImage:image];
+        AVYPhotoEditorContext *context = [session createContextWithImage:image];
         
         // Request that the context asynchronously replay the session's actions on its image.
         [context render:^(UIImage *result) {
@@ -544,9 +547,9 @@ static const NSTimeInterval kOrientationChangeAnimationDuration = 0.25;
     });
 }
 
-#pragma mark - AFPhotoEditorControllerDelegate
+#pragma mark - AVYPhotoEditorControllerDelegate
 
-- (void)photoEditor:(AFPhotoEditorController *)editor finishedWithImage:(UIImage *)image {
+- (void)photoEditor:(AVYPhotoEditorController *)editor finishedWithImage:(UIImage *)image {
     _didEditPhoto = YES;
     
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -557,7 +560,7 @@ static const NSTimeInterval kOrientationChangeAnimationDuration = 0.25;
     });
 }
 
-- (void)photoEditorCanceled:(AFPhotoEditorController *)editor {
+- (void)photoEditorCanceled:(AVYPhotoEditorController *)editor {
     [self dismissViewControllerAnimated:YES completion:nil];
     self.photoEditorController = nil;
 }
