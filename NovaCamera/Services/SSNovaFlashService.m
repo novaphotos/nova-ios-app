@@ -128,7 +128,9 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
     NSArray *flashes = self.nvFlashService.connectedFlashes;
     if (flashes.count == 0) {
         if (callback) {
-            callback(NO);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                callback(NO);
+            });
         }
     }
     __block BOOL firstResponseReceived = NO;
@@ -158,8 +160,10 @@ NSString * SSFlashSettingsDescribe(SSFlashSettings settings) {
     NSArray *flashes = self.nvFlashService.connectedFlashes;
     if (flashes.count == 0) {
         if (callback) {
-            callback(NO);
-        }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                callback(NO);
+            });
+       }
     }
     __block BOOL firstResponseReceived = NO;
     for (id<NVFlash> flash in flashes) {
