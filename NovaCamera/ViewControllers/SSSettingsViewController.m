@@ -9,6 +9,7 @@
 #import "SSSettingsViewController.h"
 #import "SSSettingsService.h"
 #import "SSSettingsCell.h"
+#import "SSStatsService.h"
 #import "SSTheme.h"
 
 static const CGFloat kTableViewHeaderSpacing = 6;
@@ -46,20 +47,29 @@ static const CGFloat kTableViewHeaderSpacing = 6;
                                                                                 action:nil];
         
         self.settingsItems = @[
-                               [[SSSettingsItem alloc] initWithTitle: @"About Nova"
+                               [[SSSettingsItem alloc] initWithTitle: @"Get help now"
                                                            andAction: ^(id sender) {
-                                                               [self navigateToUrl: @"https://www.novaphotos.com/?utm_campaign=app&utm_medium=ios&utm_source=app"];
+                                                               [self.statsService report:@"Help Start"];
+                                                               [self mailDialog];
                                                            }],
-                               [[SSSettingsItem alloc] initWithTitle: @"Help, support, feedback"
+                               [[SSSettingsItem alloc] initWithTitle: @"Buy a Nova"
                                                            andAction: ^(id sender) {
-                                                               [self navigateToUrl: @"https://www.novaphotos.com/help/?utm_campaign=app&utm_medium=ios&utm_source=app"];
+                                                               [self.statsService report:@"Show Buy"];
+                                                               [self navigateToUrl: @"https://www.novaphotos.com/shop?utm_campaign=app&utm_medium=ios&utm_source=app"];
+                                                           }],
+                               [[SSSettingsItem alloc] initWithTitle: @"Learn to take beautiful photos"
+                                                           andAction: ^(id sender) {
+                                                               [self.statsService report:@"Show Learn"];
+                                                               [self navigateToUrl: @"https://www.novaphotos.com/lightsauce/?utm_campaign=app&utm_medium=ios&utm_source=app"];
                                                            }],
                                [[SSSettingsItem alloc] initWithTitle: @"Privacy policy"
                                                            andAction: ^(id sender) {
+                                                               [self.statsService report:@"Show Privacy"];
                                                                [self performSegueWithIdentifier:@"showPrivacyPolicy" sender:nil];
                                                            }],
                                [[SSSettingsItem alloc] initWithTitle: @"Terms and conditions"
                                                            andAction: ^(id sender) {
+                                                               [self.statsService report:@"Show Terms"];
                                                                [self navigateToUrl: @"https://www.novaphotos.com/tos/?utm_campaign=app&utm_medium=ios&utm_source=app"];
                                                            }]
                                ];
@@ -70,6 +80,11 @@ static const CGFloat kTableViewHeaderSpacing = 6;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+    // table seperators render badly in iOS7.1 (known Apple bug). Don't need them.
+    [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+    
+    self.statsService = [SSStatsService sharedService];
 
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -191,5 +206,48 @@ static const CGFloat kTableViewHeaderSpacing = 6;
 - (void)navigateToUrl:(NSString *)url {
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
 }
-     
+
+- (void)mailDialog {
+    if ([MFMailComposeViewController canSendMail]) {
+        MFMailComposeViewController *mail = [[MFMailComposeViewController alloc] init];
+        mail.mailComposeDelegate = self;
+        mail.subject = @"Help with Nova on iOS";
+        mail.toRecipients = @[@"hello@novaphotos.com"];
+        [self presentViewController:mail animated:YES completion:NULL];
+    } else {
+        [self showError:@"This device is not configured to send email"];
+    }
+}
+
+#pragma mark - MFMailComposeViewControllerDelegate delegate
+
+- (void)mailComposeController:(MFMailComposeViewController *)controller
+          didFinishWithResult:(MFMailComposeResult)result
+                        error:(NSError *)error {
+    switch (result) {
+        case MFMailComposeResultFailed:
+            [self.statsService report:@"Help Failed"];
+            [self showError:@"Failed to send mail"];
+            break;
+        case MFMailComposeResultCancelled:
+            [self.statsService report:@"Help Cancelled"];
+            break;
+        case MFMailComposeResultSaved:
+            [self.statsService report:@"Help Saved"];
+            break;
+        case MFMailComposeResultSent:
+            [self.statsService report:@"Help Sent"];
+            break;
+    }
+    [self dismissViewControllerAnimated:YES completion:NULL];
+}
+
+#pragma mark - Helpers
+
+- (void)showError:(NSString*)msg {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:msg delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+    [alert show];
+}
+
+
 @end
