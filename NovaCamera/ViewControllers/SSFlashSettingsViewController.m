@@ -203,10 +203,16 @@ static void * NovaFlashServiceStatus = &NovaFlashServiceStatus;
     [self setFlashSettings:settings animated:YES];
 }
 
-- (IBAction)testFlash:(id)sender {
+- (IBAction)testBeginFlash:(id)sender {
     [self.flashService beginFlashWithSettings:self.flashSettings callback:^(BOOL status) {
         [self.statsService report:status ? @"Test Flash Succeeded" : @"Test Flash Failed"
                        properties:@{ @"Flash Mode": SSFlashSettingsDescribe(self.flashService.flashSettings) }];
+    }];
+}
+
+- (IBAction)testEndFlash:(id)sender {
+    [self.flashService endFlashWithCallback:^(BOOL status) {
+        // no-op
     }];
 }
 

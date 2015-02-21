@@ -1,776 +1,2171 @@
-// !$*UTF8*$!
-{
-	archiveVersion = 1;
-	classes = {
-	};
-	objectVersion = 46;
-	objects = {
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>archiveVersion</key>
+	<string>1</string>
+	<key>classes</key>
+	<dict/>
+	<key>objectVersion</key>
+	<string>46</string>
+	<key>objects</key>
+	<dict>
+		<key>0AA0F909440E0756E1D89C0D</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.xcconfig</string>
+			<key>name</key>
+			<string>Pods-NovaCamera.release.xcconfig</string>
+			<key>path</key>
+			<string>Pods/Target Support Files/Pods-NovaCamera/Pods-NovaCamera.release.xcconfig</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>122810D518CE4A8D0052255C</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array/>
+			<key>inputPaths</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXShellScriptBuildPhase</string>
+			<key>outputPaths</key>
+			<array/>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+			<key>shellPath</key>
+			<string>/bin/sh</string>
+			<key>shellScript</key>
+			<string>set -e
 
-/* Begin PBXBuildFile section */
-		122810D818CE50B10052255C /* SSStatsService.m in Sources */ = {isa = PBXBuildFile; fileRef = 122810D718CE50B10052255C /* SSStatsService.m */; };
-		129E0024194DB7C100DE1723 /* HtmlResources in Resources */ = {isa = PBXBuildFile; fileRef = 129E0023194DB7C100DE1723 /* HtmlResources */; };
-		129E0027194DB9BA00DE1723 /* SSPrivacyPolicyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 129E0026194DB9BA00DE1723 /* SSPrivacyPolicyViewController.m */; };
-		2719089E187EC5E500996A2D /* SSPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2719089D187EC5E500996A2D /* SSPhotoViewController.m */; };
-		2724C98018639EEB00A68E0D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2724C97F18639EEB00A68E0D /* Foundation.framework */; };
-		2724C98218639EEB00A68E0D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2724C98118639EEB00A68E0D /* CoreGraphics.framework */; };
-		2724C98418639EEB00A68E0D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2724C98318639EEB00A68E0D /* UIKit.framework */; };
-		2724C98A18639EEB00A68E0D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2724C98818639EEB00A68E0D /* InfoPlist.strings */; };
-		2724C98C18639EEB00A68E0D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2724C98B18639EEB00A68E0D /* main.m */; };
-		2724C99018639EEB00A68E0D /* SSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2724C98F18639EEB00A68E0D /* SSAppDelegate.m */; };
-		2724C99318639EEB00A68E0D /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2724C99118639EEB00A68E0D /* Main_iPhone.storyboard */; };
-		2724C99618639EEB00A68E0D /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2724C99418639EEB00A68E0D /* Main_iPad.storyboard */; };
-		2724C99B18639EEB00A68E0D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2724C99A18639EEB00A68E0D /* Images.xcassets */; };
-		2724C9A218639EEB00A68E0D /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2724C9A118639EEB00A68E0D /* XCTest.framework */; };
-		2724C9A318639EEB00A68E0D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2724C97F18639EEB00A68E0D /* Foundation.framework */; };
-		2724C9A418639EEB00A68E0D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2724C98318639EEB00A68E0D /* UIKit.framework */; };
-		2724C9AC18639EEB00A68E0D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2724C9AA18639EEB00A68E0D /* InfoPlist.strings */; };
-		2724C9AE18639EEB00A68E0D /* Nova_CameraTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2724C9AD18639EEB00A68E0D /* Nova_CameraTests.m */; };
-		272F87C518752DE90005BA58 /* SSCaptureSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 272F87C418752DE90005BA58 /* SSCaptureSessionManager.m */; };
-		272F87C618752DE90005BA58 /* SSCaptureSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 272F87C418752DE90005BA58 /* SSCaptureSessionManager.m */; };
-		2752B3A21884BC0F00E0C870 /* SSCenteredScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2752B3A11884BC0F00E0C870 /* SSCenteredScrollView.m */; };
-		27554D04188E9A68008E4C32 /* SSPassThroughView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27554D03188E9A68008E4C32 /* SSPassThroughView.m */; };
-		27728B48188F5757004D67A4 /* SSChronologicalAssetsLibraryService.m in Sources */ = {isa = PBXBuildFile; fileRef = 27728B47188F5757004D67A4 /* SSChronologicalAssetsLibraryService.m */; };
-		27728B4F188F5C2A004D67A4 /* ALAsset+FilteredImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 27728B4E188F5C2A004D67A4 /* ALAsset+FilteredImage.m */; };
-		27728B50188F5C2A004D67A4 /* ALAsset+FilteredImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 27728B4E188F5C2A004D67A4 /* ALAsset+FilteredImage.m */; };
-		27A2B0D91863CB7700D13251 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27A2B0D81863CB7700D13251 /* AVFoundation.framework */; };
-		27AE1BFA1896FEB500C27C38 /* SSNovaFlashService.m in Sources */ = {isa = PBXBuildFile; fileRef = 27AE1BF91896FEB500C27C38 /* SSNovaFlashService.m */; };
-		27AE1C0318976F4C00C27C38 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 27AE1C0118976F4C00C27C38 /* LICENSE.txt */; };
-		27AE1C0418976F4C00C27C38 /* OpenSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27AE1C0218976F4C00C27C38 /* OpenSans-Light.ttf */; };
-		27AE1C071897700B00C27C38 /* SSTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 27AE1C061897700B00C27C38 /* SSTheme.m */; };
-		27AE1C0A189910A300C27C38 /* SSSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27AE1C09189910A300C27C38 /* SSSettingsViewController.m */; };
-		27AE1C0D1899116900C27C38 /* SSSettingsService.m in Sources */ = {isa = PBXBuildFile; fileRef = 27AE1C0C1899116900C27C38 /* SSSettingsService.m */; };
-		27AE1C10189918D000C27C38 /* SSSettingsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 27AE1C0F189918D000C27C38 /* SSSettingsCell.m */; };
-		27AF863818DD7E5B007C175F /* empty.wav in Resources */ = {isa = PBXBuildFile; fileRef = 27AF863718DD7E5B007C175F /* empty.wav */; };
-		27BB942D1863A7CD00A31BCF /* SSCameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27BB942C1863A7CD00A31BCF /* SSCameraViewController.m */; };
-		27BB94331863AB3300A31BCF /* SSCameraPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 27BB94321863AB3300A31BCF /* SSCameraPreviewView.m */; };
-		27EF5B091886ACAD00AFBD0E /* SSLibraryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27EF5B081886ACAD00AFBD0E /* SSLibraryViewController.m */; };
-		27F266C21892710F00B47C7B /* SSFlashSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 27F266C11892710F00B47C7B /* SSFlashSettingsViewController.m */; };
-		7BB4BA47770B4148B9ACE56E /* libPods-NovaCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F36E6E5AA26F401BB75B1E25 /* libPods-NovaCamera.a */; };
-		954EF8A0E4E14A3B9AC0B73B /* libPods-NovaCameraTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AE5633BD813140FE8017A321 /* libPods-NovaCameraTests.a */; };
-		B7EEE0F0E5E01DED60D3E297 /* .travis.yml in Resources */ = {isa = PBXBuildFile; fileRef = B7EEE7532834119070879C7E /* .travis.yml */; };
-		B7EEEA4C97D542FD0772E74A /* SSCameraLockView.m in Sources */ = {isa = PBXBuildFile; fileRef = B7EEE2015376B3D5AE5405E9 /* SSCameraLockView.m */; };
-/* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		2724C9A518639EEB00A68E0D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2724C97418639EEB00A68E0D /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 2724C97B18639EEB00A68E0D;
-			remoteInfo = NovaCamera;
-		};
-/* End PBXContainerItemProxy section */
-
-/* Begin PBXFileReference section */
-		122810D618CE50B10052255C /* SSStatsService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSStatsService.h; sourceTree = "<group>"; };
-		122810D718CE50B10052255C /* SSStatsService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSStatsService.m; sourceTree = "<group>"; };
-		129E0023194DB7C100DE1723 /* HtmlResources */ = {isa = PBXFileReference; lastKnownFileType = folder; name = HtmlResources; path = NovaCamera/HtmlResources; sourceTree = "<group>"; };
-		129E0025194DB9BA00DE1723 /* SSPrivacyPolicyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSPrivacyPolicyViewController.h; sourceTree = "<group>"; };
-		129E0026194DB9BA00DE1723 /* SSPrivacyPolicyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSPrivacyPolicyViewController.m; sourceTree = "<group>"; };
-		2719089C187EC5E500996A2D /* SSPhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSPhotoViewController.h; sourceTree = "<group>"; };
-		2719089D187EC5E500996A2D /* SSPhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSPhotoViewController.m; sourceTree = "<group>"; };
-		2724C97C18639EEB00A68E0D /* NovaCamera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NovaCamera.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		2724C97F18639EEB00A68E0D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		2724C98118639EEB00A68E0D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		2724C98318639EEB00A68E0D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		2724C98718639EEB00A68E0D /* NovaCamera-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "NovaCamera-Info.plist"; sourceTree = "<group>"; };
-		2724C98918639EEB00A68E0D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		2724C98B18639EEB00A68E0D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		2724C98D18639EEB00A68E0D /* NovaCamera-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NovaCamera-Prefix.pch"; sourceTree = "<group>"; };
-		2724C98E18639EEB00A68E0D /* SSAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SSAppDelegate.h; sourceTree = "<group>"; };
-		2724C98F18639EEB00A68E0D /* SSAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SSAppDelegate.m; sourceTree = "<group>"; };
-		2724C99218639EEB00A68E0D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
-		2724C99518639EEB00A68E0D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
-		2724C99A18639EEB00A68E0D /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		2724C9A018639EEB00A68E0D /* NovaCameraTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NovaCameraTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		2724C9A118639EEB00A68E0D /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		2724C9A918639EEB00A68E0D /* NovaCameraTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "NovaCameraTests-Info.plist"; sourceTree = "<group>"; };
-		2724C9AB18639EEB00A68E0D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		2724C9AD18639EEB00A68E0D /* Nova_CameraTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Nova_CameraTests.m; sourceTree = "<group>"; };
-		272F87C318752DE90005BA58 /* SSCaptureSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSCaptureSessionManager.h; sourceTree = "<group>"; };
-		272F87C418752DE90005BA58 /* SSCaptureSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSCaptureSessionManager.m; sourceTree = "<group>"; };
-		2752B3A01884BC0F00E0C870 /* SSCenteredScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSCenteredScrollView.h; sourceTree = "<group>"; };
-		2752B3A11884BC0F00E0C870 /* SSCenteredScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSCenteredScrollView.m; sourceTree = "<group>"; };
-		27554D02188E9A68008E4C32 /* SSPassThroughView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSPassThroughView.h; sourceTree = "<group>"; };
-		27554D03188E9A68008E4C32 /* SSPassThroughView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSPassThroughView.m; sourceTree = "<group>"; };
-		276AC62B187AAF0200A7DC0B /* Config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
-		276AC62C187AAFD400A7DC0B /* Config.sample.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Config.sample.h; sourceTree = "<group>"; };
-		27728B46188F5757004D67A4 /* SSChronologicalAssetsLibraryService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSChronologicalAssetsLibraryService.h; sourceTree = "<group>"; };
-		27728B47188F5757004D67A4 /* SSChronologicalAssetsLibraryService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSChronologicalAssetsLibraryService.m; sourceTree = "<group>"; };
-		27728B4D188F5C2A004D67A4 /* ALAsset+FilteredImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ALAsset+FilteredImage.h"; sourceTree = "<group>"; };
-		27728B4E188F5C2A004D67A4 /* ALAsset+FilteredImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ALAsset+FilteredImage.m"; sourceTree = "<group>"; };
-		27A2B0D81863CB7700D13251 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		27AE1BF81896FEB500C27C38 /* SSNovaFlashService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSNovaFlashService.h; sourceTree = "<group>"; };
-		27AE1BF91896FEB500C27C38 /* SSNovaFlashService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSNovaFlashService.m; sourceTree = "<group>"; };
-		27AE1C0118976F4C00C27C38 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
-		27AE1C0218976F4C00C27C38 /* OpenSans-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Light.ttf"; sourceTree = "<group>"; };
-		27AE1C051897700B00C27C38 /* SSTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSTheme.h; sourceTree = "<group>"; };
-		27AE1C061897700B00C27C38 /* SSTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSTheme.m; sourceTree = "<group>"; };
-		27AE1C08189910A300C27C38 /* SSSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSSettingsViewController.h; sourceTree = "<group>"; };
-		27AE1C09189910A300C27C38 /* SSSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSSettingsViewController.m; sourceTree = "<group>"; };
-		27AE1C0B1899116900C27C38 /* SSSettingsService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSSettingsService.h; sourceTree = "<group>"; };
-		27AE1C0C1899116900C27C38 /* SSSettingsService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSSettingsService.m; sourceTree = "<group>"; };
-		27AE1C0E189918D000C27C38 /* SSSettingsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSSettingsCell.h; sourceTree = "<group>"; };
-		27AE1C0F189918D000C27C38 /* SSSettingsCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSSettingsCell.m; sourceTree = "<group>"; };
-		27AF863718DD7E5B007C175F /* empty.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = empty.wav; sourceTree = "<group>"; };
-		27BB942B1863A7CD00A31BCF /* SSCameraViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSCameraViewController.h; sourceTree = "<group>"; };
-		27BB942C1863A7CD00A31BCF /* SSCameraViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSCameraViewController.m; sourceTree = "<group>"; };
-		27BB94311863AB3300A31BCF /* SSCameraPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSCameraPreviewView.h; sourceTree = "<group>"; };
-		27BB94321863AB3300A31BCF /* SSCameraPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSCameraPreviewView.m; sourceTree = "<group>"; };
-		27EF5B071886ACAC00AFBD0E /* SSLibraryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSLibraryViewController.h; sourceTree = "<group>"; };
-		27EF5B081886ACAD00AFBD0E /* SSLibraryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSLibraryViewController.m; sourceTree = "<group>"; };
-		27F266C01892710F00B47C7B /* SSFlashSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSFlashSettingsViewController.h; sourceTree = "<group>"; };
-		27F266C11892710F00B47C7B /* SSFlashSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSFlashSettingsViewController.m; sourceTree = "<group>"; };
-		AE5633BD813140FE8017A321 /* libPods-NovaCameraTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NovaCameraTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B7EEE2015376B3D5AE5405E9 /* SSCameraLockView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSCameraLockView.m; sourceTree = "<group>"; };
-		B7EEE4D2EE858BEB67F3884D /* SSCameraLockView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSCameraLockView.h; sourceTree = "<group>"; };
-		B7EEE7532834119070879C7E /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = file.yml; path = .travis.yml; sourceTree = SOURCE_ROOT; };
-		E08928AB66454C1ABFCD086F /* Pods-NovaCamera.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NovaCamera.xcconfig"; path = "Pods/Pods-NovaCamera.xcconfig"; sourceTree = "<group>"; };
-		E8DE111FD9574F8F8392A750 /* Pods-NovaCameraTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NovaCameraTests.xcconfig"; path = "Pods/Pods-NovaCameraTests.xcconfig"; sourceTree = "<group>"; };
-		F36E6E5AA26F401BB75B1E25 /* libPods-NovaCamera.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NovaCamera.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-/* End PBXFileReference section */
-
-/* Begin PBXFrameworksBuildPhase section */
-		2724C97918639EEB00A68E0D /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				27A2B0D91863CB7700D13251 /* AVFoundation.framework in Frameworks */,
-				2724C98218639EEB00A68E0D /* CoreGraphics.framework in Frameworks */,
-				2724C98418639EEB00A68E0D /* UIKit.framework in Frameworks */,
-				2724C98018639EEB00A68E0D /* Foundation.framework in Frameworks */,
-				7BB4BA47770B4148B9ACE56E /* libPods-NovaCamera.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2724C99D18639EEB00A68E0D /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2724C9A218639EEB00A68E0D /* XCTest.framework in Frameworks */,
-				2724C9A418639EEB00A68E0D /* UIKit.framework in Frameworks */,
-				2724C9A318639EEB00A68E0D /* Foundation.framework in Frameworks */,
-				954EF8A0E4E14A3B9AC0B73B /* libPods-NovaCameraTests.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXFrameworksBuildPhase section */
-
-/* Begin PBXGroup section */
-		2724C97318639EEB00A68E0D = {
-			isa = PBXGroup;
-			children = (
-				129E0023194DB7C100DE1723 /* HtmlResources */,
-				2724C98518639EEB00A68E0D /* NovaCamera */,
-				2724C9A718639EEB00A68E0D /* NovaCameraTests */,
-				2724C97E18639EEB00A68E0D /* Frameworks */,
-				2724C97D18639EEB00A68E0D /* Products */,
-				E08928AB66454C1ABFCD086F /* Pods-NovaCamera.xcconfig */,
-				E8DE111FD9574F8F8392A750 /* Pods-NovaCameraTests.xcconfig */,
-			);
-			sourceTree = "<group>";
-		};
-		2724C97D18639EEB00A68E0D /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				2724C97C18639EEB00A68E0D /* NovaCamera.app */,
-				2724C9A018639EEB00A68E0D /* NovaCameraTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		2724C97E18639EEB00A68E0D /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				27A2B0D81863CB7700D13251 /* AVFoundation.framework */,
-				2724C97F18639EEB00A68E0D /* Foundation.framework */,
-				2724C98118639EEB00A68E0D /* CoreGraphics.framework */,
-				2724C98318639EEB00A68E0D /* UIKit.framework */,
-				2724C9A118639EEB00A68E0D /* XCTest.framework */,
-				F36E6E5AA26F401BB75B1E25 /* libPods-NovaCamera.a */,
-				AE5633BD813140FE8017A321 /* libPods-NovaCameraTests.a */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		2724C98518639EEB00A68E0D /* NovaCamera */ = {
-			isa = PBXGroup;
-			children = (
-				2724C98E18639EEB00A68E0D /* SSAppDelegate.h */,
-				2724C98F18639EEB00A68E0D /* SSAppDelegate.m */,
-				27AE1C051897700B00C27C38 /* SSTheme.h */,
-				27AE1C061897700B00C27C38 /* SSTheme.m */,
-				2724C99118639EEB00A68E0D /* Main_iPhone.storyboard */,
-				2724C99418639EEB00A68E0D /* Main_iPad.storyboard */,
-				272F8728186E6DE90005BA58 /* Services */,
-				27BB94281863A7B700A31BCF /* ViewControllers */,
-				27BB942E1863AB1100A31BCF /* Views */,
-				27728B49188F5BDA004D67A4 /* Categories */,
-				2724C99A18639EEB00A68E0D /* Images.xcassets */,
-				27AE1BFB18976F3C00C27C38 /* Fonts */,
-				2724C98618639EEB00A68E0D /* Supporting Files */,
-			);
-			path = NovaCamera;
-			sourceTree = "<group>";
-		};
-		2724C98618639EEB00A68E0D /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				2724C98718639EEB00A68E0D /* NovaCamera-Info.plist */,
-				2724C98818639EEB00A68E0D /* InfoPlist.strings */,
-				2724C98B18639EEB00A68E0D /* main.m */,
-				2724C98D18639EEB00A68E0D /* NovaCamera-Prefix.pch */,
-				276AC62B187AAF0200A7DC0B /* Config.h */,
-				276AC62C187AAFD400A7DC0B /* Config.sample.h */,
-				27AF863718DD7E5B007C175F /* empty.wav */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		2724C9A718639EEB00A68E0D /* NovaCameraTests */ = {
-			isa = PBXGroup;
-			children = (
-				2724C9AD18639EEB00A68E0D /* Nova_CameraTests.m */,
-				2724C9A818639EEB00A68E0D /* Supporting Files */,
-			);
-			path = NovaCameraTests;
-			sourceTree = "<group>";
-		};
-		2724C9A818639EEB00A68E0D /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				2724C9A918639EEB00A68E0D /* NovaCameraTests-Info.plist */,
-				2724C9AA18639EEB00A68E0D /* InfoPlist.strings */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		272F8728186E6DE90005BA58 /* Services */ = {
-			isa = PBXGroup;
-			children = (
-				122810D618CE50B10052255C /* SSStatsService.h */,
-				122810D718CE50B10052255C /* SSStatsService.m */,
-				272F87C318752DE90005BA58 /* SSCaptureSessionManager.h */,
-				272F87C418752DE90005BA58 /* SSCaptureSessionManager.m */,
-				27728B46188F5757004D67A4 /* SSChronologicalAssetsLibraryService.h */,
-				27728B47188F5757004D67A4 /* SSChronologicalAssetsLibraryService.m */,
-				27AE1BF81896FEB500C27C38 /* SSNovaFlashService.h */,
-				27AE1BF91896FEB500C27C38 /* SSNovaFlashService.m */,
-				27AE1C0B1899116900C27C38 /* SSSettingsService.h */,
-				27AE1C0C1899116900C27C38 /* SSSettingsService.m */,
-				B7EEE7532834119070879C7E /* .travis.yml */,
-			);
-			path = Services;
-			sourceTree = "<group>";
-		};
-		27728B49188F5BDA004D67A4 /* Categories */ = {
-			isa = PBXGroup;
-			children = (
-				27728B4D188F5C2A004D67A4 /* ALAsset+FilteredImage.h */,
-				27728B4E188F5C2A004D67A4 /* ALAsset+FilteredImage.m */,
-			);
-			path = Categories;
-			sourceTree = "<group>";
-		};
-		27AE1BFB18976F3C00C27C38 /* Fonts */ = {
-			isa = PBXGroup;
-			children = (
-				27AE1BFD18976F3C00C27C38 /* Open_Sans */,
-			);
-			path = Fonts;
-			sourceTree = "<group>";
-		};
-		27AE1BFD18976F3C00C27C38 /* Open_Sans */ = {
-			isa = PBXGroup;
-			children = (
-				27AE1C0118976F4C00C27C38 /* LICENSE.txt */,
-				27AE1C0218976F4C00C27C38 /* OpenSans-Light.ttf */,
-			);
-			path = Open_Sans;
-			sourceTree = "<group>";
-		};
-		27BB94281863A7B700A31BCF /* ViewControllers */ = {
-			isa = PBXGroup;
-			children = (
-				27BB942B1863A7CD00A31BCF /* SSCameraViewController.h */,
-				27BB942C1863A7CD00A31BCF /* SSCameraViewController.m */,
-				27EF5B071886ACAC00AFBD0E /* SSLibraryViewController.h */,
-				27EF5B081886ACAD00AFBD0E /* SSLibraryViewController.m */,
-				2719089C187EC5E500996A2D /* SSPhotoViewController.h */,
-				2719089D187EC5E500996A2D /* SSPhotoViewController.m */,
-				27F266C01892710F00B47C7B /* SSFlashSettingsViewController.h */,
-				27F266C11892710F00B47C7B /* SSFlashSettingsViewController.m */,
-				27AE1C08189910A300C27C38 /* SSSettingsViewController.h */,
-				27AE1C09189910A300C27C38 /* SSSettingsViewController.m */,
-				129E0025194DB9BA00DE1723 /* SSPrivacyPolicyViewController.h */,
-				129E0026194DB9BA00DE1723 /* SSPrivacyPolicyViewController.m */,
-			);
-			path = ViewControllers;
-			sourceTree = "<group>";
-		};
-		27BB942E1863AB1100A31BCF /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				27BB94311863AB3300A31BCF /* SSCameraPreviewView.h */,
-				27BB94321863AB3300A31BCF /* SSCameraPreviewView.m */,
-				2752B3A01884BC0F00E0C870 /* SSCenteredScrollView.h */,
-				2752B3A11884BC0F00E0C870 /* SSCenteredScrollView.m */,
-				27554D02188E9A68008E4C32 /* SSPassThroughView.h */,
-				27554D03188E9A68008E4C32 /* SSPassThroughView.m */,
-				27AE1C0E189918D000C27C38 /* SSSettingsCell.h */,
-				27AE1C0F189918D000C27C38 /* SSSettingsCell.m */,
-				B7EEE2015376B3D5AE5405E9 /* SSCameraLockView.m */,
-				B7EEE4D2EE858BEB67F3884D /* SSCameraLockView.h */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
-/* End PBXGroup section */
-
-/* Begin PBXNativeTarget section */
-		2724C97B18639EEB00A68E0D /* NovaCamera */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 2724C9B118639EEB00A68E0D /* Build configuration list for PBXNativeTarget "NovaCamera" */;
-			buildPhases = (
-				AF4B82918B474ADB919C8F34 /* Check Pods Manifest.lock */,
-				2724C97818639EEB00A68E0D /* Sources */,
-				2724C97918639EEB00A68E0D /* Frameworks */,
-				2724C97A18639EEB00A68E0D /* Resources */,
-				C7EC3CFAD39349C6B51F5F1F /* Copy Pods Resources */,
-				122810D518CE4A8D0052255C /* ShellScript */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = NovaCamera;
-			productName = NovaCamera;
-			productReference = 2724C97C18639EEB00A68E0D /* NovaCamera.app */;
-			productType = "com.apple.product-type.application";
-		};
-		2724C99F18639EEB00A68E0D /* NovaCameraTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 2724C9B418639EEB00A68E0D /* Build configuration list for PBXNativeTarget "NovaCameraTests" */;
-			buildPhases = (
-				12BFA340311B4AAB9EE31D41 /* Check Pods Manifest.lock */,
-				2724C99C18639EEB00A68E0D /* Sources */,
-				2724C99D18639EEB00A68E0D /* Frameworks */,
-				2724C99E18639EEB00A68E0D /* Resources */,
-				4927E6ABC72843AAA0204F69 /* Copy Pods Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				2724C9A618639EEB00A68E0D /* PBXTargetDependency */,
-			);
-			name = NovaCameraTests;
-			productName = NovaCameraTests;
-			productReference = 2724C9A018639EEB00A68E0D /* NovaCameraTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-/* End PBXNativeTarget section */
-
-/* Begin PBXProject section */
-		2724C97418639EEB00A68E0D /* Project object */ = {
-			isa = PBXProject;
-			attributes = {
-				CLASSPREFIX = SS;
-				LastUpgradeCheck = 0510;
-				ORGANIZATIONNAME = "Sneaky Squid";
-				TargetAttributes = {
-					2724C99F18639EEB00A68E0D = {
-						TestTargetID = 2724C97B18639EEB00A68E0D;
-					};
-				};
-			};
-			buildConfigurationList = 2724C97718639EEB00A68E0D /* Build configuration list for PBXProject "NovaCamera" */;
-			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
-			hasScannedForEncodings = 0;
-			knownRegions = (
-				en,
-				Base,
-			);
-			mainGroup = 2724C97318639EEB00A68E0D;
-			productRefGroup = 2724C97D18639EEB00A68E0D /* Products */;
-			projectDirPath = "";
-			projectRoot = "";
-			targets = (
-				2724C97B18639EEB00A68E0D /* NovaCamera */,
-				2724C99F18639EEB00A68E0D /* NovaCameraTests */,
-			);
-		};
-/* End PBXProject section */
-
-/* Begin PBXResourcesBuildPhase section */
-		2724C97A18639EEB00A68E0D /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				27AE1C0318976F4C00C27C38 /* LICENSE.txt in Resources */,
-				2724C99618639EEB00A68E0D /* Main_iPad.storyboard in Resources */,
-				27AF863818DD7E5B007C175F /* empty.wav in Resources */,
-				27AE1C0418976F4C00C27C38 /* OpenSans-Light.ttf in Resources */,
-				2724C99B18639EEB00A68E0D /* Images.xcassets in Resources */,
-				2724C99318639EEB00A68E0D /* Main_iPhone.storyboard in Resources */,
-				2724C98A18639EEB00A68E0D /* InfoPlist.strings in Resources */,
-				129E0024194DB7C100DE1723 /* HtmlResources in Resources */,
-				B7EEE0F0E5E01DED60D3E297 /* .travis.yml in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2724C99E18639EEB00A68E0D /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2724C9AC18639EEB00A68E0D /* InfoPlist.strings in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		122810D518CE4A8D0052255C /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "set -e\n\necho \"Activating Crashlytics\"\nCRASHLYTICS_API_KEY=$(./scripts/get-config-var.sh CRASHLYTICS_API_KEY)\nCRASHLYTICS_ID=$(./scripts/get-config-var.sh CRASHLYTICS_ID)\nif [ \"$CRASHLYTICS_API_KEY\" != \"\" ]; then\n    ./Pods/CrashlyticsFramework/Crashlytics.framework/run \"$CRASHLYTICS_API_KEY\" \"$CRASHLYTICS_ID\"\nfi";
-		};
-		12BFA340311B4AAB9EE31D41 /* Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		4927E6ABC72843AAA0204F69 /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Pods-NovaCameraTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		AF4B82918B474ADB919C8F34 /* Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		C7EC3CFAD39349C6B51F5F1F /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Pods-NovaCamera-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
-
-/* Begin PBXSourcesBuildPhase section */
-		2724C97818639EEB00A68E0D /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				27AE1BFA1896FEB500C27C38 /* SSNovaFlashService.m in Sources */,
-				27BB942D1863A7CD00A31BCF /* SSCameraViewController.m in Sources */,
-				2719089E187EC5E500996A2D /* SSPhotoViewController.m in Sources */,
-				27554D04188E9A68008E4C32 /* SSPassThroughView.m in Sources */,
-				122810D818CE50B10052255C /* SSStatsService.m in Sources */,
-				2724C99018639EEB00A68E0D /* SSAppDelegate.m in Sources */,
-				27BB94331863AB3300A31BCF /* SSCameraPreviewView.m in Sources */,
-				2752B3A21884BC0F00E0C870 /* SSCenteredScrollView.m in Sources */,
-				129E0027194DB9BA00DE1723 /* SSPrivacyPolicyViewController.m in Sources */,
-				27AE1C10189918D000C27C38 /* SSSettingsCell.m in Sources */,
-				272F87C518752DE90005BA58 /* SSCaptureSessionManager.m in Sources */,
-				27AE1C071897700B00C27C38 /* SSTheme.m in Sources */,
-				27728B4F188F5C2A004D67A4 /* ALAsset+FilteredImage.m in Sources */,
-				27AE1C0A189910A300C27C38 /* SSSettingsViewController.m in Sources */,
-				27F266C21892710F00B47C7B /* SSFlashSettingsViewController.m in Sources */,
-				27AE1C0D1899116900C27C38 /* SSSettingsService.m in Sources */,
-				27EF5B091886ACAD00AFBD0E /* SSLibraryViewController.m in Sources */,
-				27728B48188F5757004D67A4 /* SSChronologicalAssetsLibraryService.m in Sources */,
-				2724C98C18639EEB00A68E0D /* main.m in Sources */,
-				B7EEEA4C97D542FD0772E74A /* SSCameraLockView.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2724C99C18639EEB00A68E0D /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2724C9AE18639EEB00A68E0D /* Nova_CameraTests.m in Sources */,
-				272F87C618752DE90005BA58 /* SSCaptureSessionManager.m in Sources */,
-				27728B50188F5C2A004D67A4 /* ALAsset+FilteredImage.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		2724C9A618639EEB00A68E0D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 2724C97B18639EEB00A68E0D /* NovaCamera */;
-			targetProxy = 2724C9A518639EEB00A68E0D /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		2724C98818639EEB00A68E0D /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2724C98918639EEB00A68E0D /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		2724C99118639EEB00A68E0D /* Main_iPhone.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2724C99218639EEB00A68E0D /* Base */,
-			);
-			name = Main_iPhone.storyboard;
-			sourceTree = "<group>";
-		};
-		2724C99418639EEB00A68E0D /* Main_iPad.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2724C99518639EEB00A68E0D /* Base */,
-			);
-			name = Main_iPad.storyboard;
-			sourceTree = "<group>";
-		};
-		2724C9AA18639EEB00A68E0D /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2724C9AB18639EEB00A68E0D /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
-
-/* Begin XCBuildConfiguration section */
-		2724C9AF18639EEB00A68E0D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				COPY_PHASE_STRIP = NO;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		2724C9B018639EEB00A68E0D /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				COPY_PHASE_STRIP = YES;
-				ENABLE_NS_ASSERTIONS = NO;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		2724C9B218639EEB00A68E0D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = E08928AB66454C1ABFCD086F /* Pods-NovaCamera.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "NovaCamera/NovaCamera-Prefix.pch";
-				INFOPLIST_FILE = "NovaCamera/NovaCamera-Info.plist";
-				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = 1;
-				USER_HEADER_SEARCH_PATHS = "\"${PROJECT_DIR}/Pods\"/**";
-				VALID_ARCHS = "armv7 arm64 armv7s";
-				"VALID_ARCHS[sdk=*]" = "armv7 armv7s arm64";
-				WRAPPER_EXTENSION = app;
-			};
-			name = Debug;
-		};
-		2724C9B318639EEB00A68E0D /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = E08928AB66454C1ABFCD086F /* Pods-NovaCamera.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "NovaCamera/NovaCamera-Prefix.pch";
-				INFOPLIST_FILE = "NovaCamera/NovaCamera-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = 1;
-				USER_HEADER_SEARCH_PATHS = "\"${PROJECT_DIR}/Pods\"/**";
-				VALID_ARCHS = "armv7 armv7s";
-				"VALID_ARCHS[sdk=*]" = "armv7 armv7s arm64";
-				WRAPPER_EXTENSION = app;
-			};
-			name = Release;
-		};
-		2724C9B518639EEB00A68E0D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = E8DE111FD9574F8F8392A750 /* Pods-NovaCameraTests.xcconfig */;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/NovaCamera.app/NovaCamera";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "NovaCamera/NovaCamera-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = "NovaCameraTests/NovaCameraTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = Debug;
-		};
-		2724C9B618639EEB00A68E0D /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = E8DE111FD9574F8F8392A750 /* Pods-NovaCameraTests.xcconfig */;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/NovaCamera.app/NovaCamera";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "NovaCamera/NovaCamera-Prefix.pch";
-				INFOPLIST_FILE = "NovaCameraTests/NovaCameraTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = Release;
-		};
-/* End XCBuildConfiguration section */
-
-/* Begin XCConfigurationList section */
-		2724C97718639EEB00A68E0D /* Build configuration list for PBXProject "NovaCamera" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				2724C9AF18639EEB00A68E0D /* Debug */,
-				2724C9B018639EEB00A68E0D /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		2724C9B118639EEB00A68E0D /* Build configuration list for PBXNativeTarget "NovaCamera" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				2724C9B218639EEB00A68E0D /* Debug */,
-				2724C9B318639EEB00A68E0D /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		2724C9B418639EEB00A68E0D /* Build configuration list for PBXNativeTarget "NovaCameraTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				2724C9B518639EEB00A68E0D /* Debug */,
-				2724C9B618639EEB00A68E0D /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-/* End XCConfigurationList section */
-	};
-	rootObject = 2724C97418639EEB00A68E0D /* Project object */;
-}
+echo "Activating Crashlytics"
+CRASHLYTICS_API_KEY=$(./scripts/get-config-var.sh CRASHLYTICS_API_KEY)
+CRASHLYTICS_ID=$(./scripts/get-config-var.sh CRASHLYTICS_ID)
+if [ "$CRASHLYTICS_API_KEY" != "" ]; then
+    ./Pods/CrashlyticsFramework/Crashlytics.framework/run "$CRASHLYTICS_API_KEY" "$CRASHLYTICS_ID"
+fi</string>
+		</dict>
+		<key>122810D618CE50B10052255C</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>SSStatsService.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>122810D718CE50B10052255C</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>SSStatsService.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>122810D818CE50B10052255C</key>
+		<dict>
+			<key>fileRef</key>
+			<string>122810D718CE50B10052255C</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>129E0023194DB7C100DE1723</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>folder</string>
+			<key>name</key>
+			<string>HtmlResources</string>
+			<key>path</key>
+			<string>NovaCamera/HtmlResources</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>129E0024194DB7C100DE1723</key>
+		<dict>
+			<key>fileRef</key>
+			<string>129E0023194DB7C100DE1723</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>129E0025194DB9BA00DE1723</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>SSPrivacyPolicyViewController.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>129E0026194DB9BA00DE1723</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>SSPrivacyPolicyViewController.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>129E0027194DB9BA00DE1723</key>
+		<dict>
+			<key>fileRef</key>
+			<string>129E0026194DB9BA00DE1723</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>12BFA340311B4AAB9EE31D41</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array/>
+			<key>inputPaths</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXShellScriptBuildPhase</string>
+			<key>name</key>
+			<string>Check Pods Manifest.lock</string>
+			<key>outputPaths</key>
+			<array/>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+			<key>shellPath</key>
+			<string>/bin/sh</string>
+			<key>shellScript</key>
+			<string>diff "${PODS_ROOT}/../Podfile.lock" "${PODS_ROOT}/Manifest.lock" &gt; /dev/null
+if [[ $? != 0 ]] ; then
+    cat &lt;&lt; EOM
+error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.
+EOM
+    exit 1
+fi
+</string>
+			<key>showEnvVarsInLog</key>
+			<string>0</string>
+		</dict>
+		<key>22A425B7FF4F67C17F412B5D</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.xcconfig</string>
+			<key>name</key>
+			<string>Pods-NovaCameraTests.debug.xcconfig</string>
+			<key>path</key>
+			<string>Pods/Target Support Files/Pods-NovaCameraTests/Pods-NovaCameraTests.debug.xcconfig</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2719089C187EC5E500996A2D</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>SSPhotoViewController.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2719089D187EC5E500996A2D</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>SSPhotoViewController.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2719089E187EC5E500996A2D</key>
+		<dict>
+			<key>fileRef</key>
+			<string>2719089D187EC5E500996A2D</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>2724C97318639EEB00A68E0D</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>129E0023194DB7C100DE1723</string>
+				<string>2724C98518639EEB00A68E0D</string>
+				<string>2724C9A718639EEB00A68E0D</string>
+				<string>2724C97E18639EEB00A68E0D</string>
+				<string>2724C97D18639EEB00A68E0D</string>
+				<string>D0638A731156DD97E10F12F3</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2724C97418639EEB00A68E0D</key>
+		<dict>
+			<key>attributes</key>
+			<dict>
+				<key>CLASSPREFIX</key>
+				<string>SS</string>
+				<key>LastUpgradeCheck</key>
+				<string>0510</string>
+				<key>ORGANIZATIONNAME</key>
+				<string>Sneaky Squid</string>
+				<key>TargetAttributes</key>
+				<dict>
+					<key>2724C99F18639EEB00A68E0D</key>
+					<dict>
+						<key>TestTargetID</key>
+						<string>2724C97B18639EEB00A68E0D</string>
+					</dict>
+				</dict>
+			</dict>
+			<key>buildConfigurationList</key>
+			<string>2724C97718639EEB00A68E0D</string>
+			<key>compatibilityVersion</key>
+			<string>Xcode 3.2</string>
+			<key>developmentRegion</key>
+			<string>English</string>
+			<key>hasScannedForEncodings</key>
+			<string>0</string>
+			<key>isa</key>
+			<string>PBXProject</string>
+			<key>knownRegions</key>
+			<array>
+				<string>en</string>
+				<string>Base</string>
+			</array>
+			<key>mainGroup</key>
+			<string>2724C97318639EEB00A68E0D</string>
+			<key>productRefGroup</key>
+			<string>2724C97D18639EEB00A68E0D</string>
+			<key>projectDirPath</key>
+			<string></string>
+			<key>projectReferences</key>
+			<array/>
+			<key>projectRoot</key>
+			<string></string>
+			<key>targets</key>
+			<array>
+				<string>2724C97B18639EEB00A68E0D</string>
+				<string>2724C99F18639EEB00A68E0D</string>
+			</array>
+		</dict>
+		<key>2724C97718639EEB00A68E0D</key>
+		<dict>
+			<key>buildConfigurations</key>
+			<array>
+				<string>2724C9AF18639EEB00A68E0D</string>
+				<string>2724C9B018639EEB00A68E0D</string>
+			</array>
+			<key>defaultConfigurationIsVisible</key>
+			<string>0</string>
+			<key>defaultConfigurationName</key>
+			<string>Release</string>
+			<key>isa</key>
+			<string>XCConfigurationList</string>
+		</dict>
+		<key>2724C97818639EEB00A68E0D</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>27AE1BFA1896FEB500C27C38</string>
+				<string>27BB942D1863A7CD00A31BCF</string>
+				<string>2719089E187EC5E500996A2D</string>
+				<string>27554D04188E9A68008E4C32</string>
+				<string>122810D818CE50B10052255C</string>
+				<string>2724C99018639EEB00A68E0D</string>
+				<string>27BB94331863AB3300A31BCF</string>
+				<string>2752B3A21884BC0F00E0C870</string>
+				<string>129E0027194DB9BA00DE1723</string>
+				<string>27AE1C10189918D000C27C38</string>
+				<string>272F87C518752DE90005BA58</string>
+				<string>27AE1C071897700B00C27C38</string>
+				<string>27728B4F188F5C2A004D67A4</string>
+				<string>27AE1C0A189910A300C27C38</string>
+				<string>27F266C21892710F00B47C7B</string>
+				<string>27AE1C0D1899116900C27C38</string>
+				<string>27EF5B091886ACAD00AFBD0E</string>
+				<string>27728B48188F5757004D67A4</string>
+				<string>2724C98C18639EEB00A68E0D</string>
+				<string>B7EEEA4C97D542FD0772E74A</string>
+			</array>
+			<key>isa</key>
+			<string>PBXSourcesBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>2724C97918639EEB00A68E0D</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>27A2B0D91863CB7700D13251</string>
+				<string>2724C98218639EEB00A68E0D</string>
+				<string>2724C98418639EEB00A68E0D</string>
+				<string>2724C98018639EEB00A68E0D</string>
+				<string>7BB4BA47770B4148B9ACE56E</string>
+			</array>
+			<key>isa</key>
+			<string>PBXFrameworksBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>2724C97A18639EEB00A68E0D</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>27AE1C0318976F4C00C27C38</string>
+				<string>2724C99618639EEB00A68E0D</string>
+				<string>27AF863818DD7E5B007C175F</string>
+				<string>27AE1C0418976F4C00C27C38</string>
+				<string>2724C99B18639EEB00A68E0D</string>
+				<string>2724C99318639EEB00A68E0D</string>
+				<string>2724C98A18639EEB00A68E0D</string>
+				<string>129E0024194DB7C100DE1723</string>
+				<string>B7EEE0F0E5E01DED60D3E297</string>
+			</array>
+			<key>isa</key>
+			<string>PBXResourcesBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>2724C97B18639EEB00A68E0D</key>
+		<dict>
+			<key>buildConfigurationList</key>
+			<string>2724C9B118639EEB00A68E0D</string>
+			<key>buildPhases</key>
+			<array>
+				<string>AF4B82918B474ADB919C8F34</string>
+				<string>2724C97818639EEB00A68E0D</string>
+				<string>2724C97918639EEB00A68E0D</string>
+				<string>2724C97A18639EEB00A68E0D</string>
+				<string>C7EC3CFAD39349C6B51F5F1F</string>
+				<string>122810D518CE4A8D0052255C</string>
+			</array>
+			<key>buildRules</key>
+			<array/>
+			<key>dependencies</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXNativeTarget</string>
+			<key>name</key>
+			<string>NovaCamera</string>
+			<key>productName</key>
+			<string>NovaCamera</string>
+			<key>productReference</key>
+			<string>2724C97C18639EEB00A68E0D</string>
+			<key>productType</key>
+			<string>com.apple.product-type.application</string>
+		</dict>
+		<key>2724C97C18639EEB00A68E0D</key>
+		<dict>
+			<key>explicitFileType</key>
+			<string>wrapper.application</string>
+			<key>includeInIndex</key>
+			<string>0</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>path</key>
+			<string>NovaCamera.app</string>
+			<key>sourceTree</key>
+			<string>BUILT_PRODUCTS_DIR</string>
+		</dict>
+		<key>2724C97D18639EEB00A68E0D</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>2724C97C18639EEB00A68E0D</string>
+				<string>2724C9A018639EEB00A68E0D</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Products</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2724C97E18639EEB00A68E0D</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>27A2B0D81863CB7700D13251</string>
+				<string>2724C97F18639EEB00A68E0D</string>
+				<string>2724C98118639EEB00A68E0D</string>
+				<string>2724C98318639EEB00A68E0D</string>
+				<string>2724C9A118639EEB00A68E0D</string>
+				<string>F36E6E5AA26F401BB75B1E25</string>
+				<string>AE5633BD813140FE8017A321</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Frameworks</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2724C97F18639EEB00A68E0D</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.framework</string>
+			<key>name</key>
+			<string>Foundation.framework</string>
+			<key>path</key>
+			<string>System/Library/Frameworks/Foundation.framework</string>
+			<key>sourceTree</key>
+			<string>SDKROOT</string>
+		</dict>
+		<key>2724C98018639EEB00A68E0D</key>
+		<dict>
+			<key>fileRef</key>
+			<string>2724C97F18639EEB00A68E0D</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>2724C98118639EEB00A68E0D</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.framework</string>
+			<key>name</key>
+			<string>CoreGraphics.framework</string>
+			<key>path</key>
+			<string>System/Library/Frameworks/CoreGraphics.framework</string>
+			<key>sourceTree</key>
+			<string>SDKROOT</string>
+		</dict>
+		<key>2724C98218639EEB00A68E0D</key>
+		<dict>
+			<key>fileRef</key>
+			<string>2724C98118639EEB00A68E0D</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>2724C98318639EEB00A68E0D</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.framework</string>
+			<key>name</key>
+			<string>UIKit.framework</string>
+			<key>path</key>
+			<string>System/Library/Frameworks/UIKit.framework</string>
+			<key>sourceTree</key>
+			<string>SDKROOT</string>
+		</dict>
+		<key>2724C98418639EEB00A68E0D</key>
+		<dict>
+			<key>fileRef</key>
+			<string>2724C98318639EEB00A68E0D</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>2724C98518639EEB00A68E0D</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>2724C98E18639EEB00A68E0D</string>
+				<string>2724C98F18639EEB00A68E0D</string>
+				<string>27AE1C051897700B00C27C38</string>
+				<string>27AE1C061897700B00C27C38</string>
+				<string>2724C99118639EEB00A68E0D</string>
+				<string>2724C99418639EEB00A68E0D</string>
+				<string>272F8728186E6DE90005BA58</string>
+				<string>27BB94281863A7B700A31BCF</string>
+				<string>27BB942E1863AB1100A31BCF</string>
+				<string>27728B49188F5BDA004D67A4</string>
+				<string>2724C99A18639EEB00A68E0D</string>
+				<string>27AE1BFB18976F3C00C27C38</string>
+				<string>2724C98618639EEB00A68E0D</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>path</key>
+			<string>NovaCamera</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2724C98618639EEB00A68E0D</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>2724C98718639EEB00A68E0D</string>
+				<string>2724C98818639EEB00A68E0D</string>
+				<string>2724C98B18639EEB00A68E0D</string>
+				<string>2724C98D18639EEB00A68E0D</string>
+				<string>276AC62B187AAF0200A7DC0B</string>
+				<string>276AC62C187AAFD400A7DC0B</string>
+				<string>27AF863718DD7E5B007C175F</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Supporting Files</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2724C98718639EEB00A68E0D</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.plist.xml</string>
+			<key>path</key>
+			<string>NovaCamera-Info.plist</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2724C98818639EEB00A68E0D</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>2724C98918639EEB00A68E0D</string>
+			</array>
+			<key>isa</key>
+			<string>PBXVariantGroup</string>
+			<key>name</key>
+			<string>InfoPlist.strings</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2724C98918639EEB00A68E0D</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.plist.strings</string>
+			<key>name</key>
+			<string>en</string>
+			<key>path</key>
+			<string>en.lproj/InfoPlist.strings</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2724C98A18639EEB00A68E0D</key>
+		<dict>
+			<key>fileRef</key>
+			<string>2724C98818639EEB00A68E0D</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>2724C98B18639EEB00A68E0D</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>main.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2724C98C18639EEB00A68E0D</key>
+		<dict>
+			<key>fileRef</key>
+			<string>2724C98B18639EEB00A68E0D</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>2724C98D18639EEB00A68E0D</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>NovaCamera-Prefix.pch</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2724C98E18639EEB00A68E0D</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>SSAppDelegate.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2724C98F18639EEB00A68E0D</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>SSAppDelegate.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2724C99018639EEB00A68E0D</key>
+		<dict>
+			<key>fileRef</key>
+			<string>2724C98F18639EEB00A68E0D</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>2724C99118639EEB00A68E0D</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>2724C99218639EEB00A68E0D</string>
+			</array>
+			<key>isa</key>
+			<string>PBXVariantGroup</string>
+			<key>name</key>
+			<string>Main_iPhone.storyboard</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2724C99218639EEB00A68E0D</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>file.storyboard</string>
+			<key>name</key>
+			<string>Base</string>
+			<key>path</key>
+			<string>Base.lproj/Main_iPhone.storyboard</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2724C99318639EEB00A68E0D</key>
+		<dict>
+			<key>fileRef</key>
+			<string>2724C99118639EEB00A68E0D</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>2724C99418639EEB00A68E0D</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>2724C99518639EEB00A68E0D</string>
+			</array>
+			<key>isa</key>
+			<string>PBXVariantGroup</string>
+			<key>name</key>
+			<string>Main_iPad.storyboard</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2724C99518639EEB00A68E0D</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>file.storyboard</string>
+			<key>name</key>
+			<string>Base</string>
+			<key>path</key>
+			<string>Base.lproj/Main_iPad.storyboard</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2724C99618639EEB00A68E0D</key>
+		<dict>
+			<key>fileRef</key>
+			<string>2724C99418639EEB00A68E0D</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>2724C99A18639EEB00A68E0D</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>folder.assetcatalog</string>
+			<key>path</key>
+			<string>Images.xcassets</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2724C99B18639EEB00A68E0D</key>
+		<dict>
+			<key>fileRef</key>
+			<string>2724C99A18639EEB00A68E0D</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>2724C99C18639EEB00A68E0D</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>2724C9AE18639EEB00A68E0D</string>
+				<string>272F87C618752DE90005BA58</string>
+				<string>27728B50188F5C2A004D67A4</string>
+			</array>
+			<key>isa</key>
+			<string>PBXSourcesBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>2724C99D18639EEB00A68E0D</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>2724C9A218639EEB00A68E0D</string>
+				<string>2724C9A418639EEB00A68E0D</string>
+				<string>2724C9A318639EEB00A68E0D</string>
+				<string>954EF8A0E4E14A3B9AC0B73B</string>
+			</array>
+			<key>isa</key>
+			<string>PBXFrameworksBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>2724C99E18639EEB00A68E0D</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>2724C9AC18639EEB00A68E0D</string>
+			</array>
+			<key>isa</key>
+			<string>PBXResourcesBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>2724C99F18639EEB00A68E0D</key>
+		<dict>
+			<key>buildConfigurationList</key>
+			<string>2724C9B418639EEB00A68E0D</string>
+			<key>buildPhases</key>
+			<array>
+				<string>12BFA340311B4AAB9EE31D41</string>
+				<string>2724C99C18639EEB00A68E0D</string>
+				<string>2724C99D18639EEB00A68E0D</string>
+				<string>2724C99E18639EEB00A68E0D</string>
+				<string>4927E6ABC72843AAA0204F69</string>
+			</array>
+			<key>buildRules</key>
+			<array/>
+			<key>dependencies</key>
+			<array>
+				<string>2724C9A618639EEB00A68E0D</string>
+			</array>
+			<key>isa</key>
+			<string>PBXNativeTarget</string>
+			<key>name</key>
+			<string>NovaCameraTests</string>
+			<key>productName</key>
+			<string>NovaCameraTests</string>
+			<key>productReference</key>
+			<string>2724C9A018639EEB00A68E0D</string>
+			<key>productType</key>
+			<string>com.apple.product-type.bundle.unit-test</string>
+		</dict>
+		<key>2724C9A018639EEB00A68E0D</key>
+		<dict>
+			<key>explicitFileType</key>
+			<string>wrapper.cfbundle</string>
+			<key>includeInIndex</key>
+			<string>0</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>path</key>
+			<string>NovaCameraTests.xctest</string>
+			<key>sourceTree</key>
+			<string>BUILT_PRODUCTS_DIR</string>
+		</dict>
+		<key>2724C9A118639EEB00A68E0D</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.framework</string>
+			<key>name</key>
+			<string>XCTest.framework</string>
+			<key>path</key>
+			<string>Library/Frameworks/XCTest.framework</string>
+			<key>sourceTree</key>
+			<string>DEVELOPER_DIR</string>
+		</dict>
+		<key>2724C9A218639EEB00A68E0D</key>
+		<dict>
+			<key>fileRef</key>
+			<string>2724C9A118639EEB00A68E0D</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>2724C9A318639EEB00A68E0D</key>
+		<dict>
+			<key>fileRef</key>
+			<string>2724C97F18639EEB00A68E0D</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>2724C9A418639EEB00A68E0D</key>
+		<dict>
+			<key>fileRef</key>
+			<string>2724C98318639EEB00A68E0D</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>2724C9A518639EEB00A68E0D</key>
+		<dict>
+			<key>containerPortal</key>
+			<string>2724C97418639EEB00A68E0D</string>
+			<key>isa</key>
+			<string>PBXContainerItemProxy</string>
+			<key>proxyType</key>
+			<string>1</string>
+			<key>remoteGlobalIDString</key>
+			<string>2724C97B18639EEB00A68E0D</string>
+			<key>remoteInfo</key>
+			<string>NovaCamera</string>
+		</dict>
+		<key>2724C9A618639EEB00A68E0D</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXTargetDependency</string>
+			<key>target</key>
+			<string>2724C97B18639EEB00A68E0D</string>
+			<key>targetProxy</key>
+			<string>2724C9A518639EEB00A68E0D</string>
+		</dict>
+		<key>2724C9A718639EEB00A68E0D</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>2724C9AD18639EEB00A68E0D</string>
+				<string>2724C9A818639EEB00A68E0D</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>path</key>
+			<string>NovaCameraTests</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2724C9A818639EEB00A68E0D</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>2724C9A918639EEB00A68E0D</string>
+				<string>2724C9AA18639EEB00A68E0D</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Supporting Files</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2724C9A918639EEB00A68E0D</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.plist.xml</string>
+			<key>path</key>
+			<string>NovaCameraTests-Info.plist</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2724C9AA18639EEB00A68E0D</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>2724C9AB18639EEB00A68E0D</string>
+			</array>
+			<key>isa</key>
+			<string>PBXVariantGroup</string>
+			<key>name</key>
+			<string>InfoPlist.strings</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2724C9AB18639EEB00A68E0D</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.plist.strings</string>
+			<key>name</key>
+			<string>en</string>
+			<key>path</key>
+			<string>en.lproj/InfoPlist.strings</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2724C9AC18639EEB00A68E0D</key>
+		<dict>
+			<key>fileRef</key>
+			<string>2724C9AA18639EEB00A68E0D</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>2724C9AD18639EEB00A68E0D</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>Nova_CameraTests.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2724C9AE18639EEB00A68E0D</key>
+		<dict>
+			<key>fileRef</key>
+			<string>2724C9AD18639EEB00A68E0D</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>2724C9AF18639EEB00A68E0D</key>
+		<dict>
+			<key>buildSettings</key>
+			<dict>
+				<key>ALWAYS_SEARCH_USER_PATHS</key>
+				<string>NO</string>
+				<key>CLANG_CXX_LANGUAGE_STANDARD</key>
+				<string>gnu++0x</string>
+				<key>CLANG_CXX_LIBRARY</key>
+				<string>libc++</string>
+				<key>CLANG_ENABLE_MODULES</key>
+				<string>YES</string>
+				<key>CLANG_ENABLE_OBJC_ARC</key>
+				<string>YES</string>
+				<key>CLANG_WARN_BOOL_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_CONSTANT_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_DIRECT_OBJC_ISA_USAGE</key>
+				<string>YES_ERROR</string>
+				<key>CLANG_WARN_EMPTY_BODY</key>
+				<string>YES</string>
+				<key>CLANG_WARN_ENUM_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_INT_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_OBJC_ROOT_CLASS</key>
+				<string>YES_ERROR</string>
+				<key>CLANG_WARN__DUPLICATE_METHOD_MATCH</key>
+				<string>YES</string>
+				<key>CODE_SIGN_IDENTITY[sdk=iphoneos*]</key>
+				<string>iPhone Developer</string>
+				<key>COPY_PHASE_STRIP</key>
+				<string>NO</string>
+				<key>GCC_C_LANGUAGE_STANDARD</key>
+				<string>gnu99</string>
+				<key>GCC_DYNAMIC_NO_PIC</key>
+				<string>NO</string>
+				<key>GCC_OPTIMIZATION_LEVEL</key>
+				<string>0</string>
+				<key>GCC_PREPROCESSOR_DEFINITIONS</key>
+				<array>
+					<string>DEBUG=1</string>
+					<string>$(inherited)</string>
+				</array>
+				<key>GCC_SYMBOLS_PRIVATE_EXTERN</key>
+				<string>NO</string>
+				<key>GCC_WARN_64_TO_32_BIT_CONVERSION</key>
+				<string>YES</string>
+				<key>GCC_WARN_ABOUT_RETURN_TYPE</key>
+				<string>YES_ERROR</string>
+				<key>GCC_WARN_UNDECLARED_SELECTOR</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNINITIALIZED_AUTOS</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNUSED_FUNCTION</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNUSED_VARIABLE</key>
+				<string>YES</string>
+				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
+				<string>7.0</string>
+				<key>ONLY_ACTIVE_ARCH</key>
+				<string>YES</string>
+				<key>SDKROOT</key>
+				<string>iphoneos</string>
+				<key>TARGETED_DEVICE_FAMILY</key>
+				<string>1,2</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Debug</string>
+		</dict>
+		<key>2724C9B018639EEB00A68E0D</key>
+		<dict>
+			<key>buildSettings</key>
+			<dict>
+				<key>ALWAYS_SEARCH_USER_PATHS</key>
+				<string>NO</string>
+				<key>CLANG_CXX_LANGUAGE_STANDARD</key>
+				<string>gnu++0x</string>
+				<key>CLANG_CXX_LIBRARY</key>
+				<string>libc++</string>
+				<key>CLANG_ENABLE_MODULES</key>
+				<string>YES</string>
+				<key>CLANG_ENABLE_OBJC_ARC</key>
+				<string>YES</string>
+				<key>CLANG_WARN_BOOL_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_CONSTANT_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_DIRECT_OBJC_ISA_USAGE</key>
+				<string>YES_ERROR</string>
+				<key>CLANG_WARN_EMPTY_BODY</key>
+				<string>YES</string>
+				<key>CLANG_WARN_ENUM_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_INT_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_OBJC_ROOT_CLASS</key>
+				<string>YES_ERROR</string>
+				<key>CLANG_WARN__DUPLICATE_METHOD_MATCH</key>
+				<string>YES</string>
+				<key>CODE_SIGN_IDENTITY[sdk=iphoneos*]</key>
+				<string>iPhone Developer</string>
+				<key>COPY_PHASE_STRIP</key>
+				<string>YES</string>
+				<key>ENABLE_NS_ASSERTIONS</key>
+				<string>NO</string>
+				<key>GCC_C_LANGUAGE_STANDARD</key>
+				<string>gnu99</string>
+				<key>GCC_WARN_64_TO_32_BIT_CONVERSION</key>
+				<string>YES</string>
+				<key>GCC_WARN_ABOUT_RETURN_TYPE</key>
+				<string>YES_ERROR</string>
+				<key>GCC_WARN_UNDECLARED_SELECTOR</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNINITIALIZED_AUTOS</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNUSED_FUNCTION</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNUSED_VARIABLE</key>
+				<string>YES</string>
+				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
+				<string>7.0</string>
+				<key>SDKROOT</key>
+				<string>iphoneos</string>
+				<key>TARGETED_DEVICE_FAMILY</key>
+				<string>1,2</string>
+				<key>VALIDATE_PRODUCT</key>
+				<string>YES</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Release</string>
+		</dict>
+		<key>2724C9B118639EEB00A68E0D</key>
+		<dict>
+			<key>buildConfigurations</key>
+			<array>
+				<string>2724C9B218639EEB00A68E0D</string>
+				<string>2724C9B318639EEB00A68E0D</string>
+			</array>
+			<key>defaultConfigurationIsVisible</key>
+			<string>0</string>
+			<key>defaultConfigurationName</key>
+			<string>Release</string>
+			<key>isa</key>
+			<string>XCConfigurationList</string>
+		</dict>
+		<key>2724C9B218639EEB00A68E0D</key>
+		<dict>
+			<key>baseConfigurationReference</key>
+			<string>E7ACC9F727EAD45F4471C559</string>
+			<key>buildSettings</key>
+			<dict>
+				<key>ASSETCATALOG_COMPILER_APPICON_NAME</key>
+				<string>AppIcon</string>
+				<key>ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME</key>
+				<string>LaunchImage</string>
+				<key>GCC_PRECOMPILE_PREFIX_HEADER</key>
+				<string>YES</string>
+				<key>GCC_PREFIX_HEADER</key>
+				<string>NovaCamera/NovaCamera-Prefix.pch</string>
+				<key>INFOPLIST_FILE</key>
+				<string>NovaCamera/NovaCamera-Info.plist</string>
+				<key>ONLY_ACTIVE_ARCH</key>
+				<string>YES</string>
+				<key>PRODUCT_NAME</key>
+				<string>$(TARGET_NAME)</string>
+				<key>TARGETED_DEVICE_FAMILY</key>
+				<string>1</string>
+				<key>USER_HEADER_SEARCH_PATHS</key>
+				<string>"${PROJECT_DIR}/Pods"/**</string>
+				<key>VALID_ARCHS</key>
+				<string>armv7 arm64 armv7s</string>
+				<key>VALID_ARCHS[sdk=*]</key>
+				<string>armv7 armv7s arm64</string>
+				<key>WRAPPER_EXTENSION</key>
+				<string>app</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Debug</string>
+		</dict>
+		<key>2724C9B318639EEB00A68E0D</key>
+		<dict>
+			<key>baseConfigurationReference</key>
+			<string>0AA0F909440E0756E1D89C0D</string>
+			<key>buildSettings</key>
+			<dict>
+				<key>ASSETCATALOG_COMPILER_APPICON_NAME</key>
+				<string>AppIcon</string>
+				<key>ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME</key>
+				<string>LaunchImage</string>
+				<key>GCC_PRECOMPILE_PREFIX_HEADER</key>
+				<string>YES</string>
+				<key>GCC_PREFIX_HEADER</key>
+				<string>NovaCamera/NovaCamera-Prefix.pch</string>
+				<key>INFOPLIST_FILE</key>
+				<string>NovaCamera/NovaCamera-Info.plist</string>
+				<key>PRODUCT_NAME</key>
+				<string>$(TARGET_NAME)</string>
+				<key>TARGETED_DEVICE_FAMILY</key>
+				<string>1</string>
+				<key>USER_HEADER_SEARCH_PATHS</key>
+				<string>"${PROJECT_DIR}/Pods"/**</string>
+				<key>VALID_ARCHS</key>
+				<string>armv7 armv7s</string>
+				<key>VALID_ARCHS[sdk=*]</key>
+				<string>armv7 armv7s arm64</string>
+				<key>WRAPPER_EXTENSION</key>
+				<string>app</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Release</string>
+		</dict>
+		<key>2724C9B418639EEB00A68E0D</key>
+		<dict>
+			<key>buildConfigurations</key>
+			<array>
+				<string>2724C9B518639EEB00A68E0D</string>
+				<string>2724C9B618639EEB00A68E0D</string>
+			</array>
+			<key>defaultConfigurationIsVisible</key>
+			<string>0</string>
+			<key>defaultConfigurationName</key>
+			<string>Release</string>
+			<key>isa</key>
+			<string>XCConfigurationList</string>
+		</dict>
+		<key>2724C9B518639EEB00A68E0D</key>
+		<dict>
+			<key>baseConfigurationReference</key>
+			<string>22A425B7FF4F67C17F412B5D</string>
+			<key>buildSettings</key>
+			<dict>
+				<key>BUNDLE_LOADER</key>
+				<string>$(BUILT_PRODUCTS_DIR)/NovaCamera.app/NovaCamera</string>
+				<key>FRAMEWORK_SEARCH_PATHS</key>
+				<array>
+					<string>$(SDKROOT)/Developer/Library/Frameworks</string>
+					<string>$(inherited)</string>
+					<string>$(DEVELOPER_FRAMEWORKS_DIR)</string>
+				</array>
+				<key>GCC_PRECOMPILE_PREFIX_HEADER</key>
+				<string>YES</string>
+				<key>GCC_PREFIX_HEADER</key>
+				<string>NovaCamera/NovaCamera-Prefix.pch</string>
+				<key>GCC_PREPROCESSOR_DEFINITIONS</key>
+				<array>
+					<string>DEBUG=1</string>
+					<string>$(inherited)</string>
+				</array>
+				<key>INFOPLIST_FILE</key>
+				<string>NovaCameraTests/NovaCameraTests-Info.plist</string>
+				<key>PRODUCT_NAME</key>
+				<string>$(TARGET_NAME)</string>
+				<key>TEST_HOST</key>
+				<string>$(BUNDLE_LOADER)</string>
+				<key>WRAPPER_EXTENSION</key>
+				<string>xctest</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Debug</string>
+		</dict>
+		<key>2724C9B618639EEB00A68E0D</key>
+		<dict>
+			<key>baseConfigurationReference</key>
+			<string>3D0AB8C730B233CE727B5878</string>
+			<key>buildSettings</key>
+			<dict>
+				<key>BUNDLE_LOADER</key>
+				<string>$(BUILT_PRODUCTS_DIR)/NovaCamera.app/NovaCamera</string>
+				<key>FRAMEWORK_SEARCH_PATHS</key>
+				<array>
+					<string>$(SDKROOT)/Developer/Library/Frameworks</string>
+					<string>$(inherited)</string>
+					<string>$(DEVELOPER_FRAMEWORKS_DIR)</string>
+				</array>
+				<key>GCC_PRECOMPILE_PREFIX_HEADER</key>
+				<string>YES</string>
+				<key>GCC_PREFIX_HEADER</key>
+				<string>NovaCamera/NovaCamera-Prefix.pch</string>
+				<key>INFOPLIST_FILE</key>
+				<string>NovaCameraTests/NovaCameraTests-Info.plist</string>
+				<key>PRODUCT_NAME</key>
+				<string>$(TARGET_NAME)</string>
+				<key>TEST_HOST</key>
+				<string>$(BUNDLE_LOADER)</string>
+				<key>WRAPPER_EXTENSION</key>
+				<string>xctest</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Release</string>
+		</dict>
+		<key>272F8728186E6DE90005BA58</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>122810D618CE50B10052255C</string>
+				<string>122810D718CE50B10052255C</string>
+				<string>272F87C318752DE90005BA58</string>
+				<string>272F87C418752DE90005BA58</string>
+				<string>27728B46188F5757004D67A4</string>
+				<string>27728B47188F5757004D67A4</string>
+				<string>27AE1BF81896FEB500C27C38</string>
+				<string>27AE1BF91896FEB500C27C38</string>
+				<string>27AE1C0B1899116900C27C38</string>
+				<string>27AE1C0C1899116900C27C38</string>
+				<string>B7EEE7532834119070879C7E</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>path</key>
+			<string>Services</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>272F87C318752DE90005BA58</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>SSCaptureSessionManager.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>272F87C418752DE90005BA58</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>SSCaptureSessionManager.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>272F87C518752DE90005BA58</key>
+		<dict>
+			<key>fileRef</key>
+			<string>272F87C418752DE90005BA58</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>272F87C618752DE90005BA58</key>
+		<dict>
+			<key>fileRef</key>
+			<string>272F87C418752DE90005BA58</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>2752B3A01884BC0F00E0C870</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>SSCenteredScrollView.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2752B3A11884BC0F00E0C870</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>SSCenteredScrollView.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2752B3A21884BC0F00E0C870</key>
+		<dict>
+			<key>fileRef</key>
+			<string>2752B3A11884BC0F00E0C870</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>27554D02188E9A68008E4C32</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>SSPassThroughView.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>27554D03188E9A68008E4C32</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>SSPassThroughView.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>27554D04188E9A68008E4C32</key>
+		<dict>
+			<key>fileRef</key>
+			<string>27554D03188E9A68008E4C32</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>276AC62B187AAF0200A7DC0B</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>Config.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>276AC62C187AAFD400A7DC0B</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>Config.sample.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>27728B46188F5757004D67A4</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>SSChronologicalAssetsLibraryService.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>27728B47188F5757004D67A4</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>SSChronologicalAssetsLibraryService.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>27728B48188F5757004D67A4</key>
+		<dict>
+			<key>fileRef</key>
+			<string>27728B47188F5757004D67A4</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>27728B49188F5BDA004D67A4</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>27728B4D188F5C2A004D67A4</string>
+				<string>27728B4E188F5C2A004D67A4</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>path</key>
+			<string>Categories</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>27728B4D188F5C2A004D67A4</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>ALAsset+FilteredImage.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>27728B4E188F5C2A004D67A4</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>ALAsset+FilteredImage.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>27728B4F188F5C2A004D67A4</key>
+		<dict>
+			<key>fileRef</key>
+			<string>27728B4E188F5C2A004D67A4</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>27728B50188F5C2A004D67A4</key>
+		<dict>
+			<key>fileRef</key>
+			<string>27728B4E188F5C2A004D67A4</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>27A2B0D81863CB7700D13251</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.framework</string>
+			<key>name</key>
+			<string>AVFoundation.framework</string>
+			<key>path</key>
+			<string>System/Library/Frameworks/AVFoundation.framework</string>
+			<key>sourceTree</key>
+			<string>SDKROOT</string>
+		</dict>
+		<key>27A2B0D91863CB7700D13251</key>
+		<dict>
+			<key>fileRef</key>
+			<string>27A2B0D81863CB7700D13251</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>27AE1BF81896FEB500C27C38</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>SSNovaFlashService.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>27AE1BF91896FEB500C27C38</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>SSNovaFlashService.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>27AE1BFA1896FEB500C27C38</key>
+		<dict>
+			<key>fileRef</key>
+			<string>27AE1BF91896FEB500C27C38</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>27AE1BFB18976F3C00C27C38</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>27AE1BFD18976F3C00C27C38</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>path</key>
+			<string>Fonts</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>27AE1BFD18976F3C00C27C38</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>27AE1C0118976F4C00C27C38</string>
+				<string>27AE1C0218976F4C00C27C38</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>path</key>
+			<string>Open_Sans</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>27AE1C0118976F4C00C27C38</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text</string>
+			<key>path</key>
+			<string>LICENSE.txt</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>27AE1C0218976F4C00C27C38</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>file</string>
+			<key>path</key>
+			<string>OpenSans-Light.ttf</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>27AE1C0318976F4C00C27C38</key>
+		<dict>
+			<key>fileRef</key>
+			<string>27AE1C0118976F4C00C27C38</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>27AE1C0418976F4C00C27C38</key>
+		<dict>
+			<key>fileRef</key>
+			<string>27AE1C0218976F4C00C27C38</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>27AE1C051897700B00C27C38</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>SSTheme.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>27AE1C061897700B00C27C38</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>SSTheme.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>27AE1C071897700B00C27C38</key>
+		<dict>
+			<key>fileRef</key>
+			<string>27AE1C061897700B00C27C38</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>27AE1C08189910A300C27C38</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>SSSettingsViewController.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>27AE1C09189910A300C27C38</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>SSSettingsViewController.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>27AE1C0A189910A300C27C38</key>
+		<dict>
+			<key>fileRef</key>
+			<string>27AE1C09189910A300C27C38</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>27AE1C0B1899116900C27C38</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>SSSettingsService.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>27AE1C0C1899116900C27C38</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>SSSettingsService.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>27AE1C0D1899116900C27C38</key>
+		<dict>
+			<key>fileRef</key>
+			<string>27AE1C0C1899116900C27C38</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>27AE1C0E189918D000C27C38</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>SSSettingsCell.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>27AE1C0F189918D000C27C38</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>SSSettingsCell.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>27AE1C10189918D000C27C38</key>
+		<dict>
+			<key>fileRef</key>
+			<string>27AE1C0F189918D000C27C38</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>27AF863718DD7E5B007C175F</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>audio.wav</string>
+			<key>path</key>
+			<string>empty.wav</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>27AF863818DD7E5B007C175F</key>
+		<dict>
+			<key>fileRef</key>
+			<string>27AF863718DD7E5B007C175F</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>27BB94281863A7B700A31BCF</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>27BB942B1863A7CD00A31BCF</string>
+				<string>27BB942C1863A7CD00A31BCF</string>
+				<string>27EF5B071886ACAC00AFBD0E</string>
+				<string>27EF5B081886ACAD00AFBD0E</string>
+				<string>2719089C187EC5E500996A2D</string>
+				<string>2719089D187EC5E500996A2D</string>
+				<string>27F266C01892710F00B47C7B</string>
+				<string>27F266C11892710F00B47C7B</string>
+				<string>27AE1C08189910A300C27C38</string>
+				<string>27AE1C09189910A300C27C38</string>
+				<string>129E0025194DB9BA00DE1723</string>
+				<string>129E0026194DB9BA00DE1723</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>path</key>
+			<string>ViewControllers</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>27BB942B1863A7CD00A31BCF</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>SSCameraViewController.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>27BB942C1863A7CD00A31BCF</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>SSCameraViewController.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>27BB942D1863A7CD00A31BCF</key>
+		<dict>
+			<key>fileRef</key>
+			<string>27BB942C1863A7CD00A31BCF</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>27BB942E1863AB1100A31BCF</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>27BB94311863AB3300A31BCF</string>
+				<string>27BB94321863AB3300A31BCF</string>
+				<string>2752B3A01884BC0F00E0C870</string>
+				<string>2752B3A11884BC0F00E0C870</string>
+				<string>27554D02188E9A68008E4C32</string>
+				<string>27554D03188E9A68008E4C32</string>
+				<string>27AE1C0E189918D000C27C38</string>
+				<string>27AE1C0F189918D000C27C38</string>
+				<string>B7EEE2015376B3D5AE5405E9</string>
+				<string>B7EEE4D2EE858BEB67F3884D</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>path</key>
+			<string>Views</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>27BB94311863AB3300A31BCF</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>SSCameraPreviewView.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>27BB94321863AB3300A31BCF</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>SSCameraPreviewView.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>27BB94331863AB3300A31BCF</key>
+		<dict>
+			<key>fileRef</key>
+			<string>27BB94321863AB3300A31BCF</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>27EF5B071886ACAC00AFBD0E</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>SSLibraryViewController.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>27EF5B081886ACAD00AFBD0E</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>SSLibraryViewController.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>27EF5B091886ACAD00AFBD0E</key>
+		<dict>
+			<key>fileRef</key>
+			<string>27EF5B081886ACAD00AFBD0E</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>27F266C01892710F00B47C7B</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>SSFlashSettingsViewController.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>27F266C11892710F00B47C7B</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>SSFlashSettingsViewController.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>27F266C21892710F00B47C7B</key>
+		<dict>
+			<key>fileRef</key>
+			<string>27F266C11892710F00B47C7B</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>3D0AB8C730B233CE727B5878</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.xcconfig</string>
+			<key>name</key>
+			<string>Pods-NovaCameraTests.release.xcconfig</string>
+			<key>path</key>
+			<string>Pods/Target Support Files/Pods-NovaCameraTests/Pods-NovaCameraTests.release.xcconfig</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>4927E6ABC72843AAA0204F69</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array/>
+			<key>inputPaths</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXShellScriptBuildPhase</string>
+			<key>name</key>
+			<string>Copy Pods Resources</string>
+			<key>outputPaths</key>
+			<array/>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+			<key>shellPath</key>
+			<string>/bin/sh</string>
+			<key>shellScript</key>
+			<string>"${SRCROOT}/Pods/Target Support Files/Pods-NovaCameraTests/Pods-NovaCameraTests-resources.sh"
+</string>
+			<key>showEnvVarsInLog</key>
+			<string>0</string>
+		</dict>
+		<key>7BB4BA47770B4148B9ACE56E</key>
+		<dict>
+			<key>fileRef</key>
+			<string>F36E6E5AA26F401BB75B1E25</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>954EF8A0E4E14A3B9AC0B73B</key>
+		<dict>
+			<key>fileRef</key>
+			<string>AE5633BD813140FE8017A321</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>AE5633BD813140FE8017A321</key>
+		<dict>
+			<key>explicitFileType</key>
+			<string>archive.ar</string>
+			<key>includeInIndex</key>
+			<string>0</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>path</key>
+			<string>libPods-NovaCameraTests.a</string>
+			<key>sourceTree</key>
+			<string>BUILT_PRODUCTS_DIR</string>
+		</dict>
+		<key>AF4B82918B474ADB919C8F34</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array/>
+			<key>inputPaths</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXShellScriptBuildPhase</string>
+			<key>name</key>
+			<string>Check Pods Manifest.lock</string>
+			<key>outputPaths</key>
+			<array/>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+			<key>shellPath</key>
+			<string>/bin/sh</string>
+			<key>shellScript</key>
+			<string>diff "${PODS_ROOT}/../Podfile.lock" "${PODS_ROOT}/Manifest.lock" &gt; /dev/null
+if [[ $? != 0 ]] ; then
+    cat &lt;&lt; EOM
+error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.
+EOM
+    exit 1
+fi
+</string>
+			<key>showEnvVarsInLog</key>
+			<string>0</string>
+		</dict>
+		<key>B7EEE0F0E5E01DED60D3E297</key>
+		<dict>
+			<key>fileRef</key>
+			<string>B7EEE7532834119070879C7E</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>B7EEE2015376B3D5AE5405E9</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>SSCameraLockView.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>B7EEE4D2EE858BEB67F3884D</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>SSCameraLockView.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>B7EEE7532834119070879C7E</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>file.yml</string>
+			<key>path</key>
+			<string>.travis.yml</string>
+			<key>sourceTree</key>
+			<string>SOURCE_ROOT</string>
+		</dict>
+		<key>B7EEEA4C97D542FD0772E74A</key>
+		<dict>
+			<key>fileRef</key>
+			<string>B7EEE2015376B3D5AE5405E9</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>C7EC3CFAD39349C6B51F5F1F</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array/>
+			<key>inputPaths</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXShellScriptBuildPhase</string>
+			<key>name</key>
+			<string>Copy Pods Resources</string>
+			<key>outputPaths</key>
+			<array/>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+			<key>shellPath</key>
+			<string>/bin/sh</string>
+			<key>shellScript</key>
+			<string>"${SRCROOT}/Pods/Target Support Files/Pods-NovaCamera/Pods-NovaCamera-resources.sh"
+</string>
+			<key>showEnvVarsInLog</key>
+			<string>0</string>
+		</dict>
+		<key>D0638A731156DD97E10F12F3</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>E7ACC9F727EAD45F4471C559</string>
+				<string>0AA0F909440E0756E1D89C0D</string>
+				<string>22A425B7FF4F67C17F412B5D</string>
+				<string>3D0AB8C730B233CE727B5878</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Pods</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>E7ACC9F727EAD45F4471C559</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.xcconfig</string>
+			<key>name</key>
+			<string>Pods-NovaCamera.debug.xcconfig</string>
+			<key>path</key>
+			<string>Pods/Target Support Files/Pods-NovaCamera/Pods-NovaCamera.debug.xcconfig</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F36E6E5AA26F401BB75B1E25</key>
+		<dict>
+			<key>explicitFileType</key>
+			<string>archive.ar</string>
+			<key>includeInIndex</key>
+			<string>0</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>path</key>
+			<string>libPods-NovaCamera.a</string>
+			<key>sourceTree</key>
+			<string>BUILT_PRODUCTS_DIR</string>
+		</dict>
+	</dict>
+	<key>rootObject</key>
+	<string>2724C97418639EEB00A68E0D</string>
+</dict>
+</plist>

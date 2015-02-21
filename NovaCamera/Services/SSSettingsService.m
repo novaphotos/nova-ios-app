@@ -13,11 +13,11 @@ const NSString *kSettingsServiceEditAfterCaptureKey = @"SettingsServiceEditAfter
 const NSString *kSettingsServiceShareAfterCaptureKey = @"SettingsServiceShareAfterCaptureKey";
 const NSString *kSettingsServiceShowGridLinesKey = @"SettingsServiceShowGridLinesKey";
 const NSString *kSettingsServiceSquarePhotosKey = @"SettingsServiceSquarePhotosKey";
-const NSString *kSettingsServiceMultipleNovasKey = @"SettingsServiceMultipleNovasKey";
 const NSString *kSettingsServiceOptOutStatsKey = @"SettingsServiceOptOutStats";
 const NSString *kSettingsServiceEnableVolumeButtonTriggerKey = @"SettingsServiceEnableVolumeButtonTrigger";
 const NSString *kSettingsServiceLightBoostKey = @"SettingsServiceLightBoostKey";
 const NSString *kSettingsServiceResetFocusOnSceneChangeKey = @"SettingsServiceResetFocusOnSceneChangeKey";
+const NSString *kSettingsServiceMultipleNovasKey = @"SettingsServiceMultipleNovasKey";
 
 
 // Private settings that are never shown to user
@@ -52,6 +52,7 @@ const NSString *kSettingsServiceOneTimeAskedOptOutQuestion = @"SettingsServiceOn
                           @YES,     // kSettingsServiceEnableVolumeButtonTriggerKey
                           @YES,     // kSettingsServiceLightBoostKey
                           @YES,     // kSettingsServiceResetFocusOnSceneChangeKey
+                          @NO,      // kSettingsServiceMultipleNovasKey
                           ];
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSArray *keys = [self generalSettingsKeys];
@@ -75,6 +76,7 @@ const NSString *kSettingsServiceOneTimeAskedOptOutQuestion = @"SettingsServiceOn
              kSettingsServiceEnableVolumeButtonTriggerKey,
              kSettingsServiceLightBoostKey,
              kSettingsServiceResetFocusOnSceneChangeKey,
+             kSettingsServiceMultipleNovasKey,
              ];
 }
 
@@ -87,6 +89,7 @@ const NSString *kSettingsServiceOneTimeAskedOptOutQuestion = @"SettingsServiceOn
              @"Volume keys trigger shutter",
              @"Night vision in low light",
              @"Scene change resets focus",
+             @"Multiple Novas",
              ];
 }
 
