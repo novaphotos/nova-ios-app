@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <NovaSDK/NVFlashService.h>
 
 /**
  * Different modes of flash, including the three built-in modes, off and custom.
@@ -58,14 +59,12 @@ typedef enum {
  */
 static const NSString *SSNovaFlashServiceStatusChanged;
 
-@class NVFlashService;
-
 /**
  * Abstraction for Nova Flash, handling persistence of flash settings as well as
  * Nova Flash SDK interaction.
  */
 
-@interface SSNovaFlashService : NSObject
+@interface SSNovaFlashService : NSObject<NVFlashServiceDelegate>
 
 /**
  * NVFlashService from the Nova SDK
