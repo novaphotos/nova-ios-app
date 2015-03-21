@@ -7,7 +7,7 @@ before_install:
 
 env:
   matrix:
-    - SDK=iphonesimulator7.1
+    - SDK=iphonesimulator
     #- SDK=iphonesimulator8.0
 
 script:
